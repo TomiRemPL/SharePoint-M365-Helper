@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SharePoint M365 – Przewodnik Szybkiego Startu</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --sp-primary: #038387;
+      --sp-primary-dark: #02595c;
+      --sp-blue: #0078d4;
+      --sp-blue-dark: #106ebe;
+      --sp-bg-light: #f0fdfa;
+      --slate-900: #0f172a;
+      --slate-800: #1e293b;
+      --slate-700: #334155;
+      --slate-600: #475569;
+      --slate-500: #64748b;
+      --slate-200: #e2e8f0;
+      --slate-100: #f1f5f9;
+      --slate-50: #f8fafc;
+      --amber-600: #d97706;
+      --amber-50: #fffbeb;
+      --amber-200: #fde68a;
+      --emerald-600: #059669;
+      --emerald-50: #ecfdf5;
+      --emerald-200: #a7f3d0;
+      --indigo-600: #4f46e5;
+      --indigo-50: #eef2ff;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: #e2e8f0;
+      color: var(--slate-800);
+      font-size: 11.2px;
+      line-height: 1.4;
+      -webkit-font-smoothing: antialiased;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px 10px;
+    }
+
+    /* Pasek akcji ekranowych (niewidoczny w druku) */
+    .screen-toolbar {
+      width: 210mm;
+      max-width: 100%;
+      background: white;
+      border-radius: 10px;
+      padding: 10px 18px;
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    }
+
+    .toolbar-info {
+      font-size: 12px;
+      color: var(--slate-600);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .toolbar-info strong {
+      color: var(--slate-900);
+    }
+
+    .btn-print {
+      background: linear-gradient(135deg, var(--sp-primary), var(--sp-blue));
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 12px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-print:hover {
+      opacity: 0.92;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 10px rgba(3, 131, 135, 0.3);
+    }
+
+    /* Format A4 One-Pager */
+    .page-container {
+      width: 210mm;
+      height: 297mm;
+      max-height: 297mm;
+      background: #ffffff;
+      padding: 8mm 9mm 6mm 9mm;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+      border-radius: 2px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Nagłówek dokumentu */
+    .header {
+      border-bottom: 2px solid var(--slate-100);
+      padding-bottom: 6px;
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .header-branding {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .sp-logo-badge {
+      width: 38px;
+      height: 38px;
+      border-radius: 9px;
+      background: linear-gradient(135deg, #038387 0%, #0078d4 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      box-shadow: 0 4px 10px rgba(3, 131, 135, 0.25);
+    }
+
+    .title-group h1 {
+      font-size: 18.5px;
+      font-weight: 800;
+      color: var(--slate-900);
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+    }
+
+    .title-group p {
+      font-size: 10.5px;
+      color: var(--sp-primary-dark);
+      font-weight: 600;
+      margin-top: 1px;
+    }
+
+    .header-meta {
+      text-align: right;
+    }
+
+    .badge-target {
+      display: inline-block;
+      background: var(--sp-bg-light);
+      color: var(--sp-primary-dark);
+      border: 1px solid #99f6e4;
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 3px 8px;
+      border-radius: 20px;
+    }
+
+    .meta-sub {
+      font-size: 8.5px;
+      color: var(--slate-500);
+      margin-top: 2px;
+    }
+
+    /* Układ główny - siatka sekcji */
+    .content-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 7px;
+      flex-grow: 1;
+    }
+
+    .card {
+      background: white;
+      border: 1px solid var(--slate-200);
+      border-radius: 7px;
+      padding: 7px 9px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .card-full {
+      grid-column: span 2;
+    }
+
+    .card-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--slate-900);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 5px;
+      padding-bottom: 3px;
+      border-bottom: 1.5px solid var(--slate-100);
+    }
+
+    .card-title .icon {
+      width: 16px;
+      height: 16px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+      font-size: 10px;
+    }
+
+    .card-title .tag {
+      margin-left: auto;
+      font-size: 8px;
+      font-weight: 600;
+      padding: 1px 5px;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+
+    /* Elementy w kartach */
+    .tip-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .tip-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+    }
+
+    .tip-bullet {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--slate-100);
+      color: var(--sp-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 8.5px;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .tip-text {
+      font-size: 10px;
+      color: var(--slate-700);
+    }
+
+    .tip-text strong {
+      color: var(--slate-900);
+    }
+
+    .tip-box {
+      border-radius: 5px;
+      padding: 5px 7px;
+      font-size: 9.5px;
+      margin-top: 4px;
+      line-height: 1.35;
+    }
+
+    .tip-box-amber {
+      background: var(--amber-50);
+      border: 1px solid var(--amber-200);
+      color: #92400e;
+    }
+
+    .tip-box-teal {
+      background: var(--sp-bg-light);
+      border: 1px solid #a7f3d0;
+      color: var(--sp-primary-dark);
+    }
+
+    .tip-box-blue {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      color: #1e40af;
+    }
+
+    /* Tabela porównawcza udostępniania */
+    .compare-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 9.5px;
+      margin-top: 2px;
+    }
+
+    .compare-table th {
+      text-align: left;
+      background: var(--slate-100);
+      padding: 3px 5px;
+      color: var(--slate-700);
+      font-weight: 700;
+      border-radius: 3px 3px 0 0;
+    }
+
+    .compare-table td {
+      padding: 3px 5px;
+      border-bottom: 1px solid var(--slate-100);
+      color: var(--slate-700);
+    }
+
+    .pill-safe {
+      background: var(--emerald-50);
+      color: var(--emerald-600);
+      border: 1px solid var(--emerald-200);
+      padding: 1px 4px;
+      border-radius: 3px;
+      font-weight: 700;
+      font-size: 8.5px;
+      display: inline-block;
+    }
+
+    .pill-warn {
+      background: var(--amber-50);
+      color: var(--amber-600);
+      border: 1px solid var(--amber-200);
+      padding: 1px 4px;
+      border-radius: 3px;
+      font-weight: 700;
+      font-size: 8.5px;
+      display: inline-block;
+    }
+
+    /* Pasek 3 super-funkcji */
+    .superpowers-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      margin-top: 2px;
+    }
+
+    .power-box {
+      background: var(--slate-50);
+      border: 1px solid var(--slate-200);
+      border-radius: 6px;
+      padding: 5px 7px;
+    }
+
+    .power-box-title {
+      font-weight: 700;
+      font-size: 10px;
+      color: var(--slate-900);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-bottom: 2px;
+    }
+
+    .power-box-desc {
+      font-size: 9.3px;
+      color: var(--slate-600);
+      line-height: 1.35;
+    }
+
+    /* Skróty i pro-tipy pasek */
+    .tips-ribbon {
+      background: linear-gradient(90deg, #f8fafc, #f1f5f9);
+      border: 1px solid var(--slate-200);
+      border-radius: 6px;
+      padding: 5px 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 9.3px;
+      margin-top: 2px;
+    }
+
+    .kbd {
+      font-family: 'JetBrains Mono', monospace;
+      background: white;
+      border: 1px solid var(--slate-200);
+      box-shadow: 0 1px 0 rgba(0,0,0,0.1);
+      padding: 1px 4px;
+      border-radius: 3px;
+      font-size: 8.5px;
+      font-weight: 600;
+      color: var(--slate-800);
+    }
+
+    /* Stopka firmowa */
+    .footer {
+      border-top: 2px solid var(--sp-primary);
+      padding-top: 5px;
+      margin-top: 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #fafafa;
+      border-radius: 0 0 5px 5px;
+      padding: 5px 8px 3px 8px;
+    }
+
+    .footer-company {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .company-name {
+      font-size: 10.5px;
+      font-weight: 800;
+      color: var(--slate-900);
+      letter-spacing: -0.01em;
+    }
+
+    .company-details {
+      font-size: 8.8px;
+      color: var(--slate-500);
+      margin-top: 1px;
+    }
+
+    .footer-helpdesk {
+      text-align: right;
+    }
+
+    .helpdesk-label {
+      font-size: 8.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--sp-primary-dark);
+      letter-spacing: 0.04em;
+    }
+
+    .helpdesk-contact {
+      font-size: 9.5px;
+      font-weight: 700;
+      color: var(--slate-900);
+      margin-top: 1px;
+    }
+
+    .helpdesk-contact a {
+      color: var(--sp-blue);
+      text-decoration: none;
+    }
+
+    /* Reguły wydruku (Druk A4 / Zapis do PDF) */
+    @media print {
+      body {
+        background: white;
+        padding: 0;
+        margin: 0;
+      }
+
+      .screen-toolbar {
+        display: none !important;
+      }
+
+      .page-container {
+        width: 100%;
+        height: 100%;
+        max-height: none;
+        box-shadow: none;
+        border-radius: 0;
+        padding: 6mm 7mm 4mm 7mm;
+        page-break-after: avoid;
+        page-break-inside: avoid;
+      }
+
+      @page {
+        size: A4 portrait;
+        margin: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Pasek narzędzi przeglądarki (ukrywany w druku) -->
+  <div class="screen-toolbar no-print">
+    <div class="toolbar-info">
+      <span>📄 <strong>Format A4 (1 strona)</strong> — Dokument zoptymalizowany pod bezpośredni wydruk lub zapis do pliku PDF (Ctrl + P).</span>
+    </div>
+    <button class="btn-print" onclick="window.print()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 6 2 18 2 18 9"></polyline>
+        <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+        <rect x="6" y="14" width="12" height="8"></rect>
+      </svg>
+      Drukuj / Zapisz jako PDF
+    </button>
+  </div>
+
+  <!-- Główny dokument A4 (dokładnie 1 strona) -->
+  <div class="page-container">
+
+    <!-- NAGŁÓWEK -->
+    <header class="header">
+      <div class="header-branding">
+        <div class="sp-logo-badge">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+          </svg>
+        </div>
+        <div class="title-group">
+          <h1>SharePoint M365 – Szybki Start</h1>
+          <p>Podręczny przewodnik codziennej pracy z dokumentami i zespołem</p>
+        </div>
+      </div>
+      <div class="header-meta">
+        <span class="badge-target">Dla Użytkowników M365</span>
+        <div class="meta-sub">Wydanie 2026.1 • Format A4 (1 strona)</div>
+      </div>
+    </header>
+
+    <!-- SIATKA TREŚCI (2 KOLUMNY + SEKCJE PEŁNEJ SZEROKOŚCI) -->
+    <main class="content-grid">
+
+      <!-- MODUŁ 1: NAWIGACJA & STRUKTURA -->
+      <section class="card">
+        <div class="card-title">
+          <span class="icon" style="background:#e0f2fe; color:#0284c7;">🧭</span>
+          1. Anatomia Witryny & Nawigacja
+          <span class="tag" style="background:#f1f5f9; color:#475569;">Baza</span>
+        </div>
+        <ul class="tip-list">
+          <li class="tip-item">
+            <span class="tip-bullet">1</span>
+            <div class="tip-text"><strong>Gdzie są pliki?</strong> W lewym menu witryny kliknij <strong>„Dokumenty”</strong> (Główna biblioteka zespołu).</div>
+          </li>
+          <li class="tip-item">
+            <span class="tip-bullet">2</span>
+            <div class="tip-text"><strong>Pasek ścieżki (Breadcrumbs):</strong> U góry biblioteki widzisz pełną ścieżkę folderów – kliknij dowolny poziom, by szybko wrócić.</div>
+          </li>
+          <li class="tip-item">
+            <span class="tip-bullet">3</span>
+            <div class="tip-text"><strong>Witryna Zespołu vs Komunikacyjna:</strong> Witryna Zespołu (Team Site) służy do wspólnej pracy na co dzień; Komunikacyjna to tablica ogłoszeń i procedury.</div>
+          </li>
+        </ul>
+        <div class="tip-box tip-box-teal">
+          💡 <strong>Wskazówka:</strong> Kliknij <strong>gwiazdkę (Obserwuj)</strong> w prawym górnym rogu witryny, by mieć do niej natychmiastowy dostęp ze strony głównej Microsoft 365.
+        </div>
+      </section>
+
+      <!-- MODUŁ 2: DODAWANIE & PRACA Z PLIKAMI -->
+      <section class="card">
+        <div class="card-title">
+          <span class="icon" style="background:#ecfdf5; color:#059669;">📁</span>
+          2. Tworzenie & Otwieranie Plików
+          <span class="tag" style="background:#ecfdf5; color:#059669;">Codzienność</span>
+        </div>
+        <ul class="tip-list">
+          <li class="tip-item">
+            <span class="tip-bullet">1</span>
+            <div class="tip-text"><strong>Dodawanie plików:</strong> Przeciągnij pliki z pulpitu prosto do przeglądarki (Drag & Drop) lub użyj przycisku <strong>„+ Nowy”</strong> / <strong>„Przekaż”</strong>.</div>
+          </li>
+          <li class="tip-item">
+            <span class="tip-bullet">2</span>
+            <div class="tip-text"><strong>W przeglądarce vs Aplikacja klasyczna:</strong>
+              Kliknięcie pliku otwiera go w przeglądarce (szybki podgląd i edycja). W menu pliku możesz wybrać <strong>„Otwórz w aplikacji klasycznej”</strong> (pełny Word / Excel).
+            </div>
+          </li>
+          <li class="tip-item">
+            <span class="tip-bullet">3</span>
+            <div class="tip-text"><strong>Automatyczny zapis:</strong> Każda wprowadzona zmiana zapisuje się w chmurze na bieżąco – nie musisz szukać przycisku Zapisz (Ctrl+S).</div>
+          </li>
+        </ul>
+        <div class="tip-box tip-box-blue">
+          ⚡ <strong>Koniec z załącznikami w mailach:</strong> Zamiast wysyłać plik pocztą, wyślij bezpośredni link ze SharePointa.
+        </div>
+      </section>
+
+      <!-- MODUŁ 3: WSPÓŁPRACA W CZASIE RZECZYWISTYM -->
+      <section class="card">
+        <div class="card-title">
+          <span class="icon" style="background:#eef2ff; color:#4f46e5;">👥</span>
+          3. Współpraca w Czasie Rzeczywistym
+          <span class="tag" style="background:#eef2ff; color:#4f46e5;">Efektywność</span>
+        </div>
+        <ul class="tip-list">
+          <li class="tip-item">
+            <span class="tip-bullet">✓</span>
+            <div class="tip-text"><strong>Współedycja (Co-authoring):</strong> Wiele osób może pisać w tym samym dokumencie naraz. Widzisz kolorowe kursory współpracowników.</div>
+          </li>
+          <li class="tip-item">
+            <span class="tip-bullet">✓</span>
+            <div class="tip-text"><strong>Koniec z bałaganem w nazwach:</strong> Nigdy więcej plików typu <em>Raport_v2_poprawiony_ostateczny.docx</em>. W SharePoint zawsze obowiązuje jeden, aktualny plik!</div>
+          </li>
+          <li class="tip-item">
+            <span class="tip-bullet">✓</span>
+            <div class="tip-text"><strong>Wzmianki @Imię:</strong> Dodaj komentarz i wpisz <strong>@Nazwisko</strong> współpracownika – otrzyma e-mail z bezpośrednim odnośnikiem do akapitu.</div>
+          </li>
+        </ul>
+      </section>
+
+      <!-- MODUŁ 4: BEZPIECZNE UDOSTĘPNIANIE -->
+      <section class="card">
+        <div class="card-title">
+          <span class="icon" style="background:#fef2f2; color:#dc2626;">🔗</span>
+          4. Bezpieczne Udostępnianie & Linki
+          <span class="tag" style="background:#fef2f2; color:#dc2626;">Bezpieczeństwo</span>
+        </div>
+        <table class="compare-table">
+          <thead>
+            <tr>
+              <th>Typ łącza (Udostępnij)</th>
+              <th>Kiedy stosować?</th>
+              <th>Poziom</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Określone osoby</strong></td>
+              <td>Dostęp tylko dla wyznaczonych osób (wpisz e-mail)</td>
+              <td><span class="pill-safe">Zalecane</span></td>
+            </tr>
+            <tr>
+              <td><strong>Osoby w organizacji</strong></td>
+              <td>Każdy pracownik z kontem w firmie może otworzyć</td>
+              <td><span class="pill-safe">Wewnętrzne</span></td>
+            </tr>
+            <tr>
+              <td><strong>Każdy z linkiem</strong></td>
+              <td>Dostęp publiczny bez logowania (ryzyko wycieku!)</td>
+              <td><span class="pill-warn">Ostrożnie</span></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="tip-box tip-box-amber">
+          🔒 <strong>Zasada:</strong> Zawsze wybieraj uprawnienie: <strong>„Może edytować”</strong> (praca wspólna) lub <strong>„Może wyświetlać”</strong> (zabezpieczenie przed edycją).
+        </div>
+      </section>
+
+      <!-- MODUŁ 5: TRZY KOŁA RATUNKOWE (PEŁNA SZEROKOŚĆ) -->
+      <section class="card card-full">
+        <div class="card-title">
+          <span class="icon" style="background:#fef3c7; color:#d97706;">🛟</span>
+          5. Twoje Koła Ratunkowe (Nigdy nie stracisz danych)
+          <span class="tag" style="background:#fef3c7; color:#d97706;">Niezbędnik</span>
+        </div>
+        <div class="superpowers-grid">
+          <div class="power-box">
+            <div class="power-box-title">
+              <span>🕒</span> Historia wersji
+            </div>
+            <div class="power-box-desc">
+              Ktoś przypadkowo skasował treść? Kliknij <strong>„...”</strong> obok pliku &gt; <strong>Historia wersji</strong>. Możesz podejrzeć i przywrócić dowolny stan dokumentu z przeszłości.
+            </div>
+          </div>
+          <div class="power-box">
+            <div class="power-box-title">
+              <span>🗑️</span> Kosz witryny (93 dni)
+            </div>
+            <div class="power-box-desc">
+              Skasowany folder lub plik trafia do <strong>Kosza</strong> w menu bocznym. Każdy użytkownik może samodzielnie przywrócić swoje pliki przez <strong>93 dni</strong> od usunięcia.
+            </div>
+          </div>
+          <div class="power-box">
+            <div class="power-box-title">
+              <span>🔄</span> Synchronizacja z PC
+            </div>
+            <div class="power-box-desc">
+              Kliknij przycisk <strong>„Synchronizuj”</strong> na górnym pasku biblioteki. Foldery pojawią się w Twoim <strong>Eksploratorze Windows</strong>, z oszczędzaniem miejsca na dysku (Pliki na żądanie).
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- MODUŁ 6: WYSZUKIWANIE & SKRÓTY (PEŁNA SZEROKOŚĆ) -->
+      <section class="tips-ribbon card-full">
+        <div>
+          🔍 <strong>Globalna Wyszukiwarka:</strong> Pasek na samej górze okna M365 przeszukuje <strong>nie tylko nazwy plików</strong>, ale całą treść dokumentów, PDF i prezentacji!
+        </div>
+        <div style="display:flex; gap:12px; align-items:center;">
+          <span>Powiadomienia o zmianach: <strong>„...” &gt; Powiadom mnie</strong></span>
+          <span>Szukaj w witrynie: <span class="kbd">Ctrl</span> + <span class="kbd">F</span></span>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- STOPKA FIRMOWA -->
+    <footer class="footer">
+      <div class="footer-company">
+        <span class="company-name" id="comp-name">REMBIASZ GRC Tech Solutions Tomasz Rembiasz</span>
+        <span class="company-details" id="comp-meta">NIP: 887-155-01-62 • Doradztwo GRC & Architektura M365</span>
+      </div>
+      <div class="footer-helpdesk">
+        <div class="helpdesk-label">Kontakt & Pomoc M365</div>
+        <div class="helpdesk-contact">
+          <span id="comp-support">E-mail: <a href="mailto:trembiasz@gmail.com">trembiasz@gmail.com</a> | NIP: 887-155-01-62</span>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+
+</body>
+</html>

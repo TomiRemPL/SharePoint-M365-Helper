@@ -1,0 +1,3 @@
+# Agent workspace skills (not part of SharePoint repo)
+.agents/skills/
+*.log

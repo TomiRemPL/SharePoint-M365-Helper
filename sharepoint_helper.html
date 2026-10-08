@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Centrum Pomocy SharePoint M365 – Podręcznik Codziennej Pracy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --sp-teal: #038387;
+      --sp-teal-dark: #025356;
+      --sp-teal-light: #f0fdfa;
+      --sp-blue: #0078d4;
+      --sp-blue-dark: #106ebe;
+      --sp-blue-light: #eff6ff;
+      --bg-page: #f8fafc;
+      --surface: #ffffff;
+      --surface-subtle: #f1f5f9;
+      --border: #e2e8f0;
+      --border-focus: #0078d4;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --text-soft: #475569;
+      --emerald: #059669;
+      --emerald-bg: #ecfdf5;
+      --amber: #d97706;
+      --amber-bg: #fffbeb;
+      --rose: #e11d48;
+      --rose-bg: #fff1f2;
+      --indigo: #4f46e5;
+      --indigo-bg: #eef2ff;
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 14px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+      --shadow-md: 0 4px 14px rgba(0,0,0,0.06);
+      --shadow-lg: 0 10px 25px rgba(0,0,0,0.08);
+      --sidebar-width: 290px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-page);
+      color: var(--text-main);
+      line-height: 1.55;
+      font-size: 14.5px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* GŁÓWNY UKŁAD STRONY (HEADER + SIDEBAR + CONTENT) */
+    .app-header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .sp-logo {
+      width: 36px;
+      height: 36px;
+      border-radius: 9px;
+      background: linear-gradient(135deg, var(--sp-teal) 0%, var(--sp-blue) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      box-shadow: 0 3px 8px rgba(3, 131, 135, 0.3);
+    }
+
+    .app-title h1 {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--text-main);
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+    }
+
+    .app-title p {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* Pasek wyszukiwania w nagłówku */
+    .search-box {
+      position: relative;
+      width: 340px;
+    }
+
+    .search-box input {
+      width: 100%;
+      height: 38px;
+      background: var(--surface-subtle);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 0 14px 0 36px;
+      font-size: 13px;
+      font-family: inherit;
+      color: var(--text-main);
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    .search-box input:focus {
+      background: white;
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 3px rgba(0, 120, 212, 0.15);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+
+    .badge-status {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 20px;
+      background: var(--sp-teal-light);
+      color: var(--sp-teal-dark);
+      border: 1px solid #99f6e4;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    /* GŁÓWNY KONTENER Z PANELEM BOCZNYM */
+    .app-layout {
+      display: flex;
+      max-width: 1540px;
+      margin: 0 auto;
+      min-height: calc(100vh - 64px);
+    }
+
+    /* SIDEBAR (SPIS TREŚCI / NAWIGACJA) */
+    .sidebar {
+      width: var(--sidebar-width);
+      position: sticky;
+      top: 64px;
+      height: calc(100vh - 64px);
+      overflow-y: auto;
+      padding: 20px 16px 40px 20px;
+      border-right: 1px solid var(--border);
+      background: white;
+      flex-shrink: 0;
+    }
+
+    .sidebar-section-title {
+      font-size: 10.5px;
+      text-transform: uppercase;
+      font-weight: 800;
+      color: var(--text-muted);
+      letter-spacing: 0.06em;
+      margin: 16px 0 8px 8px;
+    }
+
+    .nav-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .nav-item a {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 8px 10px;
+      border-radius: var(--radius-sm);
+      text-decoration: none;
+      color: var(--text-soft);
+      font-size: 13px;
+      font-weight: 600;
+      transition: all 0.15s ease;
+    }
+
+    .nav-item a:hover {
+      background: var(--surface-subtle);
+      color: var(--text-main);
+    }
+
+    .nav-item a.active {
+      background: var(--sp-teal-light);
+      color: var(--sp-teal-dark);
+      border-left: 3px solid var(--sp-teal);
+      padding-left: 7px;
+    }
+
+    .nav-item .icon {
+      font-size: 14px;
+      width: 20px;
+      text-align: center;
+    }
+
+    .sidebar-help-widget {
+      margin-top: 24px;
+      background: linear-gradient(135deg, var(--sp-teal-light), var(--sp-blue-light));
+      border: 1px solid #c7d2fe;
+      border-radius: var(--radius-md);
+      padding: 14px;
+    }
+
+    .sidebar-help-widget h4 {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--slate-900);
+      margin-bottom: 4px;
+    }
+
+    .sidebar-help-widget p {
+      font-size: 11px;
+      color: var(--text-soft);
+      margin-bottom: 8px;
+    }
+
+    .sidebar-help-widget a {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--sp-blue-dark);
+      text-decoration: none;
+    }
+
+    /* GŁÓWNA OBSZAR TREŚCI */
+    .content-area {
+      flex: 1;
+      padding: 32px 40px 60px 40px;
+      max-width: 1250px;
+    }
+
+    /* BANER POWITALNY */
+    .welcome-hero {
+      background: linear-gradient(135deg, #02595c 0%, #038387 50%, #0078d4 100%);
+      color: white;
+      border-radius: var(--radius-lg);
+      padding: 28px 32px;
+      margin-bottom: 32px;
+      box-shadow: var(--shadow-md);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .welcome-hero::after {
+      content: "";
+      position: absolute;
+      right: -30px;
+      bottom: -40px;
+      width: 220px;
+      height: 220px;
+      background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 70%);
+      border-radius: 50%;
+    }
+
+    .welcome-hero h2 {
+      font-size: 24px;
+      font-weight: 800;
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+    }
+
+    .welcome-hero p {
+      font-size: 14px;
+      max-width: 750px;
+      color: rgba(255, 255, 255, 0.9);
+      line-height: 1.5;
+    }
+
+    .hero-tags {
+      display: flex;
+      gap: 10px;
+      margin-top: 16px;
+      flex-wrap: wrap;
+    }
+
+    .hero-tag {
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(4px);
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 11.5px;
+      font-weight: 600;
+    }
+
+    /* KARTY SEKCJI TEMATYCZNYCH */
+    .topic-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 24px 28px;
+      margin-bottom: 28px;
+      box-shadow: var(--shadow-sm);
+      scroll-margin-top: 80px;
+      transition: all 0.2s;
+    }
+
+    .topic-section:hover {
+      box-shadow: var(--shadow-md);
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1.5px solid var(--surface-subtle);
+      padding-bottom: 14px;
+      margin-bottom: 20px;
+    }
+
+    .section-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-icon-badge {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .section-title-wrap h3 {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text-main);
+      letter-spacing: -0.01em;
+    }
+
+    .section-title-wrap p {
+      font-size: 12.5px;
+      color: var(--text-muted);
+      margin-top: 1px;
+    }
+
+    .section-badge {
+      font-size: 10.5px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    /* SIATKA ELEMENTÓW W SEKCJI */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+
+    /* KARTY INSTRUKCYJNE (SUB-CARDS) */
+    .sub-card {
+      background: var(--surface-subtle);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 16px 18px;
+      position: relative;
+    }
+
+    .sub-card-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .sub-card p {
+      font-size: 13px;
+      color: var(--text-soft);
+      line-height: 1.45;
+      margin-bottom: 8px;
+    }
+
+    .step-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .step-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-size: 12.5px;
+      color: var(--text-soft);
+    }
+
+    .step-num {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: white;
+      border: 1px solid var(--border);
+      color: var(--sp-teal-dark);
+      font-weight: 700;
+      font-size: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    /* CALLOUTY I ALERTY */
+    .callout {
+      border-radius: var(--radius-md);
+      padding: 12px 16px;
+      font-size: 13px;
+      margin-top: 14px;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      line-height: 1.45;
+    }
+
+    .callout-icon {
+      font-size: 16px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .callout-teal {
+      background: var(--sp-teal-light);
+      border: 1px solid #99f6e4;
+      color: var(--sp-teal-dark);
+    }
+
+    .callout-blue {
+      background: var(--sp-blue-light);
+      border: 1px solid #bfdbfe;
+      color: #1e40af;
+    }
+
+    .callout-amber {
+      background: var(--amber-bg);
+      border: 1px solid #fde68a;
+      color: #92400e;
+    }
+
+    .callout-rose {
+      background: var(--rose-bg);
+      border: 1px solid #fecdd3;
+      color: #9f1239;
+    }
+
+    /* TABELA DANYCH */
+    .doc-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      font-size: 13px;
+      margin-top: 12px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+    }
+
+    .doc-table th {
+      background: var(--surface-subtle);
+      padding: 10px 14px;
+      text-align: left;
+      font-weight: 700;
+      color: var(--text-main);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .doc-table td {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-soft);
+      vertical-align: middle;
+    }
+
+    .doc-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .badge-pill {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 12px;
+      display: inline-block;
+    }
+
+    .pill-green {
+      background: var(--emerald-bg);
+      color: var(--emerald);
+      border: 1px solid #a7f3d0;
+    }
+
+    .pill-orange {
+      background: var(--amber-bg);
+      color: var(--amber);
+      border: 1px solid #fde68a;
+    }
+
+    .pill-red {
+      background: var(--rose-bg);
+      color: var(--rose);
+      border: 1px solid #fecdd3;
+    }
+
+    .kbd-key {
+      font-family: 'JetBrains Mono', monospace;
+      background: white;
+      border: 1px solid var(--border);
+      border-bottom: 2px solid #cbd5e1;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-main);
+      display: inline-block;
+    }
+
+    /* INTERAKTYWNA SKŁADANKA (ACCORDION / FAQ) */
+    .faq-item {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      margin-bottom: 8px;
+      overflow: hidden;
+      background: white;
+    }
+
+    .faq-question {
+      padding: 12px 16px;
+      font-weight: 700;
+      font-size: 13.5px;
+      color: var(--text-main);
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      user-select: none;
+      background: white;
+      transition: background 0.15s;
+    }
+
+    .faq-question:hover {
+      background: var(--surface-subtle);
+    }
+
+    .faq-answer {
+      padding: 0 16px 12px 16px;
+      font-size: 13px;
+      color: var(--text-soft);
+      line-height: 1.5;
+      display: none;
+      border-top: 1px dashed var(--border);
+      padding-top: 10px;
+    }
+
+    .faq-item.open .faq-answer {
+      display: block;
+    }
+
+    .faq-toggle-icon {
+      font-size: 14px;
+      color: var(--text-muted);
+      transition: transform 0.2s;
+    }
+
+    .faq-item.open .faq-toggle-icon {
+      transform: rotate(180deg);
+    }
+
+    /* STOPKA FIRMOWA */
+    .main-footer {
+      background: white;
+      border-top: 2px solid var(--sp-teal);
+      border-radius: var(--radius-lg);
+      padding: 24px 30px;
+      margin-top: 40px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .footer-left {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .footer-comp-name {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--text-main);
+      letter-spacing: -0.01em;
+    }
+
+    .footer-comp-details {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .footer-right {
+      text-align: right;
+    }
+
+    .helpdesk-box {
+      background: var(--surface-subtle);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 10px 16px;
+      display: inline-block;
+      text-align: left;
+    }
+
+    .helpdesk-box-title {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--sp-teal-dark);
+      margin-bottom: 2px;
+    }
+
+    .helpdesk-box-contact {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .helpdesk-box-contact a {
+      color: var(--sp-blue);
+      text-decoration: none;
+    }
+
+    /* TRYB DRUKU */
+    @media print {
+      .app-header, .sidebar, .search-box, .welcome-hero {
+        display: none !important;
+      }
+      .content-area {
+        padding: 0 !important;
+        max-width: 100% !important;
+      }
+      .topic-section {
+        border: none !important;
+        box-shadow: none !important;
+        page-break-inside: avoid;
+      }
+    }
+
+    @media (max-width: 1024px) {
+      .sidebar {
+        display: none;
+      }
+      .content-area {
+        padding: 20px 16px;
+      }
+      .grid-2, .grid-3 {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAGŁÓWEK APLIKACJI -->
+  <header class="app-header">
+    <div class="header-left">
+      <div class="sp-logo">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+          <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+        </svg>
+      </div>
+      <div class="app-title">
+        <h1>SharePoint M365 – Asystent Codziennej Pracy</h1>
+        <p>Interaktywny podręcznik nawigacji, dobrych praktyk i rozwiązywania problemów</p>
+      </div>
+    </div>
+
+    <!-- Live Search -->
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="liveSearch" placeholder="Szukaj w podręczniku (np. wersje, link, kosz, sync)..." onkeyup="filterContent()">
+    </div>
+
+    <div class="header-actions">
+      <a href="sharepoint_columns_content_types.html" class="btn-switch-handbook" title="Przejdź do przewodnika po architekturze danych, kolumnach i typach zawartości" style="background:var(--surface-subtle); border:1px solid var(--border); color:var(--text-soft); padding:6px 12px; border-radius:6px; font-size:12px; font-weight:700; text-decoration:none; display:inline-flex; align-items:center; gap:6px;">
+        <span>🏛️</span> Galerie Projektanta
+      </a>
+      <span class="badge-status">
+        <span style="display:inline-block; width:7px; height:7px; background:#059669; border-radius:50%;"></span>
+        Środowisko M365 Aktywne
+      </span>
+      <button onclick="window.print()" style="background:var(--surface-subtle); border:1px solid var(--border); padding:6px 12px; border-radius:6px; font-weight:600; font-size:12px; cursor:pointer;">
+        🖨️ Drukuj / PDF
+      </button>
+    </div>
+  </header>
+
+  <!-- GŁÓWNA STRUKTURA Z PANELEM BOCZNYM -->
+  <div class="app-layout">
+
+    <!-- PANEK BOCZNY / SPIS TREŚCI -->
+    <aside class="sidebar">
+      <div class="sidebar-section-title">Spis Tematów</div>
+      <ul class="nav-list" id="sidebarNav">
+        <li class="nav-item"><a href="#podstawy" class="active"><span class="icon">🧭</span> 1. Podstawy & Dostęp</a></li>
+        <li class="nav-item"><a href="#pliki"><span class="icon">📁</span> 2. Praca z Plikami</a></li>
+        <li class="nav-item"><a href="#wspolpraca"><span class="icon">👥</span> 3. Współpraca & Co-authoring</a></li>
+        <li class="nav-item"><a href="#udostepnianie"><span class="icon">🔗</span> 4. Udostępnianie & Uprawnienia</a></li>
+        <li class="nav-item"><a href="#widoki"><span class="icon">🗂️</span> 5. Widoki, Filtry & Kolumny</a></li>
+        <li class="nav-item"><a href="#synchronizacja"><span class="icon">🔄</span> 6. Synchronizacja (OneDrive)</a></li>
+        <li class="nav-item"><a href="#kola-ratunkowe"><span class="icon">🛟</span> 7. Historia Wersji & Kosz</a></li>
+        <li class="nav-item"><a href="#troubleshooting"><span class="icon">⚡</span> 8. Typowe Problemy (FAQ)</a></li>
+        <li class="nav-item"><a href="#skroty"><span class="icon">⌨️</span> 9. Skróty & Pro-Tipy</a></li>
+      </ul>
+
+      <div class="sidebar-help-widget">
+        <h4>Potrzebujesz wsparcia?</h4>
+        <p>Jeżeli nie widzisz danej witryny lub biblioteki, skontaktuj się z administratorem IT.</p>
+        <a href="#stopka-kontakt">Przejdź do danych Helpdesku &rarr;</a>
+      </div>
+    </aside>
+
+    <!-- TREŚĆ GŁÓWNA -->
+    <main class="content-area">
+
+      <!-- BANER POWITALNY -->
+      <section class="welcome-hero">
+        <h2>Witaj w centrum wiedzy SharePoint M365</h2>
+        <p>Ten podręcznik powstał, aby ułatwić Twoją codzienną pracę z dokumentami firmowymi, eliminować dublowanie plików, zapobiegać błędom uprawnień oraz szybko rozwiązywać typowe trudności.</p>
+        <div class="hero-tags">
+          <span class="hero-tag">✓ Bezpieczna praca w chmurze</span>
+          <span class="hero-tag">✓ Współpraca w czasie rzeczywistym</span>
+          <span class="hero-tag">✓ Ochrona historii wersji</span>
+          <span class="hero-tag">✓ Wyszukiwarka kontekstowa</span>
+        </div>
+      </section>
+
+      <!-- TEMAT 1: PODSTAWY & DOSTĘP -->
+      <section class="topic-section" id="podstawy">
+        <div class="section-header">
+          <div class="section-title-wrap">
+            <div class="section-icon-badge" style="background:#e0f2fe; color:#0284c7;">🧭</div>
+            <div>
+              <h3>1. Podstawy, Witryny & Pierwsze Kroki</h3>
+              <p>Struktura SharePointa, rodzaje witryn i szybkie odnajdywanie zasobów</p>
+            </div>
+          </div>
+          <span class="section-badge" style="background:#e0f2fe; color:#0284c7;">Nawigacja</span>
+        </div>
+
+        <div class="grid-2">
+          <div class="sub-card">
+            <div class="sub-card-title">🏢 Witryna Zespołu (Team Site)</div>
+            <p>Dedykowana konkretnemu działowi lub projektowi (np. <em>Dział Sprzedaży</em>, <em>Projekt Alfa</em>). Zazwyczaj powiązana z kanałem w aplikacji Microsoft Teams.</p>
+            <ul class="step-list">
+              <li class="step-item"><span class="step-num">1</span> Każdy członek ma pełne prawa do tworzenia i edycji plików.</li>
+              <li class="step-item"><span class="step-num">2</span> Posiada wspólną skrzynkę pocztową i notes OneNote.</li>
+            </ul>
+          </div>
+          <div class="sub-card">
+            <div class="sub-card-title">📢 Witryna Komunikacyjna (Communication Site)</div>
+            <p>Ogólnodostępny Intranet firmy (np. <em>Strona Główna Firmy</em>, <em>Baza HR i Regulaminy</em>). Służy do publikowania oficjalnych wiadomości i szablonów.</p>
+            <ul class="step-list">
+              <li class="step-item"><span class="step-num">1</span> Kilku redaktorów tworzy treści, pozostali pracownicy mają prawa tylko do odczytu.</li>
+              <li class="step-item"><span class="step-num">2</span> Miejsce oficjalnych wzorów umów i wniosków urlopowych.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="callout callout-teal">
+          <span class="callout-icon">💡</span>
+          <div>
+            <strong>Złota zasada szybkiego dostępu:</strong> Otwórz witrynę, z której korzystasz najczęściej, i kliknij <strong>gwiazdkę „Obserwuj”</strong> w prawym górnym rogu. Witryna pojawi się od razu w Twoich skrótach na portalu <a href="https://www.office.com" target="_blank" style="color:var(--sp-teal-dark); font-weight:700;">portal.office.com</a> i w menu bocznym SharePoint.
+          </div>
+        </div>
+      </section>
+
+      <!-- TEMAT 2: PRACA Z PLIKAMI -->
+      <section class="topic-section" id="pliki">
+        <div class="section-header">
+          <div class="section-title-wrap">
+            <div class="section-icon-badge" style="background:#ecfdf5; color:#059669;">📁</div>
+            <div>
+              <h3>2. Praca z Plikami i Bibliotekami</h3>
+              <p>Tworzenie, wgrywanie, edycja i zasady nazewnictwa plików</p>
+            </div>
+          </div>
+          <span class="section-badge" style="background:#ecfdf5; color:#059669;">Codzienność</span>
+        </div>
+
+        <div class="grid-3">
+          <div class="sub-card">
+            <div class="sub-card-title">Przesyłanie plików</div>
+            <p>Możesz po prostu <strong>przeciągnąć pliki lub całe foldery</strong> z pulpitu bezpośrednio do okna przeglądarki. Ewentualnie użyj przycisku <strong>„Przekaż”</strong>.</p>
+          </div>
+          <div class="sub-card">
+            <div class="sub-card-title">Przeglądarka vs Aplikacja</div>
+            <p>Kliknięcie otwiera plik w przeglądarce (szybki podgląd). Jeśli potrzebujesz makr lub zaawansowanych funkcji, kliknij: <strong>Edycja &gt; Otwórz w aplikacji klasycznej</strong>.</p>
+          </div>
+          <div class="sub-card">
+            <div class="sub-card-title">Automatyczny Zapis</div>
+            <p>Wszystkie zmiany zapisują się same co kilka sekund. Pasek stanu w lewym górnym rogu pokazuje status: <em>Zapisano</em>.</p>
+          </div>
+        </div>
+
+        <div class="callout callout-amber" style="margin-top:16px;">
+          <span class="callout-icon">⚠️</span>
+          <div>
+            <strong>Czego unikać w nazwach plików?</strong> SharePoint nie akceptuje niektórych znaków specjalnych w nazwach plików i folderów: <code>" * : &lt; &gt; ? / \ |</code>. Unikaj także przesadnie długich ścieżek katalogów (maksymalnie 400 znaków w całej ścieżce URL).
+          </div>
+        </div>
+      </section>
+
+      <!-- TEMAT 3: WSPÓŁPRACA & CO-AUTHORING -->
+      <section class="topic-section" id="wspolpraca">
+        <div class="section-header">
+          <div class="section-title-wrap">
+            <div class="section-icon-badge" style="background:#eef2ff; color:#4f46e5;">👥</div>
+            <div>
+              <h3>3. Współpraca w Czasie Rzeczywistym (Co-authoring)</h3>
+              <p>Wspólna edycja dokumentów, komentowanie i eliminacja chaosu w nazwach</p>
+            </div>
+          </div>
+          <span class="section-badge" style="background:#eef2ff; color:#4f46e5;">Współpraca</span>
+        </div>
+
+        <div class="grid-2">
+          <div class="sub-card">
+            <div class="sub-card-title">Jak działa współedycja?</div>
+            <p>Wiele osób może jednocześnie pracować nad jednym plikiem Word, Excel czy PowerPoint. W prawym górnym rogu widać awatary osób aktualnie przeglądających dokument, a w treści kolorowe kursory pokazujące, gdzie kto pisze.</p>
+            <div style="background:white; border:1px solid var(--border); border-radius:6px; padding:10px; margin-top:8px; font-size:12px;">
+              🛡️ <strong>Koniec z duplikatami:</strong> Nigdy więcej nie twórz plików <em>Projekt_v1_JT.docx</em> i <em>Projekt_v2_poprawki.docx</em>. W SharePoint pracujemy na jednym wspólnym dokumencie, a historię dba wbudowany automat.
+            </div>
+          </div>
+
+          <div class="sub-card">
+            <div class="sub-card-title">Komentarze i wzmianki @Imię</div>
+            <p>Zaznacz dowolny fragment tekstu lub komórkę i kliknij <strong>Nowy komentarz</strong>. Wpisz znak <strong>@</strong> oraz nazwisko współpracownika (np. <code>@Jan Kowalski, sprawdź tę pozycję</code>).</p>
+            <p>Adresat natychmiast otrzyma automatyczny e-mail z powiadomieniem i bezpośrednim linkiem prowadzącym dokładnie do tego akapitu.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- TEMAT 4: UDOSTĘPNIANIE & UPRAWNIENIA -->
+      <section class="topic-section" id="udostepnianie">
+        <div class="section-header">
+          <div class="section-title-wrap">
+            <div class="section-icon-badge" style="background:#fef2f2; color:#dc2626;">🔗</div>
+            <div>
+              <h3>4. Udostępnianie & Bezpieczne Linki</h3>
+              <p>Zasady przesyłania linków wewnętrznych i zewnętrznych bez ryzyka wycieku danych</p>
+            </div>
+          </div>
+          <span class="section-badge" style="background:#fef2f2; color:#dc2626;">Bezpieczeństwo</span>
+        </div>
+
+        <p style="font-size:13.5px; color:var(--text-soft); margin-bottom:12px;">
+          Nigdy nie wysyłaj dokumentu jako załącznika pocztowego. Zamiast tego zaznacz plik w SharePoint i kliknij przycisk <strong>„Udostępnij”</strong> (lub skrót <em>Kopiuj łącze</em>).
+        </p>
+
+        <table class="doc-table">
+          <thead>
+            <tr>
+              <th>Rodzaj linku</th>
+              <th>Opis działania</th>
+              <th>Dla kogo stosować?</th>
+              <th>Poziom bezpieczeństwa</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Określone osoby</strong></td>
+              <td>Dostęp ma wyłącznie osoba, której adres e-mail wpiszesz w formularzu.</td>
+              <td>Współpracownicy z konkretnego projektu, klienci zewnętrzni.</td>
+              <td><span class="badge-pill pill-green">Najbezpieczniejszy (Rekomendowany)</span></td>
+            </tr>
+            <tr>
+              <td><strong>Osoby w organizacji</strong></td>
+              <td>Każdy zalogowany pracownik posiadający konto firmowe może otworzyć plik.</td>
+              <td>Materiały ogólnodostępne, wewnętrzne procedury, szablony.</td>
+              <td><span class="badge-pill pill-orange">Wewnętrzny standard</span></td>
+            </tr>
+            <tr>
+              <td><strong>Każdy z linkiem</strong></td>
+              <td>Anonimowy dostęp dla każdego, kto wejdzie w link (nawet z zewnątrz, bez logowania).</td>
+              <td>Publiczne cenniki, ulotki (stosuj tylko w wyjątkowych sytuacjach).</td>
+              <td><span class="badge-pill pill-red">Wysokie ryzyko wycieku</span></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="callout callout-blue">
+          <span class="callout-icon">🔒</span>
+          <div>
+            <strong>Opcja „Zablokuj pobieranie”:</strong> Przy udostępnianiu pliku w trybie podglądu (<em>Może wyświetlać</em>) możesz włączyć przełącznik <strong>Zablokuj pobieranie</strong>. Odbiorca przeczyta dokument w przeglądarce, ale nie będzie mógł zapisać kopii na swoim dysku ani wydrukować!
+          </div>
+        </div>
+      </section>
+
+      <!-- TEMAT 5: WIDOKI & FILTRY -->
+      <section class="topic-section" id="widoki">
+        <div class="section-header">
+          <div class="section-title-wrap">
+            <div class="section-icon-badge" style="background:#fdf4ff; color:#a855f7;">🗂️</div>
+            <div>
+              <h3>5. Widoki, Filtry, Kolumny i Metadane</h3>
+              <p>Jak porządkować tysiące dokumentów bez tworzenia głębokich struktur folderów</p>
+            </div>
+          </div>
+          <span class="section-badge" style="background:#fdf4ff; color:#a855f7;">Efektywność</span>
+        </div>
+
+        <div class="grid-2">
+          <div class="sub-card">
+            <div class="sub-card-title">Tworzenie Widoków Niestandardowych</div>
+            <p>Zamiast szukać w dziesiątkach podfolderów, możesz przefiltrować bibliotekę (np. tylko pliki zmodyfikowane w tym miesiącu lub należące do Ciebie), a następnie kliknąć:</p>
+            <p><strong>Opcje widoku (w prawym górnym rogu) &gt; Zapisz widok jako...</strong></p>
+            <p>Widok będzie zawsze dostępny z rozwijanej listy jednym kliknięciem!</p>
+          </div>
+          <div class="sub-card">
+            <div class="sub-card-title">Kolumny z etykietami (Metadane)</div>
+            <p>Administrator lub właściciel biblioteki może dodać własne kolumny (np. <em>Status: W trakcie / Zatwierdzone</em>, <em>Klient</em>, <em>Rok</em>).</p>
+            <p>Dzięki temu dokumenty można grupować w bibliotece dokładnie tak, jak w arkuszu Excela, klikając nagłówek kolumny &gt; <strong>Grupuj według tego pola</strong>.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- TEMAT 6: SYNCHRONIZACJA & ONEDRIVE -->
+      <section class="topic-section" id="synchronizacja">
+        <div class="section-header">
+          <div class="section-title-wrap">
+            <div class="section-icon-badge" style="background:#f0fdf4; color:#16a34a;">🔄</div>
+            <div>
+              <h3>6. Synchronizacja z Eksploratorem Windows</h3>
+              <p>Praca z plikami w znajomym Eksploratorze Windows i oszczędzanie miejsca na dysku</p>
+            </div>
+          </div>
+          <span class="section-badge" style="background:#f0fdf4; color:#16a34a;">Wygoda</span>
+        </div>
+
+        <div class="grid-2">
+          <div class="sub-card">
+            <div class="sub-card-title">Przycisk „Synchronizuj” vs „Dodaj skrót do usługi OneDrive”</div>
+            <p><strong>Rekomendacja Microsoft:</strong> Wybieraj opcję <strong>„Dodaj skrót do usługi OneDrive”</strong>. Folder pojawi się w Twoim osobistym OneDrive z małą ikonką łańcucha i będzie dostępny również na smartfonie czy tablecie bez dublowania instalacji.</p>
+          </div>
+
+          <div class="sub-card">
+            <div class="sub-card-title">Co oznaczają ikonki w Eksploratorze?</div>
+            <ul class="step-list">
+              <li class="step-item"><span class="step-num">☁️</span> <strong>Niebieska chmurka:</strong> Plik jest w chmurze – nie zajmuje miejsca na Twoim dysku C:.</li>
+              <li class="step-item"><span class="step-num">🟢</span> <strong>Białe kółko z zielonym ptaszkiem:</strong> Plik tymczasowo pobrany na dysk lokalny.</li>
+              <li class="step-item"><span class="step-num">✅</span> <strong>Pełny zielony ptaszek:</strong> Plik trwale przypięty offline (<em>Zawsze zachowuj na tym urządzeniu</em>).</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- TEMAT 7: KOŁA RATUNKOWE -->
+      <section class="topic-section" id="kola-ratunkowe">
+        <div class="section-header">
+          <div class="section-title-wrap">
+            <div class="section-icon-badge" style="background:#fffbeb; color:#d97706;">🛟</div>
+            <div>
+              <h3>7. Historia Wersji & Kosz Witryny</h3>
+              <p>Jak w kilka sekund cofnąć niechciane zmiany lub odzyskać skasowany folder</p>
+            </div>
+          </div>
+          <span class="section-badge" style="background:#fffbeb; color:#d97706;">Bezpieczeństwo</span>
+        </div>
+
+        <div class="grid-2">
+          <div class="sub-card">
+            <div class="sub-card-title">🕒 Jak przywrócić starszą wersję pliku?</div>
+            <ul class="step-list">
+              <li class="step-item"><span class="step-num">1</span> Najedź kursorem na plik w bibliotece i kliknij <strong>„...” (trzy kropki)</strong>.</li>
+              <li class="step-item"><span class="step-num">2</span> Wybierz z menu opcję <strong>Historia wersji</strong>.</li>
+              <li class="step-item"><span class="step-num">3</span> Zobaczysz listę zapisów z dokładną datą, godziną i nazwiskiem autora zmian.</li>
+              <li class="step-item"><span class="step-num">4</span> Kliknij strzałkę obok wybranej wersji i wybierz <strong>Przywróć</strong>. Wcześniejszy stan natychmiast staje się wersją bieżącą!</li>
+            </ul>
+          </div>
+
+          <div class="sub-card">
+            <div class="sub-card-title">🗑️ Jak odzyskać usunięty plik z Kosza?</div>
+            <ul class="step-list">
+              <li class="step-item"><span class="step-num">1</span> W menu po lewej stronie witryny kliknij <strong>Kosz</strong> (Recycle Bin).</li>
+              <li class="step-item"><span class="step-num">2</span> Zaznacz skasowany plik lub cały folder.</li>
+              <li class="step-item"><span class="step-num">3</span> Na górnym pasku kliknij <strong>Przywróć</strong> – plik wróci dokładnie do miejsca, z którego został skasowany.</li>
+              <li class="step-item"><span class="step-num">⏱️</span> <strong>Czas retencji:</strong> Pliki w koszu są przechowywane przez <strong>93 dni</strong>.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- TEMAT 8: TYPOWE PROBLEMY (FAQ) -->
+      <section class="topic-section" id="troubleshooting">
+        <div class="section-header">
+          <div class="section-title-wrap">
+            <div class="section-icon-badge" style="background:#fee2e2; color:#ef4444;">⚡</div>
+            <div>
+              <h3>8. Typowe Problemy i Jak Je Rozwiązać (FAQ)</h3>
+              <p>Szybkie rozwiązania codziennych problemów technicznych</p>
+            </div>
+          </div>
+          <span class="section-badge" style="background:#fee2e2; color:#ef4444;">Troubleshooting</span>
+        </div>
+
+        <div class="faq-item open">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span>Plik wyświetla komunikat „Zablokowany do edycji przez innego użytkownika”</span>
+            <span class="faq-toggle-icon">▲</span>
+          </div>
+          <div class="faq-answer">
+            To się zdarza, gdy współpracownik otworzył plik w starszej wersji pakietu Office lub proces został zawieszony w tle. Zazwyczaj wystarczy poprosić użytkownika o zamknięcie pliku lub odczekać 10 minut na zwolnienie blokady sesji chmurowej. Jeśli plik był ręcznie <em>Wyewidencjonowany</em> (Check out), należy kliknąć <strong>Zaewidencjonuj</strong> lub <em>Odrzuć wyewidencjonowanie</em>.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span>Nie widzę witryny lub folderu, który widzi mój współpracownik</span>
+            <span class="faq-toggle-icon">▼</span>
+          </div>
+          <div class="faq-answer">
+            SharePoint wyświetla wyłącznie te elementy, do których użytkownik posiada bezpośrednie uprawnienia. Poproś właściciela witryny lub przełożonego o dodanie Twojego konta do odpowiedniej grupy członków witryny (np. <em>Nazwa_Witryny Członkowie</em>).
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span>Ikona synchronizacji OneDrive wyświetla czerwony krzyżyk</span>
+            <span class="faq-toggle-icon">▼</span>
+          </div>
+          <div class="faq-answer">
+            Kliknij ikonę niebieskiej chmurki OneDrive przy zegarku systemowym. Zobaczysz dokładną listę plików z błędem synchronizacji. Najczęstsze przyczyny to: niedozwolony znak w nazwie pliku (np. znak zapytania lub dwukropek) albo otwarty plik blokowany przez inną aplikację na komputerze.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span>Chcę wysłać plik osobie spoza firmy, ale opcja „Każdy z linkiem” jest szara</span>
+            <span class="faq-toggle-icon">▼</span>
+          </div>
+          <div class="faq-answer">
+            To standardowa polityka bezpieczeństwa w większości organizacji – anonimowe udostępnianie publiczne jest blokowane przez administratorów. Wybierz opcję <strong>Określone osoby</strong> i wpisz dokładny zewnętrzny adres e-mail odbiorcy. Odbiorca otrzyma jednorazowy kod weryfikacyjny.
+          </div>
+        </div>
+      </section>
+
+      <!-- TEMAT 9: SKRÓTY KLAWISZOWE & PRO-TIPY -->
+      <section class="topic-section" id="skroty">
+        <div class="section-header">
+          <div class="section-title-wrap">
+            <div class="section-icon-badge" style="background:#f1f5f9; color:#334155;">⌨️</div>
+            <div>
+              <h3>9. Skróty Klawiszowe i Sprytne Wskazówki</h3>
+              <p>Przyspiesz codzienną nawigację w środowisku Microsoft 365</p>
+            </div>
+          </div>
+          <span class="section-badge" style="background:#f1f5f9; color:#334155;">Pro-Tipy</span>
+        </div>
+
+        <div class="grid-3">
+          <div class="sub-card">
+            <div class="sub-card-title"><span class="kbd-key">Alt</span> + <span class="kbd-key">Q</span> (lub Szukaj)</div>
+            <p><strong>Powiedz mi, co chcesz zrobić:</strong> Otwiera wyszukiwarkę poleceń w aplikacjach Office Online – nie musisz szukać opcji w menu.</p>
+          </div>
+          <div class="sub-card">
+            <div class="sub-card-title"><span class="kbd-key">Ctrl</span> + <span class="kbd-key">Alt</span> + <span class="kbd-key">M</span></div>
+            <p><strong>Wstaw nowy komentarz:</strong> Błyskawiczne dodanie notatki ze wzmianką <code>@Współpracownik</code> w Word i Excel.</p>
+          </div>
+          <div class="sub-card">
+            <div class="sub-card-title">Powiadom mnie (Alert)</div>
+            <p>Kliknij <strong>„...” &gt; Powiadom mnie</strong> na poziomie folderu, aby otrzymywać powiadomienie e-mail za każdym razem, gdy ktoś wgra nową fakturę lub raport.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- STOPKA FIRMOWA Z DANYMI -->
+      <footer class="main-footer" id="stopka-kontakt">
+        <div class="footer-left">
+          <div class="footer-comp-name" id="firm-name">REMBIASZ GRC Tech Solutions Tomasz Rembiasz</div>
+          <div class="footer-comp-details" id="firm-meta">
+            NIP: 887-155-01-62 • Doradztwo GRC, Bezpieczeństwo Informacji & Wdrożenia Microsoft 365
+          </div>
+          <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">
+            Wydanie: 2026.1 • Podręcznik Codziennej Pracy z SharePoint & Microsoft 365
+          </div>
+        </div>
+
+        <div class="footer-right">
+          <div class="helpdesk-box">
+            <div class="helpdesk-box-title">Kontakt & Wsparcie Użytkowników</div>
+            <div class="helpdesk-box-contact">
+              E-mail: <a href="mailto:trembiasz@gmail.com">trembiasz@gmail.com</a><br>
+              NIP: 887-155-01-62
+            </div>
+          </div>
+        </div>
+      </footer>
+
+    </main>
+
+  </div>
+
+  <script>
+    // Interaktywne rozwijanie pytań FAQ
+    function toggleFaq(element) {
+      const parent = element.parentElement;
+      const isOpen = parent.classList.contains('open');
+      const icon = element.querySelector('.faq-toggle-icon');
+      
+      if (isOpen) {
+        parent.classList.remove('open');
+        icon.textContent = '▼';
+      } else {
+        parent.classList.add('open');
+        icon.textContent = '▲';
+      }
+    }
+
+    // Dynamiczne wyszukiwanie w podręczniku na żywo
+    function filterContent() {
+      const input = document.getElementById('liveSearch');
+      const filter = input.value.toLowerCase().trim();
+      const sections = document.querySelectorAll('.topic-section');
+
+      sections.forEach(sec => {
+        if (!filter) {
+          sec.style.display = 'block';
+          return;
+        }
+
+        const text = sec.innerText.toLowerCase();
+        if (text.includes(filter)) {
+          sec.style.display = 'block';
+        } else {
+          sec.style.display = 'none';
+        }
+      });
+    }
+
+    // Śledzenie aktywnej sekcji w panelu bocznym (Scroll Spy)
+    window.addEventListener('scroll', () => {
+      const sections = document.querySelectorAll('.topic-section');
+      const navLinks = document.querySelectorAll('#sidebarNav a');
+      let currentSectionId = '';
+
+      sections.forEach(section => {
+        const rect = section.getBoundingClientRect();
+        if (rect.top <= 120 && rect.bottom >= 120) {
+          currentSectionId = section.getAttribute('id');
+        }
+      });
+
+      if (currentSectionId) {
+        navLinks.forEach(link => {
+          if (link.getAttribute('href') === '#' + currentSectionId) {
+            link.classList.add('active');
+          } else {
+            link.classList.remove('active');
+          }
+        });
+      }
+    });
+  </script>
+</body>
+</html>
