@@ -1,0 +1,1719 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SharePoint M365 – Automatyzacja Obiegów & Power Automate w Sektorze Bankowym</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --sp-blue: #0078d4;
+      --sp-blue-dark: #106ebe;
+      --sp-blue-light: #eff6ff;
+      --flow-indigo: #4f46e5;
+      --flow-indigo-dark: #3730a3;
+      --flow-indigo-light: #eef2ff;
+      --sp-teal: #038387;
+      --sp-teal-dark: #025356;
+      --sp-teal-light: #f0fdfa;
+      --bg-page: #f8fafc;
+      --surface: #ffffff;
+      --surface-subtle: #f1f5f9;
+      --border: #e2e8f0;
+      --border-focus: #4f46e5;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --text-soft: #475569;
+      --emerald: #059669;
+      --emerald-dark: #065f46;
+      --emerald-bg: #ecfdf5;
+      --emerald-border: #a7f3d0;
+      --amber: #d97706;
+      --amber-dark: #92400e;
+      --amber-bg: #fffbeb;
+      --amber-border: #fde68a;
+      --rose: #e11d48;
+      --rose-dark: #9f1239;
+      --rose-bg: #fff1f2;
+      --rose-border: #fecdd3;
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 14px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+      --shadow-md: 0 4px 14px rgba(0,0,0,0.06);
+      --shadow-lg: 0 10px 25px rgba(0,0,0,0.08);
+      --sidebar-width: 290px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: var(--bg-page);
+      color: var(--text-main);
+      line-height: 1.55;
+      font-size: 14.5px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* NAGŁÓWEK GŁÓWNY */
+    .app-header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      height: 66px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .sp-logo {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #4f46e5 0%, #2563eb 50%, #0284c7 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      box-shadow: 0 3px 10px rgba(79, 70, 229, 0.3);
+    }
+
+    .header-titles h1 {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--text-main);
+      line-height: 1.2;
+      letter-spacing: -0.01em;
+    }
+
+    .header-titles p {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-header {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      border-radius: var(--radius-md);
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text-soft);
+      cursor: pointer;
+    }
+
+    .btn-header:hover {
+      background: var(--surface-subtle);
+      color: var(--text-main);
+      border-color: #cbd5e1;
+    }
+
+    .btn-header.primary {
+      background: var(--flow-indigo);
+      color: #ffffff;
+      border-color: var(--flow-indigo);
+      box-shadow: 0 2px 6px rgba(79, 70, 229, 0.25);
+    }
+
+    .btn-header.primary:hover {
+      background: var(--flow-indigo-dark);
+      border-color: var(--flow-indigo-dark);
+    }
+
+    /* GŁÓWNY UKŁAD 2-KOLUMNOWY */
+    .app-layout {
+      display: flex;
+      max-width: 1540px;
+      margin: 0 auto;
+      min-height: calc(100vh - 66px);
+    }
+
+    /* PASEK BOCZNY */
+    .sidebar {
+      width: var(--sidebar-width);
+      flex-shrink: 0;
+      border-right: 1px solid var(--border);
+      background: var(--surface);
+      padding: 24px 16px;
+      position: sticky;
+      top: 66px;
+      height: calc(100vh - 66px);
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .sidebar-search-box {
+      position: relative;
+    }
+
+    .sidebar-search-box input {
+      width: 100%;
+      padding: 9px 12px 9px 34px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      font-size: 13px;
+      outline: none;
+      background: var(--surface-subtle);
+      transition: all 0.2s ease;
+    }
+
+    .sidebar-search-box input:focus {
+      background: #ffffff;
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
+    }
+
+    .sidebar-search-icon {
+      position: absolute;
+      left: 11px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+
+    .sidebar-nav-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      padding-left: 8px;
+    }
+
+    .sidebar-nav {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .sidebar-nav a {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 8px 12px;
+      border-radius: var(--radius-sm);
+      color: var(--text-soft);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      transition: all 0.15s ease;
+    }
+
+    .sidebar-nav a:hover {
+      background: var(--surface-subtle);
+      color: var(--text-main);
+    }
+
+    .sidebar-nav a.active {
+      background: var(--flow-indigo-light);
+      color: var(--flow-indigo);
+      font-weight: 700;
+    }
+
+    .sidebar-nav .nav-icon {
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    /* TREŚĆ GŁÓWNA */
+    .content-area {
+      flex: 1;
+      padding: 32px 40px 60px 40px;
+      max-width: calc(100% - var(--sidebar-width));
+      overflow-x: hidden;
+    }
+
+    /* BANER HERO */
+    .hero-box {
+      background: linear-gradient(135deg, #ffffff 0%, #eef2ff 50%, #eff6ff 100%);
+      border: 1px solid #c7d2fe;
+      border-radius: var(--radius-lg);
+      padding: 36px 36px 32px 36px;
+      margin-bottom: 36px;
+      position: relative;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .hero-badge-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(79, 70, 229, 0.1);
+      color: var(--flow-indigo-dark);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 11.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 12px;
+    }
+
+    .hero-title {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--text-main);
+      margin-bottom: 10px;
+      line-height: 1.25;
+    }
+
+    .hero-title span {
+      background: linear-gradient(135deg, #4f46e5 0%, #0078d4 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-subtitle {
+      font-size: 15px;
+      color: var(--text-soft);
+      line-height: 1.6;
+      max-width: 900px;
+      margin-bottom: 24px;
+    }
+
+    .hero-meta-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 14px;
+    }
+
+    .hero-meta-card {
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .hero-meta-icon {
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+
+    .hero-meta-val {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .hero-meta-lbl {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    /* SEKCJE TEMATYCZNE */
+    .topic-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      margin-bottom: 32px;
+      box-shadow: var(--shadow-sm);
+      scroll-margin-top: 86px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-badge-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: var(--flow-indigo-light);
+      color: var(--flow-indigo);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .section-header h2 {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--text-main);
+      letter-spacing: -0.01em;
+    }
+
+    .section-tag {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .tag-knf { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
+    .tag-sec { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
+    .tag-arch { background: #f5f3ff; color: #6d28d9; border: 1px solid #ddd6fe; }
+    .tag-tech { background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; }
+
+    /* ALERT BOX */
+    .callout {
+      border-radius: var(--radius-md);
+      padding: 16px 20px;
+      margin: 18px 0;
+      border-left: 4px solid;
+      font-size: 13.5px;
+      line-height: 1.6;
+    }
+
+    .callout-info {
+      background: var(--sp-blue-light);
+      border-color: var(--sp-blue);
+      color: #1e3a8a;
+    }
+
+    .callout-warning {
+      background: var(--amber-bg);
+      border-color: var(--amber);
+      color: #78350f;
+    }
+
+    .callout-danger {
+      background: var(--rose-bg);
+      border-color: var(--rose);
+      color: #881337;
+    }
+
+    .callout-success {
+      background: var(--emerald-bg);
+      border-color: var(--emerald);
+      color: #064e3b;
+    }
+
+    .callout-title {
+      font-weight: 800;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    /* KROKI PROCESU / DIAGRAM PRZEPŁYWU */
+    .flow-steps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+      margin: 22px 0;
+    }
+
+    .flow-step-card {
+      background: var(--surface-subtle);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      position: relative;
+      transition: all 0.2s ease;
+    }
+
+    .flow-step-card:hover {
+      border-color: var(--flow-indigo);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .step-num-pill {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--flow-indigo);
+      background: #ffffff;
+      border: 1px solid #c7d2fe;
+      padding: 2px 8px;
+      border-radius: 6px;
+      margin-bottom: 10px;
+    }
+
+    .step-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 6px;
+    }
+
+    .step-desc {
+      font-size: 13px;
+      color: var(--text-soft);
+      line-height: 1.5;
+    }
+
+    /* TABELA SPECYFIKACJI I PORÓWNAŃ */
+    .table-container {
+      overflow-x: auto;
+      margin: 20px 0;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+    }
+
+    .spec-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13.5px;
+      text-align: left;
+    }
+
+    .spec-table th {
+      background: #f8fafc;
+      padding: 12px 16px;
+      font-weight: 700;
+      color: var(--text-main);
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+
+    .spec-table td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-soft);
+      vertical-align: top;
+    }
+
+    .spec-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .spec-table tr:hover td {
+      background: #fafafa;
+    }
+
+    /* BLOKI KODU I WYRAŻEŃ */
+    .code-box {
+      background: #0f172a;
+      color: #e2e8f0;
+      border-radius: var(--radius-md);
+      padding: 16px;
+      margin: 16px 0;
+      position: relative;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12.5px;
+      line-height: 1.6;
+      overflow-x: auto;
+    }
+
+    .code-box-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #334155;
+      font-size: 11px;
+      color: #94a3b8;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 600;
+    }
+
+    .btn-copy {
+      background: #334155;
+      color: #f1f5f9;
+      border: none;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-copy:hover {
+      background: var(--flow-indigo);
+    }
+
+    .code-keyword { color: #f472b6; }
+    .code-func { color: #38bdf8; }
+    .code-string { color: #4ade80; }
+    .code-prop { color: #fbbf24; }
+    .code-comment { color: #64748b; font-style: italic; }
+
+    /* SYMULATOR OBIEGU PROCEDURY (INTERACTIVE SANDBOX) */
+    .sandbox-container {
+      background: #ffffff;
+      border: 2px solid #c7d2fe;
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      margin: 24px 0;
+      box-shadow: var(--shadow-md);
+    }
+
+    .sandbox-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .sandbox-title {
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .sandbox-workflow-track {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      margin: 28px 0 32px 0;
+      padding: 0 10px;
+    }
+
+    .sandbox-workflow-track::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 30px;
+      right: 30px;
+      height: 4px;
+      background: #e2e8f0;
+      z-index: 1;
+      transform: translateY(-50%);
+    }
+
+    .track-step-node {
+      position: relative;
+      z-index: 2;
+      background: #ffffff;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 3px solid #cbd5e1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 14px;
+      color: #64748b;
+      transition: all 0.3s ease;
+    }
+
+    .track-step-node.completed {
+      background: var(--emerald);
+      border-color: var(--emerald-dark);
+      color: #ffffff;
+    }
+
+    .track-step-node.current {
+      background: var(--flow-indigo);
+      border-color: var(--flow-indigo-dark);
+      color: #ffffff;
+      box-shadow: 0 0 0 5px rgba(79, 70, 229, 0.2);
+    }
+
+    .node-label {
+      position: absolute;
+      top: 48px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 11px;
+      font-weight: 700;
+      white-space: nowrap;
+      color: var(--text-soft);
+    }
+
+    .sandbox-stage-panel {
+      background: var(--surface-subtle);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .stage-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 8px;
+    }
+
+    .stage-desc {
+      font-size: 13px;
+      color: var(--text-soft);
+      line-height: 1.5;
+      margin-bottom: 16px;
+    }
+
+    .sandbox-controls {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn-sim {
+      padding: 9px 18px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .btn-sim-primary {
+      background: var(--flow-indigo);
+      color: #ffffff;
+    }
+    .btn-sim-primary:hover { background: var(--flow-indigo-dark); }
+
+    .btn-sim-success {
+      background: var(--emerald);
+      color: #ffffff;
+    }
+    .btn-sim-success:hover { background: var(--emerald-dark); }
+
+    .btn-sim-danger {
+      background: var(--rose);
+      color: #ffffff;
+    }
+    .btn-sim-danger:hover { background: var(--rose-dark); }
+
+    .btn-sim-reset {
+      background: #e2e8f0;
+      color: var(--text-main);
+    }
+    .btn-sim-reset:hover { background: #cbd5e1; }
+
+    .audit-log-terminal {
+      background: #0f172a;
+      border-radius: var(--radius-md);
+      padding: 16px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px;
+      color: #cbd5e1;
+      max-height: 200px;
+      overflow-y: auto;
+      line-height: 1.6;
+    }
+
+    .log-line {
+      margin-bottom: 4px;
+      display: flex;
+      gap: 10px;
+    }
+    .log-time { color: #64748b; flex-shrink: 0; }
+    .log-sys { color: #38bdf8; flex-shrink: 0; }
+    .log-act { color: #a7f3d0; }
+    .log-alert { color: #f87171; }
+
+    /* AKORDEON FAQ */
+    .faq-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .faq-item {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      background: var(--surface);
+      overflow: hidden;
+      transition: border-color 0.2s;
+    }
+
+    .faq-item.open {
+      border-color: var(--flow-indigo);
+    }
+
+    .faq-question {
+      padding: 16px 20px;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #ffffff;
+      user-select: none;
+    }
+
+    .faq-question:hover {
+      background: var(--surface-subtle);
+    }
+
+    .faq-toggle-icon {
+      font-size: 11px;
+      color: var(--text-muted);
+      transition: transform 0.2s;
+    }
+
+    .faq-answer {
+      display: none;
+      padding: 0 20px 18px 20px;
+      font-size: 13.5px;
+      color: var(--text-soft);
+      line-height: 1.6;
+      border-top: 1px solid var(--border);
+      background: #ffffff;
+    }
+
+    .faq-item.open .faq-answer {
+      display: block;
+      padding-top: 14px;
+    }
+
+    /* STOPKA GŁÓWNA */
+    .main-footer {
+      background: #ffffff;
+      border-top: 1px solid var(--border);
+      padding: 32px 0 24px 0;
+      margin-top: 60px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 30px;
+    }
+
+    .footer-left {
+      max-width: 650px;
+    }
+
+    .footer-comp-name {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 4px;
+    }
+
+    .footer-comp-details {
+      font-size: 12.5px;
+      color: var(--text-soft);
+      line-height: 1.6;
+    }
+
+    .footer-right {
+      text-align: right;
+    }
+
+    .helpdesk-box {
+      background: var(--surface-subtle);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 12px 18px;
+      display: inline-block;
+      text-align: left;
+    }
+
+    .helpdesk-box-title {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .helpdesk-box-contact {
+      font-size: 13px;
+      color: var(--text-main);
+      font-weight: 600;
+    }
+
+    .helpdesk-box-contact a {
+      color: var(--flow-indigo);
+      text-decoration: none;
+    }
+
+    .helpdesk-box-contact a:hover {
+      text-decoration: underline;
+    }
+
+    /* PRINT STYLESHEET */
+    @media print {
+      .app-header, .sidebar, .sidebar-search-box, .btn-header, .sandbox-controls, .btn-copy {
+        display: none !important;
+      }
+      .content-area {
+        max-width: 100% !important;
+        padding: 0 !important;
+      }
+      .topic-section {
+        box-shadow: none !important;
+        border: 1px solid #ccc !important;
+        page-break-inside: avoid;
+        margin-bottom: 20px !important;
+      }
+      body {
+        background: #ffffff !important;
+        font-size: 11pt !important;
+      }
+    }
+
+    @media (max-width: 1024px) {
+      .sidebar {
+        display: none;
+      }
+      .content-area {
+        max-width: 100%;
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAGŁÓWEK GŁÓWNY -->
+  <header class="app-header">
+    <div class="header-left">
+      <div class="sp-logo">
+        <svg style="width:20px;height:20px;fill:currentColor;" viewBox="0 0 24 24">
+          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+        </svg>
+      </div>
+      <div class="header-titles">
+        <h1>SharePoint M365 & Power Automate</h1>
+        <p>Automatyzacja Obiegów, Alerty KNF & Post-Approval Lockdown</p>
+      </div>
+    </div>
+
+    <div class="header-right">
+      <a href="index.html" class="btn-header" title="Powrót do głównego portalu wiedzy">
+        🏠 Portal Główny
+      </a>
+      <a href="sharepoint_lists_json.html" class="btn-header" title="Przejdź do rejestrów Microsoft Lists">
+        📊 Microsoft Lists JSON
+      </a>
+      <a href="sharepoint_security_permissions.html" class="btn-header" title="Przejdź do przewodnika uprawnień Zero Trust">
+        🛡️ Uprawnienia & Zero Trust
+      </a>
+      <button class="btn-header primary" onclick="window.print()" title="Wydrukuj stronę lub zapisz do PDF">
+        🖨️ Zapisz PDF
+      </button>
+    </div>
+  </header>
+
+  <!-- GŁÓWNY UKŁAD STRONY -->
+  <div class="app-layout">
+
+    <!-- LEWY PASEK BOCZNY (SPIS TREŚCI) -->
+    <aside class="sidebar">
+      <div class="sidebar-search-box">
+        <span class="sidebar-search-icon">🔍</span>
+        <input type="text" id="liveSearch" placeholder="Filtruj tematy i reguły..." oninput="filterContent()">
+      </div>
+
+      <div class="sidebar-nav-title">Spis Treści Modułu</div>
+      <ul class="sidebar-nav" id="sidebarNav">
+        <li><a href="#architektura" class="active"><span class="nav-icon">🏛️</span> 1. Architektura Obiegów w Banku</a></li>
+        <li><a href="#obieg-procedur"><span class="nav-icon">⚡</span> 2. Wielostopniowa Akceptacja</a></li>
+        <li><a href="#numeracja"><span class="nav-icon">🔢</span> 3. Atomowa Numeracja Spraw</a></li>
+        <li><a href="#alerty-knf"><span class="nav-icon">⏰</span> 4. Alerty Rewizji KNF Rek. D</a></li>
+        <li><a href="#lockdown"><span class="nav-icon">🔒</span> 5. Post-Approval Lockdown</a></li>
+        <li><a href="#wyrazenia"><span class="nav-icon">💻</span> 6. Wyrażenia WExpressions & OData</a></li>
+        <li><a href="#audyt-bledy"><span class="nav-icon">🛡️</span> 7. Obsługa Błędów & Run After</a></li>
+        <li><a href="#symulator"><span class="nav-icon">🎮</span> 8. Interaktywny Symulator Obiegu</a></li>
+        <li><a href="#faq"><span class="nav-icon">❓</span> 9. Rozwiązywanie Problemów & FAQ</a></li>
+      </ul>
+    </aside>
+
+    <!-- PRAWY OBSZAR TREŚCI -->
+    <main class="content-area">
+
+      <!-- BANER HERO -->
+      <section class="hero-box">
+        <div class="hero-badge-tag">⚡ Bankowa Automatyzacja Procesów GRC • Power Automate</div>
+        <h2 class="hero-title">
+          Wzorcowe Przepływy Akceptacji, Alerty Rewizji & <span>Bezpieczeństwo Regulacyjne</span>
+        </h2>
+        <p class="hero-subtitle">
+          Projektowanie korporacyjnych przepływów w Microsoft Power Automate dla środowisk bankowych. Zgodność z <strong>KNF Rekomendacja D (G9)</strong>, <strong>DORA (Art. 9)</strong> oraz normą <strong>ISO 27001</strong>. Eliminacja nieskończonych pętli, gwarancja unikalności numeracji dokumentów oraz automatyczne zamrażanie uprawnień do formatu nieedytowalnego.
+        </p>
+
+        <div class="hero-meta-grid">
+          <div class="hero-meta-card">
+            <div class="hero-meta-icon">🏛️</div>
+            <div>
+              <div class="hero-meta-val">KNF Rekomendacja D</div>
+              <div class="hero-meta-lbl">G9: Integralność & Dowodowość</div>
+            </div>
+          </div>
+          <div class="hero-meta-card">
+            <div class="hero-meta-icon">🔒</div>
+            <div>
+              <div class="hero-meta-val">Post-Approval Lock</div>
+              <div class="hero-meta-lbl">Blokada edycji i konwersja PDF/A</div>
+            </div>
+          </div>
+          <div class="hero-meta-card">
+            <div class="hero-meta-icon">🔢</div>
+            <div>
+              <div class="hero-meta-val">Atomowa Numeracja</div>
+              <div class="hero-meta-lbl">Brak duplikatów przy współbieżności</div>
+            </div>
+          </div>
+          <div class="hero-meta-card">
+            <div class="hero-meta-icon">⚡</div>
+            <div>
+              <div class="hero-meta-val">Zero Pętli Zdarzeń</div>
+              <div class="hero-meta-lbl">Trigger Conditions & Service Account</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SEKCJA 1: ARCHITEKTURA OBIEGÓW W BANKU -->
+      <section class="topic-section" id="architektura">
+        <div class="section-header">
+          <div class="section-title-wrap">
+            <div class="section-badge-icon">🏛️</div>
+            <h2>1. Architektura Obiegów w Sektorze Bankowym</h2>
+          </div>
+          <span class="section-tag tag-arch">Architektura GRC</span>
+        </div>
+
+        <p>
+          Wdrażanie automatyzacji w banku wymaga ścisłego rozgraniczenia pomiędzy procesami ad-hoc a procesami krytycznymi dla zgodności regulacyjnej. Power Automate Cloud Flows zapewnia bezkodowe łączenie SharePoint z usługami Microsoft 365, jednak w środowisku regulowanym wymaga wdrożenia zasad Enterprise:
+        </p>
+
+        <div class="flow-steps-grid">
+          <div class="flow-step-card">
+            <span class="step-num-pill">STANDARD 1</span>
+            <div class="step-title">Dedykowane Konto Serwisowe (gMSA / Service Principal)</div>
+            <div class="step-desc">
+              Przepływy produkcyjne <strong>nie mogą działać na tożsamości pracownika</strong>. W przypadku odejścia pracownika z banku przepływ uległby zatrzymaniu. Wymagane jest dedykowane konto serwisowe M365 z licencją per-process lub service principal.
+            </div>
+          </div>
+
+          <div class="flow-step-card">
+            <span class="step-num-pill">STANDARD 2</span>
+            <div class="step-title">Zarządzane Środowiska (Power Platform Managed Environments)</div>
+            <div class="step-desc">
+              Izolacja środowisk Dev, Test i Prod w dedykowanych rozwiązaniach (Solutions). Wdrożenie reguł DLP uniemożliwiających wysyłanie danych bankowych poza tenanta (np. zakaz łączników do Twittera, prywatnego Dysku Google czy Telegrama).
+            </div>
+          </div>
+
+          <div class="flow-step-card">
+            <span class="step-num-pill">STANDARD 3</span>
+            <div class="step-title">Warunki Wyzwalania (Trigger Conditions)</div>
+            <div class="step-desc">
+              Kluczowa technika zapobiegająca nieskończonym pętlom wywołań. Jeśli przepływ aktualizuje właściwości dokumentu SharePoint, wyzwalacz <em>When an item or file is modified</em> musi posiadać warunek filtrujący, by nie uruchamiać się po własnym zapisie.
+            </div>
+          </div>
+        </div>
+
+        <div class="callout callout-danger">
+          <div class="callout-title">🚨 Ryzyko Nieskończonej Pętli Wywołań (Infinite Trigger Loop)</div>
+          Najczęstszym błędem architektonicznym jest wyzwalacz reagujący na modyfikację pliku, który w dalszym kroku modyfikuje kolumnę metadanych (np. zapisuje numer wersji). Bez skonfigurowania <code>Trigger Conditions</code> przepływ uruchomi się tysiące razy, wyczerpując limity Power Platform API (Request Limits) i blokując tenanta!
+        </div>
+      </section>
+
+      <!-- SEKCJA 2: WIELOSTOPNIOWY OBIEG PROCEDUR -->
+      <section class="topic-section" id="obieg-procedur">
+        <div class="section-header">
+          <div class="section-title-wrap">
+            <div class="section-badge-icon">⚡</div>
+            <h2>2. Wielostopniowy Obieg Akceptacji Procedur Bankowych</h2>
+          </div>
+          <span class="section-tag tag-knf">KNF Rek. D & ISO 27001</span>
+        </div>
+
+        <p>
+          Wzorcowy proces akceptacji wewnętrznych aktów normatywnych w banku (procedur, instrukcji stanowiskowych, polityk bezpieczeństwa ICT) łączy podejście <strong>równoległe (opiniowanie merytoryczne)</strong> z <strong>sekwencyjnym (podpis Zarządu lub Dyrektora Pionu)</strong>.
+        </p>
+
+        <div class="table-container">
+          <table class="spec-table">
+            <thead>
+              <tr>
+                <th>Etap Obiegu</th>
+                <th>Rola / Uczestnik</th>
+                <th>Typ Akcji Power Automate</th>
+                <th>Warunek Sukcesu (SLA)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>1. Walidacja Robocza</strong></td>
+                <td>Autor Procedury</td>
+                <td>Automated Trigger (Status: Do Weryfikacji)</td>
+                <td>Wymagane pola wypełnione (CIF, Departament, Właściciel)</td>
+              </tr>
+              <tr>
+                <td><strong>2. Opiniowanie Równoległe</strong></td>
+                <td>Departament Prawny + Compliance + Bezpieczeństwo IT</td>
+                <td><em>Start and wait for an approval</em> (Everyone must approve)</td>
+                <td>100% akceptacji w ciągu 5 dni roboczych</td>
+              </tr>
+              <tr>
+                <td><strong>3. Rozstrzygnięcie Uwag</strong></td>
+                <td>Właściciel Biznesowy</td>
+                <td>Warunek <em>Condition (Outcome contains 'Reject')</em></td>
+                <td>Jeśli odrzucono: powrót do stanu "Korekta Robocza" z uwagami</td>
+              </tr>
+              <tr>
+                <td><strong>4. Zatwierdzenie Końcowe</strong></td>
+                <td>Zarząd Banku / Właściwy Członek Zarządu</td>
+                <td><em>Start and wait for an approval</em> (First to respond)</td>
+                <td>Formalny podpis uchwałą lub decyzją dyrektorską</td>
+              </tr>
+              <tr>
+                <td><strong>5. Publikacja & Lockdown</strong></td>
+                <td>Konto Serwisowe (Automatyczne)</td>
+                <td>SharePoint HTTP REST API + Konwersja PDF/A</td>
+                <td>Nadanie numeru, zamrożenie uprawnień, alert do organizacji</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout callout-info">
+          <div class="callout-title">💡 Dobre Praktyki Akcji Approvals w Power Automate</div>
+          Nigdy nie wpisuj adresów e-mail osób akceptujących „na sztywno” (hardcoding). Odczytuj osoby akceptujące dynamicznie z kolumn typu <em>Person/Group</em> w SharePoint lub z konfiguracji grupy Entra ID przypisanej do danego Departamentu.
+        </div>
+      </section>
+
+      <!-- SEKCJA 3: AUTOMATYCZNA UNIKALNA NUMERACJA SPRAW -->
+      <section class="topic-section" id="numeracja">
+        <div class="section-header">
+          <div class="section-title-wrap">
+            <div class="section-badge-icon">🔢</div>
+            <h2>3. Atomowa Numeracja Spraw i Procedur Bankowych</h2>
+          </div>
+          <span class="section-tag tag-tech">Integralność Danych</span>
+        </div>
+
+        <p>
+          W sektorze bankowym każdy akt wewnętrzny musi posiadać unikalną, ciągłą sygnaturę (np. <code>PROC/GRC/2026/042</code>). Tradycyjne pobieranie ostatniego numeru z biblioteki i dodawanie +1 ulega kolizji (tzw. <em>Race Condition</em>), gdy dwa dokumenty są zatwierdzane jednocześnie przez różnych członków zarządu.
+        </p>
+
+        <h4 style="margin:16px 0 8px 0; font-size:15px; font-weight:700;">Wzorzec Projektowy: Dedykowana Lista Liczników z Blokadą ETag</h4>
+        <p>
+          Aby zapobiec duplikatom, stosuje się dedykowaną, ukrytą listę SharePoint <code>Rejestr_Licznikow</code>. Zamiast liczyć elementy biblioteki, pobieramy jeden rekord licznika, zwiększamy wartość i aktualizujemy z weryfikacją ETag:
+        </p>
+
+        <div class="code-box">
+          <div class="code-box-header">
+            <span>Formuła WExpression – Generowanie Pełnej Sygnatury Bankowej</span>
+            <button class="btn-copy" onclick="copySnippet(this)">Kopiuj</button>
+          </div>
+          <code><span class="code-comment">// Schemat formatu: [TYP]/[DEPARTAMENT]/[ROK]/[NUMER_4_CYFRY]</span><br>
+<span class="code-func">concat</span>(<br>
+&nbsp;&nbsp;<span class="code-prop">triggerOutputs</span>()?[<span class="code-string">'body/TypDokumentu/Value'</span>], <span class="code-string">'/'</span>,<br>
+&nbsp;&nbsp;<span class="code-prop">triggerOutputs</span>()?[<span class="code-string">'body/Departament/Value'</span>], <span class="code-string">'/'</span>,<br>
+&nbsp;&nbsp;<span class="code-func">utcNow</span>(<span class="code-string">'yyyy'</span>), <span class="code-string">'/'</span>,<br>
+&nbsp;&nbsp;<span class="code-func">formatNumber</span>(<span class="code-prop">variables</span>(<span class="code-string">'NowyIndeksLiczbowy'</span>), <span class="code-string">'0000'</span>)<br>
+)<br>
+<span class="code-comment">// Wynik: PROC/COMPLIANCE/2026/0042</span></code>
+        </div>
+      </section>
+
+      <!-- SEKCJA 4: ALERT CYKLU ŻYCIA I REWIZJI KNF REK. D -->
+      <section class="topic-section" id="alerty-knf">
+        <div class="section-header">
+          <div class="section-title-wrap">
+            <div class="section-badge-icon">⏰</div>
+            <h2>4. Monitoring Cyklu Życia & Alerty Rewizji (KNF Rekomendacja D)</h2>
+          </div>
+          <span class="section-tag tag-knf">KNF Rek. D (G9)</span>
+        </div>
+
+        <p>
+          Zgodnie z wytycznymi KNF (Rekomendacja D, Wytyczna 9), bank ma obowiązek zapewnić <strong>aktualność i regularny przegląd</strong> całej dokumentacji operacyjnej i polityk bezpieczeństwa, standardowo nie rzadziej niż raz w roku.
+        </p>
+
+        <h4 style="margin:16px 0 8px 0; font-size:15px; font-weight:700;">Wzorzec Przepływu Cyklicznego (Scheduled Cloud Flow)</h4>
+        <p>
+          Zamiast wysyłać pojedyncze alerty, tworzymy przepływ uruchamiany codziennie o godzinie 06:00 rano, który wykonuje precyzyjne zapytanie OData przeciwko bibliotece procedur:
+        </p>
+
+        <div class="code-box">
+          <div class="code-box-header">
+            <span>OData Filter Query – Wykrywanie Procedur Wymagających Przeglądu</span>
+            <button class="btn-copy" onclick="copySnippet(this)">Kopiuj</button>
+          </div>
+          <code><span class="code-comment">// Pobierz procedury zatwierdzone, których termin przeglądu upływa w ciągu najbliższych 60 dni</span><br>
+<span class="code-prop">Status</span> <span class="code-keyword">eq</span> <span class="code-string">'Zatwierdzona'</span> <span class="code-keyword">and</span> <br>
+<span class="code-prop">Bank_DataPrzegladu</span> <span class="code-keyword">le</span> <span class="code-string">'@{formatDateTime(addDays(utcNow(), 60), 'yyyy-MM-dd')}'</span> <span class="code-keyword">and</span> <br>
+<span class="code-prop">Bank_StatusRewizji</span> <span class="code-keyword">ne</span> <span class="code-string">'W trakcie przeglądu'</span></code>
+        </div>
+
+        <div class="flow-steps-grid">
+          <div class="flow-step-card">
+            <span class="step-num-pill">ALERT T-60 DNI</span>
+            <div class="step-title">Powiadomienie Wstępne</div>
+            <div class="step-desc">Wiadomość Teams / E-mail do Właściciela Procedury z informacją o zbliżającym się terminie rocznego przeglądu.</div>
+          </div>
+          <div class="flow-step-card">
+            <span class="step-num-pill">ALERT T-30 DNI</span>
+            <div class="step-title">Powiadomienie Ponaglające</div>
+            <div class="step-desc">Powiadomienie Właściciela oraz Dyrektora Departamentu. Automatyczne przełączenie statusu na <em>Wymaga Przeglądu</em>.</div>
+          </div>
+          <div class="flow-step-card">
+            <span class="step-num-pill">ALERT T-0 DNI</span>
+            <div class="step-title">Eskalacja Compliance</div>
+            <div class="step-desc">Eskalacja do Zespołu Zgodności (Compliance) z raportem o przekroczeniu terminu ważności procedury regulacyjnej.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SEKCJA 5: POST-APPROVAL LOCKDOWN -->
+      <section class="topic-section" id="lockdown">
+        <div class="section-header">
+          <div class="section-title-wrap">
+            <div class="section-badge-icon">🔒</div>
+            <h2>5. Zamrażanie Uprawnień (Post-Approval Lockdown) & PDF/A</h2>
+          </div>
+          <span class="section-tag tag-sec">Zero Trust & Integralność</span>
+        </div>
+
+        <p>
+          Po formalnym zatwierdzeniu procedury, wersja robocza Word (<code>.docx</code>) nie może pozostać edytowalna. Aby zachować bezwzględną nienaruszalność dokumentu wymaganą przez audytorów KNF, Power Automate wykonuje dwuetapową procedurę:
+        </p>
+
+        <h4 style="margin:16px 0 8px 0; font-size:15px; font-weight:700;">Etap 1: Wywołanie REST API SharePoint – Zerwanie Dziedziczenia i Read-Only</h4>
+        <div class="code-box">
+          <div class="code-box-header">
+            <span>Akcja: Send an HTTP request to SharePoint (POST)</span>
+            <button class="btn-copy" onclick="copySnippet(this)">Kopiuj</button>
+          </div>
+          <code><span class="code-comment">// 1. Odcięcie uprawnień edycyjnych i zachowanie czystego odczytu</span><br>
+<span class="code-prop">Uri</span>: _api/web/lists/getByTitle(<span class="code-string">'Procedury'</span>)/items(@{triggerOutputs()?[<span class="code-string">'body/ID'</span>]})/<span class="code-func">breakroleinheritance</span>(copyRoleAssignments=<span class="code-keyword">true</span>, clearSubscopes=<span class="code-keyword">true</span>)<br>
+<br>
+<span class="code-comment">// 2. Nadanie grupie Właścicieli uprawnień "Tylko do odczytu" (Role Definition ID: 1073741826)</span><br>
+<span class="code-prop">Uri</span>: _api/web/lists/getByTitle(<span class="code-string">'Procedury'</span>)/items(@{triggerOutputs()?[<span class="code-string">'body/ID'</span>]})/roleassignments/<span class="code-func">addroleassignment</span>(principalid=@{variables(<span class="code-string">'OwnersGroupId'</span>)}, roledefid=1073741826)</code>
+        </div>
+
+        <h4 style="margin:20px 0 8px 0; font-size:15px; font-weight:700;">Etap 2: Konwersja do formatu PDF/A i Przeniesienie do Repozytorium Ostatecznego</h4>
+        <p>
+          Wykorzystanie łącznika <em>OneDrive for Business</em> (akcja <em>Convert file using path</em> na PDF) lub dedykowanego łącznika Word Online. Wygenerowany plik PDF z metadanymi sygnatury trafia do biblioteki <code>Baza Wiedzy Procedur (Opublikowane)</code>, a plik źródłowy <code>.docx</code> zostaje zarchiwizowany w repozytorium historycznym.
+        </p>
+      </section>
+
+      <!-- SEKCJA 6: PRZYDATNE WYRAŻENIA WEXPRESSIONS & ODATA -->
+      <section class="topic-section" id="wyrazenia">
+        <div class="section-header">
+          <div class="section-title-wrap">
+            <div class="section-badge-icon">💻</div>
+            <h2>6. Przydatne Wyrażenia Power Automate (WExpressions)</h2>
+          </div>
+          <span class="section-tag tag-tech">Cheat Sheet Wyrażeń</span>
+        </div>
+
+        <p>
+          W środowisku korporacyjnym unika się nadmiarowych kroków (np. pętli <em>Apply to each</em>). Gotowe wyrażenia pozwalają na wydajną manipulację danymi bezpośrednio w polach akcji:
+        </p>
+
+        <div class="table-container">
+          <table class="spec-table">
+            <thead>
+              <tr>
+                <th>Zastosowanie</th>
+                <th>Wyrażenie Power Automate (WExpression)</th>
+                <th>Przykładowy Wynik</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Warunkowy Właściciel (Coalesce)</strong></td>
+                <td><code>coalesce(triggerOutputs()?['body/Bank_Wlasciciel/Email'], 'compliance@bank.pl')</code></td>
+                <td>Zabezpieczenie przed pustym polem</td>
+              </tr>
+              <tr>
+                <td><strong>Data Ważności (+1 Rok)</strong></td>
+                <td><code>addDays(utcNow(), 365, 'yyyy-MM-dd')</code></td>
+                <td><code>2027-10-09</code></td>
+              </tr>
+              <tr>
+                <td><strong>Wycięcie Nazwy bez Rozszerzenia</strong></td>
+                <td><code>first(split(triggerOutputs()?['body/{FilenameWithExtension}'], '.'))</code></td>
+                <td><code>Instrukcja_Kredytowa</code></td>
+              </tr>
+              <tr>
+                <td><strong>Trigger Condition (Brak pętli)</strong></td>
+                <td><code>@not(equals(triggerOutputs()?['body/Editor/Email'], 'sp-service@bank.pl'))</code></td>
+                <td>Ignoruje zapisy konta serwisowego</td>
+              </tr>
+              <tr>
+                <td><strong>Sprawdzenie Czy Użytkownik to Gość</strong></td>
+                <td><code>contains(triggerOutputs()?['body/Editor/Email'], '#ext#')</code></td>
+                <td><code>true / false</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- SEKCJA 7: OBSŁUGA BŁĘDÓW & AUDYT DECYZJI -->
+      <section class="topic-section" id="audyt-bledy">
+        <div class="section-header">
+          <div class="section-title-wrap">
+            <div class="section-badge-icon">🛡️</div>
+            <h2>7. Obsługa Błędów, Reguła "Run After" & Ścieżka Dowodowa</h2>
+          </div>
+          <span class="section-tag tag-sec">Odporność Operacyjna DORA</span>
+        </div>
+
+        <p>
+          Zgodnie z wymogami DORA (Art. 11), systemy automatyzujące kluczowe procesy muszą posiadać mechanizmy odporności na awarie. Jeśli krok zatwierdzenia ulegnie awarii (np. błąd uprawnień lub timeout akcji approvals), przepływ nie może zakończyć się cichym błędem.
+        </p>
+
+        <h4 style="margin:16px 0 8px 0; font-size:15px; font-weight:700;">Wzorzec Obsługi Błędów Scope (Try-Catch Pattern)</h4>
+        <div class="flow-steps-grid">
+          <div class="flow-step-card" style="border-left: 4px solid var(--sp-blue);">
+            <div class="step-title">Scope: TRY</div>
+            <div class="step-desc">
+              Zawiera całą logikę biznesową: pobranie dokumentu, wysłanie akceptacji do Zarządu, wygenerowanie numeru i konwersję do PDF.
+            </div>
+          </div>
+          <div class="flow-step-card" style="border-left: 4px solid var(--rose);">
+            <div class="step-title">Scope: CATCH (Run After: Failed / TimedOut)</div>
+            <div class="step-desc">
+              Uruchamia się <strong>wyłącznie, jeśli Scope TRY zakończył się niepowodzeniem</strong>. Zapisuje błąd w dedykowanej liście logów oraz wysyła pilny alert do CISO/Administratora.
+            </div>
+          </div>
+          <div class="flow-step-card" style="border-left: 4px solid var(--emerald);">
+            <div class="step-title">Scope: FINALLY (Run After: Always)</div>
+            <div class="step-desc">
+              Krok finalizujący: zwalnia ewentualne blokady atomowe licznika i zapisuje sumaryczny rekord w audycie Unified Audit Log.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SEKCJA 8: INTERAKTYWNY SYMULATOR OBIEGU PROCEDURY (LIVE SANDBOX) -->
+      <section class="topic-section" id="symulator">
+        <div class="section-header">
+          <div class="section-title-wrap">
+            <div class="section-badge-icon">🎮</div>
+            <h2>8. Interaktywny Symulator Obiegu Procedury Bankowej</h2>
+          </div>
+          <span class="section-tag tag-tech">Symulator Na Żywo</span>
+        </div>
+
+        <p>
+          Przetestuj krok po kroku zachowanie silnika Power Automate. Zobacz, jak zmieniają się metadane, uprawnienia w SharePoint oraz jak generowane są wpisy w dzienniku audytowym zgodnym z Rekomendacją D KNF:
+        </p>
+
+        <!-- KONTENER SYMULATORA -->
+        <div class="sandbox-container">
+          <div class="sandbox-header">
+            <div class="sandbox-title">
+              <span>⚡ Silnik Obiegu: Procedura Zarządzania Ryzykiem ICT (DORA)</span>
+            </div>
+            <div>
+              <span id="workflowBadgeStatus" class="tag-knf">Stan: Wersja Robocza (Draft)</span>
+            </div>
+          </div>
+
+          <!-- PASEK POSTĘPU PROCESU -->
+          <div class="sandbox-workflow-track">
+            <div class="track-step-node completed" id="node1">
+              1
+              <span class="node-label">Zgłoszenie</span>
+            </div>
+            <div class="track-step-node" id="node2">
+              2
+              <span class="node-label">Compliance</span>
+            </div>
+            <div class="track-step-node" id="node3">
+              3
+              <span class="node-label">Ryzyko & IT</span>
+            </div>
+            <div class="track-step-node" id="node4">
+              4
+              <span class="node-label">Zarząd Banku</span>
+            </div>
+            <div class="track-step-node" id="node5">
+              5
+              <span class="node-label">Lockdown & PDF</span>
+            </div>
+          </div>
+
+          <!-- PANEL AKCJI DLA AKTUALNEGO ETAPU -->
+          <div class="sandbox-stage-panel" id="stagePanel">
+            <div class="stage-title" id="stageTitle">Krok 1: Weryfikacja Formalna Dokumentu</div>
+            <div class="stage-desc" id="stageDesc">
+              Autor złożył projekt procedury w bibliotece. Sprawdzanie kompletności metadanych: Departament = Ryzyko Operacyjne, CIF = 998822, Tajemnica Bankowa = Tak.
+            </div>
+
+            <div class="sandbox-controls" id="stageControls">
+              <button class="btn-sim btn-sim-primary" onclick="advanceStep(true)">
+                ▶ Uruchom Obieg (Wyślij do Compliance)
+              </button>
+            </div>
+          </div>
+
+          <!-- KONSOLA AUDYTU -->
+          <h4 style="font-size:12px; font-weight:700; text-transform:uppercase; color:var(--text-muted); margin-bottom:8px;">
+            Dziennik Zdarzeń Silnika (Audit Trail KNF G9):
+          </h4>
+          <div class="audit-log-terminal" id="auditLogTerminal">
+            <div class="log-line">
+              <span class="log-time">[12:40:01]</span>
+              <span class="log-sys">[TRIGGER]</span>
+              <span class="log-act">Dokument utworzony przez: jan.kowalski@bank.pl. Stan: Roboczy.</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SEKCJA 9: FAQ & ROZWIĄZYWANIE PROBLEMÓW -->
+      <section class="topic-section" id="faq">
+        <div class="section-header">
+          <div class="section-title-wrap">
+            <div class="section-badge-icon">❓</div>
+            <h2>9. Rozwiązywanie Problemów & Najczęstsze Pytania (FAQ)</h2>
+          </div>
+          <span class="section-tag tag-sec">Wsparcie Praktyczne</span>
+        </div>
+
+        <div class="faq-list">
+          <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+              <span>Jak uniknąć przekroczenia limitu 30 dni dla akcji Approvals w Power Automate?</span>
+              <span class="faq-toggle-icon">▼</span>
+            </div>
+            <div class="faq-answer">
+              Domyślny limit czasu oczekiwania na akcję w Power Automate wynosi dokładnie 30 dni. Jeśli osoba akceptująca przebywa na długim urlopie lub sprawa utknie, przepływ zakończy się błędem <em>ActionFailed / TimedOut</em>. Rozwiązaniem bankowym jest zastosowanie pętli <em>Do Until</em> z akcjami <em>Create an approval</em> i odczytywaniem statusu w cyklach tygodniowych z eskalacją do zastępcy, lub podział procesu na dwa niezależne przepływy: rejestrujący i wznawiający na podstawie modyfikacji statusu w liście SharePoint.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+              <span>Czy do akcji "Send an HTTP request to SharePoint" wymagana jest licencja Power Automate Premium?</span>
+              <span class="faq-toggle-icon">▼</span>
+            </div>
+            <div class="faq-answer">
+              <strong>Nie!</strong> Akcja <em>Send an HTTP request to SharePoint</em> wchodzi w skład standardowego łącznika SharePoint i jest w pełni dostępna w ramach standardowej licencji Microsoft 365 (E3/E5). Pozwala ona na wykonywanie zaawansowanych operacji REST API (łamanie uprawnień, zmiana ról, zarządzanie unikalnymi uprawnieniami) bez ponoszenia dodatkowych kosztów licencyjnych na łączniki Premium.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+              <span>Jak zapewnić rozliczalność decyzji akceptacyjnej przed audytem KNF?</span>
+              <span class="faq-toggle-icon">▼</span>
+            </div>
+            <div class="faq-answer">
+              Każda decyzja w akcji Approvals zwraca szczegółowe metadane: dokładny znacznik czasu (Timestamp UTC), tożsamość akceptującego (User Principal Name) oraz opcjonalny komentarz. Po zatwierdzeniu te dane powinny być automatycznie zapisane w chronionych kolumnach SharePoint (np. <code>Bank_Zatwierdzajacy</code>, <code>Bank_DataZatwierdzenia</code>, <code>Bank_KomentarzDecyzji</code>) oraz wklejone do wygenerowanego pliku PDF na karcie metryki dokumentu.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- STOPKA FIRMOWA Z DANYMI -->
+      <footer class="main-footer" id="stopka-kontakt">
+        <div class="footer-left">
+          <div class="footer-comp-name">REMBIASZ GRC Tech Solutions Tomasz Rembiasz</div>
+          <div class="footer-comp-details">
+            NIP: 887-155-01-62 • Tworzenie aplikacji GRC dla Sektora Bankowego (Governance, Risk & Compliance), Oracle APEX, Python, systemy wsparcia procesów.
+          </div>
+          <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">
+            Wydanie: 2026.1 • Przewodnik Automatyzacji Obiegów, Power Automate & GRC SharePoint M365
+          </div>
+        </div>
+
+        <div class="footer-right">
+          <div class="helpdesk-box">
+            <div class="helpdesk-box-title">Kontakt & Doradztwo GRC</div>
+            <div class="helpdesk-box-contact">
+              E-mail: <a href="mailto:trembiasz@gmail.com">trembiasz@gmail.com</a><br>
+              NIP: 887-155-01-62
+            </div>
+          </div>
+        </div>
+      </footer>
+
+    </main>
+  </div>
+
+  <!-- SKRYPTY INTERAKTYWNE -->
+  <script>
+    // Stan symulatora obiegu procedury
+    let currentStep = 1;
+
+    const stepsData = {
+      1: {
+        title: "Krok 1: Weryfikacja Formalna Dokumentu",
+        desc: "Autor złożył projekt procedury w bibliotece. Sprawdzanie kompletności metadanych: Departament = Ryzyko Operacyjne, CIF = 998822, Tajemnica Bankowa = Tak.",
+        badge: "Stan: Weryfikacja Robocza",
+        badgeClass: "tag-knf",
+        actions: [
+          { text: "▶ Uruchom Obieg (Wyślij do Compliance)", type: "primary", approve: true }
+        ],
+        log: "[STEP 1] Metadane zweryfikowane pomyślnie. Przepływ zainicjowany."
+      },
+      2: {
+        title: "Krok 2: Opiniowanie Zespołu Compliance",
+        desc: "Wysłano zadanie akceptacji do Compliance. Weryfikacja zgodności z ustawą o prawie bankowym oraz wymogami KNF.",
+        badge: "Stan: Weryfikacja Compliance",
+        badgeClass: "tag-arch",
+        actions: [
+          { text: "✓ Compliance: Akceptuj", type: "success", approve: true },
+          { text: "✕ Compliance: Zwróć z Uwagami", type: "danger", approve: false }
+        ],
+        log: "[STEP 2] Wysłano zadanie akceptacyjne do grupy: compliance@bank.pl."
+      },
+      3: {
+        title: "Krok 3: Opiniowanie Ryzyka Operacyjnego & IT",
+        desc: "Równoległa akceptacja Departamentu Ryzyka i CISO w zakresie bezpieczeństwa teleinformatycznego (DORA Art. 9).",
+        badge: "Stan: Weryfikacja Ryzyka & IT",
+        badgeClass: "tag-arch",
+        actions: [
+          { text: "✓ Ryzyko & IT: Akceptuj", type: "success", approve: true },
+          { text: "✕ Ryzyko & IT: Zwróć z Uwagami", type: "danger", approve: false }
+        ],
+        log: "[STEP 3] Compliance zaakceptował dokument. Rozpoczęto opiniowanie Ryzyko & IT."
+      },
+      4: {
+        title: "Krok 4: Ostateczny Podpis Członka Zarządu",
+        desc: "Dokument posiada wszystkie opinie pozytywne. Oczekiwanie na formalny podpis Członka Zarządu odpowiedzialnego za Pion Ryzyka.",
+        badge: "Stan: Oczekuje na Zarząd",
+        badgeClass: "tag-knf",
+        actions: [
+          { text: "🏛️ Zarząd: Podpisz i Zatwierdź Procedurę", type: "primary", approve: true },
+          { text: "✕ Zarząd: Odrzuć Procedurę", type: "danger", approve: false }
+        ],
+        log: "[STEP 4] Komplet opinii zgromadzony. Przekazano do Zarządu Banku."
+      },
+      5: {
+        title: "Krok 5: Publikacja, Nadanie Sygnatury & Post-Approval Lockdown",
+        desc: "Procedura weszła w życie! Automatycznie nadano numer PROC/RYZ/2026/0042, zerwano dziedziczenie uprawnień (ReadOnly), wygenerowano PDF/A i zaplanowano alert przeglądu KNF na +365 dni.",
+        badge: "Stan: ZATWIERDZONA & ZABLOKOWANA (PDF/A)",
+        badgeClass: "tag-sec",
+        actions: [
+          { text: "🔄 Resetuj Symulator do Początku", type: "reset", reset: true }
+        ],
+        log: "[SUCCESS] Nadano sygnaturę PROC/RYZ/2026/0042. REST API: Uprawnienia zamrożone (ReadOnly). Utworzono PDF/A."
+      }
+    };
+
+    function advanceStep(approved) {
+      if (!approved) {
+        // Odrzucenie
+        addLogLine("[REJECT]", "Odrzucono dokument. Przepływ wysłał e-mail z uwagami do autora. Status: Do Poprawy.", true);
+        const panel = document.getElementById('stagePanel');
+        document.getElementById('stageTitle').textContent = "⚠️ Dokument Zwrócony do Poprawy";
+        document.getElementById('stageDesc').textContent = "Jeden z recenzentów zgłosił zastrzeżenia formalne. Status zmieniono na 'Korekta Robocza'. Autor musi wprowadzić poprawki i ponownie złożyć dokument.";
+        document.getElementById('workflowBadgeStatus').textContent = "Stan: Do Poprawy (Odrzucony)";
+        document.getElementById('workflowBadgeStatus').className = "tag-sec";
+        document.getElementById('stageControls').innerHTML = `
+          <button class="btn-sim btn-sim-reset" onclick="resetSandbox()">
+            🔄 Rozpocznij ponownie po poprawkach
+          </button>
+        `;
+        return;
+      }
+
+      currentStep++;
+      if (currentStep > 5) {
+        resetSandbox();
+        return;
+      }
+
+      renderStep(currentStep);
+    }
+
+    function renderStep(step) {
+      const data = stepsData[step];
+
+      // Aktualizacja nodów na osi
+      for (let i = 1; i <= 5; i++) {
+        const node = document.getElementById('node' + i);
+        node.className = 'track-step-node';
+        if (i < step) {
+          node.classList.add('completed');
+          node.innerHTML = "✓ <span class='node-label'>" + getNodeLabel(i) + "</span>";
+        } else if (i === step) {
+          node.classList.add('current');
+          node.innerHTML = i + " <span class='node-label'>" + getNodeLabel(i) + "</span>";
+        } else {
+          node.innerHTML = i + " <span class='node-label'>" + getNodeLabel(i) + "</span>";
+        }
+      }
+
+      // Aktualizacja badge'a i panelu
+      const badge = document.getElementById('workflowBadgeStatus');
+      badge.textContent = data.badge;
+      badge.className = data.badgeClass;
+
+      document.getElementById('stageTitle').textContent = data.title;
+      document.getElementById('stageDesc').textContent = data.desc;
+
+      // Przyciski
+      let buttonsHtml = '';
+      data.actions.forEach(act => {
+        if (act.reset) {
+          buttonsHtml += `<button class="btn-sim btn-sim-reset" onclick="resetSandbox()">${act.text}</button>`;
+        } else {
+          const btnClass = act.type === 'primary' ? 'btn-sim-primary' : (act.type === 'success' ? 'btn-sim-success' : 'btn-sim-danger');
+          buttonsHtml += `<button class="btn-sim ${btnClass}" onclick="advanceStep(${act.approve})">${act.text}</button> `;
+        }
+      });
+      document.getElementById('stageControls').innerHTML = buttonsHtml;
+
+      // Log audytowy
+      addLogLine("[SYS]", data.log, false);
+    }
+
+    function getNodeLabel(index) {
+      const labels = ["Zgłoszenie", "Compliance", "Ryzyko & IT", "Zarząd Banku", "Lockdown & PDF"];
+      return labels[index - 1] || "";
+    }
+
+    function addLogLine(tag, message, isAlert) {
+      const terminal = document.getElementById('auditLogTerminal');
+      const time = new Date().toTimeString().split(' ')[0];
+      const div = document.createElement('div');
+      div.className = 'log-line';
+      div.innerHTML = `
+        <span class="log-time">[${time}]</span>
+        <span class="${isAlert ? 'log-alert' : 'log-sys'}">${tag}</span>
+        <span class="${isAlert ? 'log-alert' : 'log-act'}">${message}</span>
+      `;
+      terminal.appendChild(div);
+      terminal.scrollTop = terminal.scrollHeight;
+    }
+
+    function resetSandbox() {
+      currentStep = 1;
+      const terminal = document.getElementById('auditLogTerminal');
+      terminal.innerHTML = `
+        <div class="log-line">
+          <span class="log-time">[${new Date().toTimeString().split(' ')[0]}]</span>
+          <span class="log-sys">[RESET]</span>
+          <span class="log-act">Zresetowano symulator. Przywrócono stan roboczy (Draft).</span>
+        </div>
+      `;
+      renderStep(1);
+    }
+
+    // Kopiowanie snippetów kodu
+    function copySnippet(btn) {
+      const code = btn.closest('.code-box').querySelector('code').innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        const originalText = btn.textContent;
+        btn.textContent = 'Skopiowano!';
+        btn.style.background = '#059669';
+        setTimeout(() => {
+          btn.textContent = originalText;
+          btn.style.background = '#334155';
+        }, 2000);
+      });
+    }
+
+    // Rozwijanie akordeonów FAQ
+    function toggleFaq(element) {
+      const parent = element.parentElement;
+      const isOpen = parent.classList.contains('open');
+      const icon = element.querySelector('.faq-toggle-icon');
+
+      if (isOpen) {
+        parent.classList.remove('open');
+        icon.textContent = '▼';
+      } else {
+        parent.classList.add('open');
+        icon.textContent = '▲';
+      }
+    }
+
+    // Wyszukiwarka Live Search
+    function filterContent() {
+      const input = document.getElementById('liveSearch');
+      const filter = input.value.toLowerCase().trim();
+      const sections = document.querySelectorAll('.topic-section');
+
+      sections.forEach(sec => {
+        if (!filter) {
+          sec.style.display = 'block';
+          return;
+        }
+
+        const text = sec.innerText.toLowerCase();
+        if (text.includes(filter)) {
+          sec.style.display = 'block';
+        } else {
+          sec.style.display = 'none';
+        }
+      });
+    }
+
+    // Scroll-Spy paska bocznego
+    window.addEventListener('scroll', () => {
+      const sections = document.querySelectorAll('.topic-section');
+      const navLinks = document.querySelectorAll('#sidebarNav a');
+      let currentSectionId = '';
+
+      sections.forEach(section => {
+        const rect = section.getBoundingClientRect();
+        if (rect.top <= 120 && rect.bottom >= 120) {
+          currentSectionId = section.getAttribute('id');
+        }
+      });
+
+      if (currentSectionId) {
+        navLinks.forEach(link => {
+          if (link.getAttribute('href') === '#' + currentSectionId) {
+            link.classList.add('active');
+          } else {
+            link.classList.remove('active');
+          }
+        });
+      }
+    });
+  </script>
+</body>
+</html>
