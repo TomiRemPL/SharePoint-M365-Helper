@@ -1,3 +1,4 @@
-# Agent workspace skills (not part of SharePoint repo)
-.agents/skills/
+# Agent workspace skills (generic platform skills)
+.agents/skills/*
+!.agents/skills/sharepoint-content-creator/
 *.log
