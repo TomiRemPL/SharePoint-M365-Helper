@@ -31,23 +31,30 @@
    * Wytyczne zgodności bankowej (KNF, DORA, Tajemnica Bankowa) oraz stałe dane firmy w stopkach.
    * Standaryzowana procedura rejestracji nowych modułów w portalu `index.html`.
 
-3. **`sharepoint_columns_content_types.html` (Galerie Projektanta stron sieci Web)**:
+3. **`sharepoint_lists_json.html` (Microsoft Lists & Rejestry Bankowe JSON)**:
+   * Zastąpienie ryzykownych arkuszy Excela audytowalnymi rejestrami MS Lists (Rejestr Ryzyka ICT & Incydentów DORA).
+   * Gotowe do skopiowania schematy JSON: Pill Badges statusów, dynamiczna macierz ryzyka (Heatmap), dynamiczne wskaźniki SLA (@now).
+   * Formatowanie układu formularza: nagłówek (Header JSON) oraz wielokolumnowy podział na sekcje (Body JSON).
+   * Interaktywny symulator tabeli demo (Live Sandbox) z natychmiastową reakcją stylów i przyciskami symulacji incydentów.
+   * Rozbudowana sekcja FAQ, limity techniczne i zasady odwoływania się do kolumn.
+
+4. **`sharepoint_columns_content_types.html` (Galerie Projektanta stron sieci Web)**:
    * Wyczerpujący podręcznik architektury informacji: *Kolumny witryny* (Site Columns) oraz *Typy zawartości* (Site Content Types).
    * Hierarchia dziedziczenia oparta o nadrzędny `Bankowy Dokument Bazowy`.
    * Trzy gotowe scenariusze bankowe (Kredyty CIF, Compliance & AML, Procedury KNF/DORA).
    * Dwukierunkowa nawigacja: powrót do `index.html` i przełącznik do podręcznika codziennego.
 
-4. **`sharepoint_helper.html` (Podręcznik Codziennej Pracy)**:
+5. **`sharepoint_helper.html` (Podręcznik Codziennej Pracy)**:
    * Asystent codziennej pracy z SharePoint M365 (9 modułów: biblioteki, współedycja, udostępnianie, widoki, OneDrive, kosz, skróty).
    * Wyszukiwarka Live Search, interaktywny akordeon problemów, dwukierunkowa nawigacja do `index.html` i Galerii Projektanta.
 
-5. **`sharepoint_quickstart.html` (Jednostronicowy Cheat Sheet A4)**:
+6. **`sharepoint_quickstart.html` (Jednostronicowy Cheat Sheet A4)**:
    * Sformatowany do dokładnych wymiarów 1 strony A4, zoptymalizowany pod bezpośredni wydruk / PDF (`Ctrl + P`), pasek narzędzi z linkiem powrotnym do `index.html`.
 
-6. **`sharepoint_quickstart.md`**:
+7. **`sharepoint_quickstart.md`**:
    * Podręczna wersja Markdown do wklejenia w Microsoft Teams, OneNote lub intranet.
 
-7. **`README.md` & `.gitignore`**:
+8. **`README.md` & `.gitignore`**:
    * Kompletna dokumentacja projektu i czysta konfiguracja gita.
 
 ---
@@ -59,13 +66,13 @@
 
 ---
 
-## 🚀 Kolejny Krok Implementacyjny (Zgodnie z Decyzją Użytkownika)
-1. **Priorytet 1: `sharepoint_lists_json.html` (Microsoft Lists & Rejestry Bankowe JSON)**:
-   - Zastąpienie Excela audytowalnymi rejestrami MS Lists (Rejestr Ryzyka ICT, Incydenty DORA).
-   - Gotowe kody JSON dla kolumn (Pill badges, wskaźniki SLA, kalkulacja ryzyka - Heatmap).
-   - Formatowanie widoków i wielokolumnowych formularzy w JSON.
+## 🚀 Kolejny Krok Implementacyjny (Roadmapa)
+1. **Priorytet 2: `sharepoint_security_permissions.html` (Bezpieczeństwo, Uprawnienia & Zgodność Zero Trust)**:
+   - Architektura poziomów uprawnień w modelu Zero Trust (w tym rola Audytora bez pobierania).
+   - Zarządzanie dziedziczeniem (zapobieganie łamaniu uprawnień na poziomie elementów / folderów).
+   - Zasady dostępu zewnętrznego (B2B Guest Sharing) a art. 104 Prawa Bankowego i KNF Rek. D.
+   - Procedury inwentaryzacji uprawnień (Access Review) i audyt w Purview.
 2. **Kolejne moduły w roadmapie:**
-   - Bezpieczeństwo, Uprawnienia & Zero Trust (`sharepoint_security_permissions.html`).
    - Obiegi akceptacji i alerty Power Automate (`sharepoint_power_automate.html`).
    - Szablony Word .dotx powiązane z metadanymi Quick Parts (`sharepoint_word_templates.html`).
    - Automatyzacja provisioningu PnP.PowerShell (`sharepoint_pnp_powershell.html` & `.ps1`).

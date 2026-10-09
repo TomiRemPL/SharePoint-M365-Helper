@@ -1,0 +1,1753 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Microsoft Lists & Rejestry Bankowe – Zaawansowane Formatowanie JSON dla SharePoint</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --sp-teal: #038387;
+      --sp-teal-dark: #025356;
+      --sp-teal-light: #f0fdfa;
+      --sp-purple: #7c3aed;
+      --sp-purple-dark: #5b21b6;
+      --sp-purple-light: #f5f3ff;
+      --sp-blue: #0078d4;
+      --sp-blue-dark: #106ebe;
+      --sp-blue-light: #eff6ff;
+      --bg-page: #f8fafc;
+      --surface: #ffffff;
+      --surface-subtle: #f1f5f9;
+      --border: #e2e8f0;
+      --border-focus: #0078d4;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --text-soft: #475569;
+      --emerald: #059669;
+      --emerald-dark: #065f46;
+      --emerald-bg: #ecfdf5;
+      --emerald-border: #a7f3d0;
+      --amber: #d97706;
+      --amber-dark: #92400e;
+      --amber-bg: #fffbeb;
+      --amber-border: #fde68a;
+      --rose: #e11d48;
+      --rose-dark: #9f1239;
+      --rose-bg: #fff1f2;
+      --rose-border: #fecdd3;
+      --indigo: #4f46e5;
+      --indigo-bg: #eef2ff;
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 14px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+      --shadow-md: 0 4px 14px rgba(0,0,0,0.06);
+      --shadow-lg: 0 10px 25px rgba(0,0,0,0.08);
+      --sidebar-width: 290px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: var(--bg-page);
+      color: var(--text-main);
+      line-height: 1.55;
+      font-size: 14.5px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* GŁÓWNY NAGŁÓWEK APLIKACJI */
+    .app-header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      height: 66px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .sp-logo {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #d97706 0%, #ea580c 50%, #7c3aed 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      box-shadow: 0 3px 10px rgba(217, 119, 6, 0.25);
+    }
+
+    .sp-logo svg {
+      width: 20px;
+      height: 20px;
+      fill: currentColor;
+    }
+
+    .app-title h1 {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--text-main);
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+    }
+
+    .app-title p {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .search-box {
+      position: relative;
+      width: 340px;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 7px 12px 7px 34px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 12.5px;
+      background: var(--surface-subtle);
+      color: var(--text-main);
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    .search-box input:focus {
+      background: white;
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 3px rgba(0, 120, 212, 0.12);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 13px;
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-nav-top {
+      background: var(--surface-subtle);
+      border: 1px solid var(--border);
+      color: var(--text-soft);
+      padding: 6px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+      font-weight: 700;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }
+
+    .btn-nav-top:hover {
+      background: white;
+      color: var(--text-main);
+      border-color: #cbd5e1;
+    }
+
+    /* UKŁAD Z PANELEM BOCZNYM */
+    .app-layout {
+      display: flex;
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 24px;
+      gap: 28px;
+    }
+
+    .sidebar {
+      width: var(--sidebar-width);
+      flex-shrink: 0;
+      position: sticky;
+      top: 90px;
+      height: calc(100vh - 114px);
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .sidebar-section-title {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      padding-left: 10px;
+    }
+
+    .nav-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .nav-item a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-soft);
+      text-decoration: none;
+      transition: all 0.15s ease;
+    }
+
+    .nav-item a:hover {
+      background: var(--surface-subtle);
+      color: var(--text-main);
+    }
+
+    .nav-item a.active {
+      background: #fff7ed;
+      color: #c2410c;
+      font-weight: 700;
+      border-left: 3px solid #ea580c;
+    }
+
+    .nav-item a .icon {
+      font-size: 15px;
+      width: 20px;
+      text-align: center;
+    }
+
+    .content-area {
+      flex: 1;
+      min-width: 0;
+    }
+
+    /* BANNER POWITALNY / HERO */
+    .welcome-hero {
+      background: linear-gradient(135deg, #ffffff 0%, #fffbeb 50%, #fef3c7 100%);
+      border: 1px solid #fde68a;
+      border-radius: var(--radius-lg);
+      padding: 26px 30px;
+      margin-bottom: 28px;
+      box-shadow: var(--shadow-sm);
+      position: relative;
+    }
+
+    .welcome-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(217, 119, 6, 0.12);
+      color: var(--amber-dark);
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 12px;
+    }
+
+    .welcome-hero h2 {
+      font-size: 23px;
+      font-weight: 800;
+      color: var(--text-main);
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+
+    .welcome-hero p {
+      font-size: 14px;
+      color: var(--text-soft);
+      line-height: 1.6;
+      max-width: 900px;
+    }
+
+    /* SEKCJE TEMATYCZNE */
+    .topic-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 28px 32px;
+      margin-bottom: 30px;
+      box-shadow: var(--shadow-sm);
+      scroll-margin-top: 80px;
+      transition: all 0.2s;
+    }
+
+    .topic-section:hover {
+      box-shadow: var(--shadow-md);
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1.5px solid var(--surface-subtle);
+      padding-bottom: 14px;
+      margin-bottom: 22px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .section-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-icon-badge {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .section-icon-badge.amber { background: var(--amber-bg); color: var(--amber); }
+    .section-icon-badge.teal { background: var(--sp-teal-light); color: var(--sp-teal); }
+    .section-icon-badge.purple { background: var(--sp-purple-light); color: var(--sp-purple); }
+    .section-icon-badge.blue { background: var(--sp-blue-light); color: var(--sp-blue); }
+    .section-icon-badge.emerald { background: var(--emerald-bg); color: var(--emerald); }
+
+    .section-title-wrap h3 {
+      font-size: 19px;
+      font-weight: 800;
+      color: var(--text-main);
+      letter-spacing: -0.01em;
+    }
+
+    .section-title-wrap p {
+      font-size: 12.5px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .section-reg-pill {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .reg-dora { background: #dbeafe; color: #1e40af; border: 1px solid #bfdbfe; }
+    .reg-knf { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+    .reg-code { background: #f3e8ff; color: #6b21a8; border: 1px solid #e9d5ff; }
+
+    /* PORÓWNANIE EXCEL VS MS LISTS */
+    .compare-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    .compare-card {
+      border-radius: var(--radius-md);
+      padding: 20px;
+      border: 1px solid var(--border);
+    }
+
+    .compare-card.bad {
+      background: #fff1f2;
+      border-color: #fecdd3;
+    }
+
+    .compare-card.good {
+      background: #ecfdf5;
+      border-color: #a7f3d0;
+    }
+
+    .compare-card h4 {
+      font-size: 14.5px;
+      font-weight: 800;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .compare-card.bad h4 { color: #9f1239; }
+    .compare-card.good h4 { color: #065f46; }
+
+    .compare-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      font-size: 13px;
+    }
+
+    .compare-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      line-height: 1.45;
+    }
+
+    /* KARTY SZABLONÓW JSON */
+    .json-template-card {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      margin-bottom: 26px;
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .template-header {
+      background: var(--surface-subtle);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .template-header-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .template-target-tag {
+      font-size: 11px;
+      font-weight: 700;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      padding: 3px 8px;
+      border-radius: 6px;
+      color: var(--text-soft);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .template-body {
+      padding: 22px;
+      display: grid;
+      grid-template-columns: 1fr 1.15fr;
+      gap: 22px;
+    }
+
+    .preview-pane {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .pane-title {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* RENDEROWANIE PILL BADGES W PREVIEW */
+    .preview-render-box {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      flex-grow: 1;
+      justify-content: center;
+    }
+
+    /* STYLIZACJA PILL BADGES DLA SHAREPOINT JSON */
+    .sp-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 14px;
+      width: fit-content;
+    }
+
+    .sp-pill.status-new { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
+    .sp-pill.status-review { background: #fffbeb; color: #b45309; border: 1px solid #fde68a; }
+    .sp-pill.status-approved { background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; }
+    .sp-pill.status-rejected { background: #fff1f2; color: #be123c; border: 1px solid #fecdd3; }
+
+    /* HEATMAPA RYZYKA */
+    .sp-risk-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 5px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 800;
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: 0.02em;
+    }
+
+    .risk-low { background: #dcfce7; color: #15803d; border: 1px solid #86efac; }
+    .risk-med { background: #fef9c3; color: #a16207; border: 1px solid #fde047; }
+    .risk-high { background: #ffedd5; color: #c2410c; border: 1px solid #fdba74; }
+    .risk-crit { background: #ffe4e6; color: #be123c; border: 1px solid #fda4af; animation: pulseCrit 2s infinite; }
+
+    @keyframes pulseCrit {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(225, 29, 72, 0.4); }
+      50% { box-shadow: 0 0 0 4px rgba(225, 29, 72, 0); }
+    }
+
+    /* PASEK SLA & PROGRESS */
+    .sla-progress-box {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      width: 100%;
+    }
+
+    .sla-bar-bg {
+      width: 100%;
+      height: 9px;
+      background: #e2e8f0;
+      border-radius: 6px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .sla-bar-fill {
+      height: 100%;
+      border-radius: 6px;
+      transition: width 0.3s;
+    }
+
+    .sla-label-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-soft);
+    }
+
+    /* KOD JSON & PRZYCISK KOPIOWANIA */
+    .code-pane {
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .code-container {
+      background: #0f172a;
+      border-radius: var(--radius-md);
+      padding: 16px;
+      color: #f8fafc;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      line-height: 1.5;
+      overflow-x: auto;
+      max-height: 290px;
+      overflow-y: auto;
+      border: 1px solid #1e293b;
+    }
+
+    .btn-copy-code {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: #334155;
+      color: #f8fafc;
+      border: 1px solid #475569;
+      border-radius: 6px;
+      padding: 5px 10px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.2s;
+      z-index: 5;
+    }
+
+    .btn-copy-code:hover {
+      background: #475569;
+      color: #ffffff;
+    }
+
+    .btn-copy-code.copied {
+      background: var(--emerald);
+      border-color: var(--emerald);
+      color: white;
+    }
+
+    /* INTERAKTYWNA SYMULACJA LISTY (SANDBOX) */
+    .sandbox-container {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      margin-top: 18px;
+    }
+
+    .sandbox-controls {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+
+    .sandbox-btn {
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: var(--surface-subtle);
+      color: var(--text-soft);
+      transition: all 0.2s;
+    }
+
+    .sandbox-btn:hover {
+      background: #e2e8f0;
+      color: var(--text-main);
+    }
+
+    .sandbox-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      font-size: 13px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .sandbox-table th {
+      background: #f1f5f9;
+      padding: 11px 14px;
+      text-align: left;
+      font-weight: 700;
+      color: var(--text-main);
+      border-bottom: 2px solid var(--border);
+      font-size: 12px;
+    }
+
+    .sandbox-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-soft);
+      vertical-align: middle;
+      background: #ffffff;
+    }
+
+    .sandbox-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .sandbox-table tr:hover td {
+      background: #fafbfc;
+    }
+
+    /* CALLOUTY I ALERTY */
+    .alert-box {
+      border-radius: var(--radius-md);
+      padding: 16px 20px;
+      font-size: 13px;
+      margin-top: 18px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      line-height: 1.55;
+    }
+
+    .alert-box.alert-dora {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      color: #1e3a8a;
+    }
+
+    .alert-box.alert-knf {
+      background: #fee2e2;
+      border: 1px solid #fecaca;
+      color: #991b1b;
+    }
+
+    .alert-box.alert-tip {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      color: #14532d;
+    }
+
+    .alert-icon {
+      font-size: 18px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    /* AKORDEONY FAQ */
+    .faq-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .faq-item {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      transition: all 0.2s;
+    }
+
+    .faq-item.open {
+      border-color: #cbd5e1;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .faq-question {
+      padding: 14px 18px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 700;
+      font-size: 13.5px;
+      color: var(--text-main);
+      user-select: none;
+    }
+
+    .faq-question:hover {
+      background: var(--surface-subtle);
+    }
+
+    .faq-toggle-icon {
+      font-size: 11px;
+      color: var(--text-muted);
+      transition: transform 0.2s;
+    }
+
+    .faq-item.open .faq-toggle-icon {
+      transform: rotate(180deg);
+    }
+
+    .faq-answer {
+      display: none;
+      padding: 0 18px 16px 18px;
+      font-size: 13px;
+      color: var(--text-soft);
+      line-height: 1.6;
+      border-top: 1px solid var(--surface-subtle);
+      background: #fafbfc;
+    }
+
+    .faq-item.open .faq-answer {
+      display: block;
+      padding-top: 12px;
+    }
+
+    /* STOPKA FIRMOWA Z DANYMI */
+    .main-footer {
+      background: white;
+      border-top: 2px solid #ea580c;
+      border-radius: var(--radius-lg);
+      padding: 24px 30px;
+      margin-top: 40px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .footer-left {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .footer-comp-name {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .footer-comp-details {
+      font-size: 12px;
+      color: var(--text-muted);
+      max-width: 650px;
+    }
+
+    .helpdesk-box {
+      background: var(--surface-subtle);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 10px 16px;
+      display: inline-block;
+      text-align: left;
+    }
+
+    .helpdesk-box-title {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #c2410c;
+      margin-bottom: 2px;
+    }
+
+    .helpdesk-box-contact {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .helpdesk-box-contact a {
+      color: var(--sp-blue);
+      text-decoration: none;
+    }
+
+    /* PRINT RULES */
+    @media print {
+      .app-header, .sidebar, .search-box, .btn-copy-code, .header-actions {
+        display: none !important;
+      }
+      .app-layout {
+        padding: 0 !important;
+        display: block !important;
+      }
+      .content-area {
+        max-width: 100% !important;
+      }
+      .topic-section {
+        border: none !important;
+        box-shadow: none !important;
+        page-break-inside: avoid;
+      }
+      .code-container {
+        max-height: none !important;
+        background: #f1f5f9 !important;
+        color: #0f172a !important;
+        border: 1px solid #cbd5e1 !important;
+      }
+    }
+
+    @media (max-width: 1024px) {
+      .sidebar { display: none; }
+      .template-body { grid-template-columns: 1fr; }
+      .compare-grid { grid-template-columns: 1fr; }
+      .app-layout { padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAGŁÓWEK APLIKACJI -->
+  <header class="app-header">
+    <div class="header-left">
+      <div class="sp-logo">
+        <svg viewBox="0 0 24 24">
+          <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
+        </svg>
+      </div>
+      <div class="app-title">
+        <h1>Microsoft Lists & Formatowanie JSON</h1>
+        <p>Zaawansowane Rejestry Ryzyk, Zgodności i Incydentów DORA / KNF</p>
+      </div>
+    </div>
+
+    <!-- Live Search -->
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="liveSearch" placeholder="Szukaj w kodach JSON (np. pill, heatmap, sla, formularz)..." onkeyup="filterContent()">
+    </div>
+
+    <div class="header-actions">
+      <a href="index.html" class="btn-nav-top" title="Powrót do strony głównej portalu wiedzy">
+        <span>🏠</span> Portal Główny
+      </a>
+      <a href="sharepoint_columns_content_types.html" class="btn-nav-top" title="Przejdź do architektury informacji">
+        <span>🏛️</span> Galerie Projektanta
+      </a>
+      <button onclick="window.print()" class="btn-nav-top" style="cursor:pointer;">
+        🖨️ Drukuj / PDF
+      </button>
+    </div>
+  </header>
+
+  <!-- GŁÓWNY UKŁAD Z PANELEM BOCZNYM -->
+  <div class="app-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-section-title">Spis Zagadnień</div>
+      <ul class="nav-list" id="sidebarNav">
+        <li class="nav-item"><a href="#dlaczego-lists" class="active"><span class="icon">📊</span> 1. Excel vs MS Lists</a></li>
+        <li class="nav-item"><a href="#architektura-rejestru"><span class="icon">🛡️</span> 2. Architektura Rejestru</a></li>
+        <li class="nav-item"><a href="#pill-badges"><span class="icon">🏷️</span> 3. Pill Badges Statusów</a></li>
+        <li class="nav-item"><a href="#risk-heatmap"><span class="icon">🔥</span> 4. Macierz Ryzyka Heatmap</a></li>
+        <li class="nav-item"><a href="#sla-progress"><span class="icon">⏱️</span> 5. Paski Postępu i SLA</a></li>
+        <li class="nav-item"><a href="#form-formatting"><span class="icon">📋</span> 6. Układ Formularza JSON</a></li>
+        <li class="nav-item"><a href="#interaktywny-sandbox"><span class="icon">⚡</span> 7. Symulator Na Żywo</a></li>
+        <li class="nav-item"><a href="#faq-troubleshooting"><span class="icon">💡</span> 8. Dobre Praktyki & FAQ</a></li>
+      </ul>
+    </aside>
+
+    <!-- OBSZAR TREŚCI -->
+    <main class="content-area">
+
+      <!-- BANNER POWITALNY -->
+      <section class="welcome-hero">
+        <div class="welcome-badge">🏛️ Bezpieczeństwo Danych & Standardy GRC</div>
+        <h2>Profesjonalne Rejestry Bankowe w Microsoft Lists z Formatowaniem JSON</h2>
+        <p>
+          Zastąp niekontrolowane arkusze kalkulacyjne audytowalnymi bazami Microsoft Lists. Formatowanie deklaratywne JSON umożliwia tworzenie czytelnych dla biznesu wskaźników graficznych (Pill badges, macierze ryzyka DORA, dynamiczne wskaźniki SLA) z zachowaniem pełnej integralności danych i zgodności z <strong>KNF Rekomendacja D</strong>.
+        </p>
+      </section>
+
+      <!-- SEKCJA 1: DLACZEGO MICROSOFT LISTS ZAMIAST EXCELA? -->
+      <section class="topic-section" id="dlaczego-lists">
+        <div class="section-header">
+          <div class="section-title-wrap">
+            <div class="section-icon-badge amber">📊</div>
+            <div>
+              <h3>1. Dlaczego MS Lists zamiast Excela w Bankowości?</h3>
+              <p>Analiza ryzyk operacyjnych i wymogów nadzorczych KNF / DORA</p>
+            </div>
+          </div>
+          <span class="section-reg-pill reg-knf">KNF Rek. D (G9) • DORA Art. 11</span>
+        </div>
+
+        <p style="color:var(--text-soft); font-size:13.5px; line-height:1.6;">
+          Praktyka prowadzenia rejestrów ryzyk, incydentów bezpieczeństwa, upoważnień i umów w plikach <code>.xlsx</code> jest jednym z najczęściej identyfikowanych uchybień podczas audytów KNF i audytów wewnętrznych. Poniższe zestawienie wyjaśnia różnice kluczowe dla Departamentów Compliance i CISO:
+        </p>
+
+        <div class="compare-grid">
+          <div class="compare-card bad">
+            <h4>❌ Ryzyka Arkuszy Excel w Banku</h4>
+            <ul class="compare-list">
+              <li><strong>Brak ścieżki audytowej:</strong> Użytkownik może niepostrzeżenie nadpisać lub skasować komórkę bez zapisu kto, kiedy i co zmienił.</li>
+              <li><strong>Ryzyko usunięcia formuł:</strong> Przypadkowe skasowanie formuły kalkulującej scoring ryzyka niszczy spójność całego rejestru.</li>
+              <li><strong>Brak walidacji danych:</strong> Dowolność wpisywania wartości (np. literówki w nazwie klienta uniemożliwiające agregację).</li>
+              <li><strong>Kolizje współbieżności:</strong> Blokady pliku lub konflikty synchronizacji przy jednoczesnej pracy kilkunastu oficerów.</li>
+            </ul>
+          </div>
+
+          <div class="compare-card good">
+            <h4>✅ Bezpieczeństwo Microsoft Lists</h4>
+            <ul class="compare-list">
+              <li><strong>Niezaprzeczalny Audit Trail:</strong> Każda modyfikacja rejestrowana w historii wersji (kto, data, poprzednia i nowa wartość) oraz w Unified Audit Log.</li>
+              <li><strong>Oddzielenie danych od prezentacji:</strong> Logika formatowania JSON znajduje się w warstwie widoku – użytkownik nie może uszkodzić formuł ani logiki.</li>
+              <li><strong>Wymuszone typowanie:</strong> Ścisłe listy wyboru (Choice), pola odnośników (Lookup) i walidacje uniemożliwiają wprowadzenie błędnych danych.</li>
+              <li><strong>Automatyzacja powiadomień:</strong> Wbudowane reguły i przepływy Power Automate natychmiast informujące Właściciela Ryzyka o incydencie.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="alert-box alert-dora">
+          <span class="alert-icon">⚖️</span>
+          <div>
+            <strong>Wymóg DORA (UE 2022/2554) – Art. 11:</strong> Podmioty finansowe są zobowiązane do utrzymywania scentralizowanego, ustrukturyzowanego rejestru informacji o wszystkich ustaleniach umownych dotyczących korzystania z usług ICT świadczonych przez dostawców zewnętrznych. Microsoft Lists z formatowaniem JSON idealnie spełnia te kryteria bez potrzeby zakupu dedykowanych systemów zewnętrznych.
+          </div>
+        </div>
+      </section>
+
+      <!-- SEKCJA 2: ARCHITEKTURA REJESTRU BANKOWEGO -->
+      <section class="topic-section" id="architektura-rejestru">
+        <div class="section-header">
+          <div class="section-title-wrap">
+            <div class="section-icon-badge teal">🛡️</div>
+            <div>
+              <h3>2. Architektura Rejestru: Bankowy Rejestr Ryzyk ICT & Incydentów DORA</h3>
+              <p>Zalecana struktura kolumn i typów danych dla zachowania standardów audytu</p>
+            </div>
+          </div>
+          <span class="section-reg-pill reg-dora">Struktura Kolumn</span>
+        </div>
+
+        <p style="color:var(--text-soft); font-size:13.5px; line-height:1.6; margin-bottom:16px;">
+          Poniższa specyfikacja określa zestaw pól rekomendowany do utworzenia w liście Microsoft Lists przed wdrożeniem kodów formatujących JSON. Używaj podanych <strong>wewnętrznych nazw systemowych</strong> (Internal Names):
+        </p>
+
+        <table style="width:100%; border-collapse:collapse; font-size:13px; border:1px solid var(--border); border-radius:8px; overflow:hidden;">
+          <thead>
+            <tr style="background:var(--surface-subtle); color:var(--text-main); font-weight:700;">
+              <th style="padding:10px 14px; text-align:left; border-bottom:2px solid var(--border);">Nazwa Wyświetlana</th>
+              <th style="padding:10px 14px; text-align:left; border-bottom:2px solid var(--border);">Nazwa Systemowa (Internal)</th>
+              <th style="padding:10px 14px; text-align:left; border-bottom:2px solid var(--border);">Typ Pola</th>
+              <th style="padding:10px 14px; text-align:left; border-bottom:2px solid var(--border);">Przeznaczenie w GRC</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom:1px solid var(--border);">
+              <td style="padding:10px 14px; font-weight:700;">Identyfikator / Zagrożenie</td>
+              <td style="padding:10px 14px; font-family:'JetBrains Mono'; color:#0284c7;">Title</td>
+              <td style="padding:10px 14px;">Jednowierszowy tekst</td>
+              <td style="padding:10px 14px;">Unikalny kod incydentu (np. <code>INC-DORA-2026-081</code>)</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border); background:#fafbfc;">
+              <td style="padding:10px 14px; font-weight:700;">Status Obsługi</td>
+              <td style="padding:10px 14px; font-family:'JetBrains Mono'; color:#0284c7;">StatusIncydentu</td>
+              <td style="padding:10px 14px;">Wybór (Choice)</td>
+              <td style="padding:10px 14px;">Wartości: <code>Nowy</code>, <code>W analizie</code>, <code>Zaakceptowany</code>, <code>Zablokowany</code></td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border);">
+              <td style="padding:10px 14px; font-weight:700;">Prawdopodobieństwo (P)</td>
+              <td style="padding:10px 14px; font-family:'JetBrains Mono'; color:#0284c7;">Prawdopodobienstwo</td>
+              <td style="padding:10px 14px;">Liczba (1-5)</td>
+              <td style="padding:10px 14px;">1 = Znikome, 3 = Umiarkowane, 5 = Niemal pewne</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border); background:#fafbfc;">
+              <td style="padding:10px 14px; font-weight:700;">Wpływ Biznesowy (W)</td>
+              <td style="padding:10px 14px; font-family:'JetBrains Mono'; color:#0284c7;">WplywBiznesowy</td>
+              <td style="padding:10px 14px;">Liczba (1-5)</td>
+              <td style="padding:10px 14px;">1 = Nieznaczny, 3 = Poważny, 5 = Katastrofalny</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border);">
+              <td style="padding:10px 14px; font-weight:700;">Poziom Ryzyka (P x W)</td>
+              <td style="padding:10px 14px; font-family:'JetBrains Mono'; color:#0284c7;">PoziomRyzyka</td>
+              <td style="padding:10px 14px;">Kolumna obliczana / Liczba</td>
+              <td style="padding:10px 14px;">Formuła: <code>=[Prawdopodobienstwo]*[WplywBiznesowy]</code></td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border); background:#fafbfc;">
+              <td style="padding:10px 14px; font-weight:700;">Termin Usunięcia (SLA)</td>
+              <td style="padding:10px 14px; font-family:'JetBrains Mono'; color:#0284c7;">TerminSLA</td>
+              <td style="padding:10px 14px;">Data i godzina</td>
+              <td style="padding:10px 14px;">Maksymalny dopuszczalny czas mitygacji wg polityki bankowej</td>
+            </tr>
+            <tr>
+              <td style="padding:10px 14px; font-weight:700;">Właściciel Ryzyka</td>
+              <td style="padding:10px 14px; font-family:'JetBrains Mono'; color:#0284c7;">WlascicielRyzyka</td>
+              <td style="padding:10px 14px;">Osoba lub Grupa</td>
+              <td style="padding:10px 14px;">Oficer CISO / Kierownik Departamentu odpowiedzialny za mitygację</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- SEKCJA 3: PILL BADGES STATUSÓW -->
+      <section class="topic-section" id="pill-badges">
+        <div class="section-header">
+          <div class="section-title-wrap">
+            <div class="section-icon-badge purple">🏷️</div>
+            <div>
+              <h3>3. Pill Badges: Nowoczesne Etykiety Statusów w JSON</h3>
+              <p>Formatowanie kolumny wyboru (Choice) z automatyczną zmianą barw i zaokrągleniami</p>
+            </div>
+          </div>
+          <span class="section-reg-pill reg-code">Formatowanie Kolumny JSON</span>
+        </div>
+
+        <p style="color:var(--text-soft); font-size:13.5px; line-height:1.6; margin-bottom:16px;">
+          Formatowanie zastępuje szary, zwykły tekst elegancką „pigułką” (Pill Badge), której kolor, ramka i ikona zmieniają się dynamicznie w oparciu o wartość pola <code>@currentField</code>.
+        </p>
+
+        <div class="json-template-card">
+          <div class="template-header">
+            <div class="template-header-title">
+              <span>Szablon: Status Pill Badge (Nowy / W analizie / Zaakceptowany / Zablokowany)</span>
+            </div>
+            <span class="template-target-tag">Cel: Kolumna [StatusIncydentu]</span>
+          </div>
+
+          <div class="template-body">
+            <!-- PODGLĄD WIZUALNY -->
+            <div class="preview-pane">
+              <div class="pane-title">
+                <span>Podgląd Renderowania w Liście</span>
+                <span style="color:#059669;">● Live CSS Preview</span>
+              </div>
+              <div class="preview-render-box">
+                <div>
+                  <div style="font-size:11px; color:var(--text-muted); margin-bottom:4px;">Gdy wartość = "Nowy":</div>
+                  <span class="sp-pill status-new">● Nowy</span>
+                </div>
+                <div>
+                  <div style="font-size:11px; color:var(--text-muted); margin-bottom:4px;">Gdy wartość = "W analizie":</div>
+                  <span class="sp-pill status-review">⏳ W analizie</span>
+                </div>
+                <div>
+                  <div style="font-size:11px; color:var(--text-muted); margin-bottom:4px;">Gdy wartość = "Zaakceptowany":</div>
+                  <span class="sp-pill status-approved">✓ Zaakceptowany</span>
+                </div>
+                <div>
+                  <div style="font-size:11px; color:var(--text-muted); margin-bottom:4px;">Gdy wartość = "Zablokowany":</div>
+                  <span class="sp-pill status-rejected">✕ Zablokowany</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- KOD DO SKOPIOWANIA -->
+            <div class="code-pane">
+              <button class="btn-copy-code" onclick="copyCode(this, 'code-pill-status')">
+                <span>📋 Kopiuj JSON</span>
+              </button>
+              <pre class="code-container" id="code-pill-status"><code>{
+  "$schema": "https://developer.microsoft.com/json-schemas/sp/v2/column-formatting.schema.json",
+  "elmType": "div",
+  "style": {
+    "display": "inline-flex",
+    "align-items": "center",
+    "padding": "4px 10px",
+    "border-radius": "14px",
+    "font-size": "12px",
+    "font-weight": "700",
+    "letter-spacing": "0.02em",
+    "background-color": "=if(@currentField == 'Nowy', '#eff6ff', if(@currentField == 'W analizie', '#fffbeb', if(@currentField == 'Zaakceptowany', '#ecfdf5', '#fff1f2')))",
+    "color": "=if(@currentField == 'Nowy', '#1d4ed8', if(@currentField == 'W analizie', '#b45309', if(@currentField == 'Zaakceptowany', '#047857', '#be123c')))",
+    "border": "=if(@currentField == 'Nowy', '1px solid #bfdbfe', if(@currentField == 'W analizie', '1px solid #fde68a', if(@currentField == 'Zaakceptowany', '1px solid #a7f3d0', '1px solid #fecdd3')))"
+  },
+  "children": [
+    {
+      "elmType": "span",
+      "style": { "margin-right": "5px" },
+      "txtContent": "=if(@currentField == 'Nowy', '●', if(@currentField == 'W analizie', '⏳', if(@currentField == 'Zaakceptowany', '✓', '✕')))"
+    },
+    {
+      "elmType": "span",
+      "txtContent": "@currentField"
+    }
+  ]
+}</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="alert-box alert-tip">
+          <span class="alert-icon">💡</span>
+          <div>
+            <strong>Jak wdrożyć w SharePoint:</strong> Kliknij nagłówek kolumny w liście ➔ <strong>Ustawienia kolumny</strong> ➔ <strong>Sformatuj tę kolumnę</strong> ➔ na dole kliknij <em>Tryb zaawansowany</em> ➔ wklej powyższy kod JSON i kliknij <strong>Zapisz</strong>.
+          </div>
+        </div>
+      </section>
+
+      <!-- SEKCJA 4: RISK HEATMAP (MACIERZ RYZYKA) -->
+      <section class="topic-section" id="risk-heatmap">
+        <div class="section-header">
+          <div class="section-title-wrap">
+            <div class="section-icon-badge amber">🔥</div>
+            <div>
+              <h3>4. Dynamiczna Macierz Ryzyka (Risk Heatmap w JSON)</h3>
+              <p>Warunkowe kolorowanie poziomu ryzyka z automatyczną kalkulacją i pulsowaniem krytycznym</p>
+            </div>
+          </div>
+          <span class="section-reg-pill reg-dora">DORA Risk Matrix</span>
+        </div>
+
+        <p style="color:var(--text-soft); font-size:13.5px; line-height:1.6; margin-bottom:16px;">
+          W rejestrze DORA poziom ryzyka (iloczyn Prawdopodobieństwo x Wpływ) przyjmuje wartości od 1 do 25. Poniższy format dynamicznie przypisuje klasę barwną i etykietę słowną do wartości liczbowej:
+        </p>
+
+        <div class="json-template-card">
+          <div class="template-header">
+            <div class="template-header-title">
+              <span>Szablon: Heatmapa Poziomu Ryzyka (Low / Med / High / Critical)</span>
+            </div>
+            <span class="template-target-tag">Cel: Kolumna [PoziomRyzyka]</span>
+          </div>
+
+          <div class="template-body">
+            <div class="preview-pane">
+              <div class="pane-title">
+                <span>Podgląd Poziomów Ryzyka</span>
+                <span style="color:#059669;">● Live CSS Preview</span>
+              </div>
+              <div class="preview-render-box">
+                <div>
+                  <div style="font-size:11px; color:var(--text-muted); margin-bottom:4px;">Wartość 1–4 (Niski):</div>
+                  <span class="sp-risk-badge risk-low">NISKIE (Score: 2)</span>
+                </div>
+                <div>
+                  <div style="font-size:11px; color:var(--text-muted); margin-bottom:4px;">Wartość 5–9 (Średni):</div>
+                  <span class="sp-risk-badge risk-med">ŚREDNIE (Score: 6)</span>
+                </div>
+                <div>
+                  <div style="font-size:11px; color:var(--text-muted); margin-bottom:4px;">Wartość 10–15 (Wysoki):</div>
+                  <span class="sp-risk-badge risk-high">WYSOKIE (Score: 12)</span>
+                </div>
+                <div>
+                  <div style="font-size:11px; color:var(--text-muted); margin-bottom:4px;">Wartość 16–25 (Krytyczny – DORA):</div>
+                  <span class="sp-risk-badge risk-crit">⚠️ KRYTYCZNE (Score: 20)</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="code-pane">
+              <button class="btn-copy-code" onclick="copyCode(this, 'code-risk-heatmap')">
+                <span>📋 Kopiuj JSON</span>
+              </button>
+              <pre class="code-container" id="code-risk-heatmap"><code>{
+  "$schema": "https://developer.microsoft.com/json-schemas/sp/v2/column-formatting.schema.json",
+  "elmType": "div",
+  "style": {
+    "display": "inline-flex",
+    "align-items": "center",
+    "justify-content": "center",
+    "padding": "5px 12px",
+    "border-radius": "6px",
+    "font-size": "12px",
+    "font-weight": "800",
+    "font-family": "monospace",
+    "background-color": "=if(@currentField >= 16, '#ffe4e6', if(@currentField >= 10, '#ffedd5', if(@currentField >= 5, '#fef9c3', '#dcfce7')))",
+    "color": "=if(@currentField >= 16, '#be123c', if(@currentField >= 10, '#c2410c', if(@currentField >= 5, '#a16207', '#15803d')))",
+    "border": "=if(@currentField >= 16, '1px solid #fda4af', if(@currentField >= 10, '1px solid #fdba74', if(@currentField >= 5, '1px solid #fde047', '1px solid #86efac')))"
+  },
+  "children": [
+    {
+      "elmType": "span",
+      "txtContent": "=if(@currentField >= 16, '⚠️ KRYTYCZNE (', if(@currentField >= 10, 'WYSOKIE (', if(@currentField >= 5, 'ŚREDNIE (', 'NISKIE ('))) + @currentField + ')'"
+    }
+  ]
+}</code></pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SEKCJA 5: PASKI POSTĘPU I WSKAŹNIK SLA -->
+      <section class="topic-section" id="sla-progress">
+        <div class="section-header">
+          <div class="section-title-wrap">
+            <div class="section-icon-badge blue">⏱️</div>
+            <div>
+              <h3>5. Paski Postępu & Dynamiczny Wskaźnik Upływu SLA</h3>
+              <p>Porównanie z datą bieżącą @now i alarmowanie o zbliżającym się terminie incydentu</p>
+            </div>
+          </div>
+          <span class="section-reg-pill reg-code">Kalkulacja Daty @now</span>
+        </div>
+
+        <p style="color:var(--text-soft); font-size:13.5px; line-height:1.6; margin-bottom:16px;">
+          W bankowości każdy incydent cyberbezpieczeństwa posiada określone w procedurze SLA (np. 4h, 24h, 72h). SharePoint pozwala za pomocą <code>@now</code> obliczyć liczbę milisekund do upływu terminu i natychmiast zaalarmować zespół operacyjny:
+        </p>
+
+        <div class="json-template-card">
+          <div class="template-header">
+            <div class="template-header-title">
+              <span>Szablon: SLA Countdown Badge (Przed terminem / &lt;24h / Przekroczone)</span>
+            </div>
+            <span class="template-target-tag">Cel: Kolumna daty [TerminSLA]</span>
+          </div>
+
+          <div class="template-body">
+            <div class="preview-pane">
+              <div class="pane-title">
+                <span>Podgląd Stanu SLA w Zależności od Terminu</span>
+                <span style="color:#059669;">● Live CSS Preview</span>
+              </div>
+              <div class="preview-render-box">
+                <div class="sla-progress-box">
+                  <div class="sla-label-row">
+                    <span>SLA: Zgodne z harmonogramem (&gt;24h)</span>
+                    <span style="color:#15803d;">Bezpieczne</span>
+                  </div>
+                  <div class="sla-bar-bg">
+                    <div class="sla-bar-fill" style="width: 85%; background:#10b981;"></div>
+                  </div>
+                </div>
+
+                <div class="sla-progress-box">
+                  <div class="sla-label-row">
+                    <span>SLA: Mniej niż 24h do końca!</span>
+                    <span style="color:#b45309;">Uwaga</span>
+                  </div>
+                  <div class="sla-bar-bg">
+                    <div class="sla-bar-fill" style="width: 30%; background:#f59e0b;"></div>
+                  </div>
+                </div>
+
+                <div class="sla-progress-box">
+                  <div class="sla-label-row">
+                    <span>SLA: PRZEKROCZONE! (Audyt Alert)</span>
+                    <span style="color:#be123c;">PRZETERMINOWANE</span>
+                  </div>
+                  <div class="sla-bar-bg">
+                    <div class="sla-bar-fill" style="width: 100%; background:#ef4444;"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="code-pane">
+              <button class="btn-copy-code" onclick="copyCode(this, 'code-sla-format')">
+                <span>📋 Kopiuj JSON</span>
+              </button>
+              <pre class="code-container" id="code-sla-format"><code>{
+  "$schema": "https://developer.microsoft.com/json-schemas/sp/v2/column-formatting.schema.json",
+  "elmType": "div",
+  "style": {
+    "display": "inline-flex",
+    "align-items": "center",
+    "gap": "6px",
+    "padding": "4px 10px",
+    "border-radius": "6px",
+    "font-size": "12px",
+    "font-weight": "700",
+    "background-color": "=if(@currentField < @now, '#fee2e2', if(@currentField < @now + 86400000, '#fef3c7', '#ecfdf5'))",
+    "color": "=if(@currentField < @now, '#991b1b', if(@currentField < @now + 86400000, '#92400e', '#065f46'))",
+    "border": "=if(@currentField < @now, '1px solid #fca5a5', if(@currentField < @now + 86400000, '1px solid #fde68a', '1px solid #a7f3d0'))"
+  },
+  "children": [
+    {
+      "elmType": "span",
+      "txtContent": "=if(@currentField < @now, '🚨 PO TERMINIE: ', if(@currentField < @now + 86400000, '⚠️ PILNE (<24h): ', '⏱️ W TERMINIE: ')) + toLocaleDateString(@currentField)"
+    }
+  ]
+}</code></pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SEKCJA 6: UKŁAD FORMULARZA LISTY W JSON -->
+      <section class="topic-section" id="form-formatting">
+        <div class="section-header">
+          <div class="section-title-wrap">
+            <div class="section-icon-badge purple">📋</div>
+            <div>
+              <h3>6. Profesjonalny Układ Formularza (JSON Form Formatter)</h3>
+              <p>Podział długiego formularza na sekcje wielokolumnowe, baner nagłówka i stopkę klauzuli poufności</p>
+            </div>
+          </div>
+          <span class="section-reg-pill reg-code">Formatowanie Formularza</span>
+        </div>
+
+        <p style="color:var(--text-soft); font-size:13.5px; line-height:1.6; margin-bottom:16px;">
+          Microsoft Lists pozwala zreorganizować standardowy, płaski formularz edycji elementu w logiczne zakładki i sekcje biznesowe. Konfiguruje się to w menu: <em>Edytuj formularz ➔ Skonfiguruj układ</em>.
+        </p>
+
+        <!-- KOD FORMULARZA: BODY (SEKCJE) -->
+        <div class="json-template-card">
+          <div class="template-header">
+            <div class="template-header-title">
+              <span>Szablon: Wielokolumnowe Sekcje Formularza (Ciało / Body JSON)</span>
+            </div>
+            <span class="template-target-tag">Cel: Sekcja "Treść" (Body Layout)</span>
+          </div>
+          <div style="padding:18px 22px; position:relative;">
+            <button class="btn-copy-code" onclick="copyCode(this, 'code-form-body')">
+              <span>📋 Kopiuj JSON</span>
+            </button>
+            <pre class="code-container" id="code-form-body"><code>[
+  {
+    "displayname": "1. Identyfikacja Incydentu & Zdarzenia DORA",
+    "fields": [
+      "Title",
+      "KategoriaZagrozenia",
+      "StatusIncydentu"
+    ]
+  },
+  {
+    "displayname": "2. Ocena Skali Ryzyka & SLA",
+    "fields": [
+      "Prawdopodobienstwo",
+      "WplywBiznesowy",
+      "PoziomRyzyka",
+      "TerminSLA"
+    ]
+  },
+  {
+    "displayname": "3. Odpowiedzialność & Nadzór GRC",
+    "fields": [
+      "WlascicielRyzyka",
+      "PodstawaPrawna",
+      "PlanMitygacji"
+    ]
+  }
+]</code></pre>
+          </div>
+        </div>
+
+        <!-- KOD FORMULARZA: HEADER (NAGŁÓWEK) -->
+        <div class="json-template-card">
+          <div class="template-header">
+            <div class="template-header-title">
+              <span>Szablon: Profesjonalny Nagłówek Formularza (Header JSON)</span>
+            </div>
+            <span class="template-target-tag">Cel: Sekcja "Nagłówek" (Header Layout)</span>
+          </div>
+          <div style="padding:18px 22px; position:relative;">
+            <button class="btn-copy-code" onclick="copyCode(this, 'code-form-header')">
+              <span>📋 Kopiuj JSON</span>
+            </button>
+            <pre class="code-container" id="code-form-header"><code>{
+  "elmType": "div",
+  "style": {
+    "background": "linear-gradient(135deg, #038387 0%, #0078d4 100%)",
+    "padding": "18px 20px",
+    "color": "white",
+    "border-radius": "8px",
+    "margin-bottom": "14px",
+    "box-shadow": "0 2px 6px rgba(0,0,0,0.1)"
+  },
+  "children": [
+    {
+      "elmType": "div",
+      "style": { "font-size": "11px", "font-weight": "800", "letter-spacing": "0.05em", "text-transform": "uppercase", "opacity": "0.85" },
+      "txtContent": "REJESTR BEZPIECZEŃSTWA ICT • PROCEDURA DORA / KNF"
+    },
+    {
+      "elmType": "div",
+      "style": { "font-size": "17px", "font-weight": "800", "margin-top": "4px" },
+      "txtContent": "=['Formularz Incydentu: ' + if([$Title] != '', [$Title], 'Nowy Wpis')]"
+    },
+    {
+      "elmType": "div",
+      "style": { "font-size": "12px", "margin-top": "4px", "opacity": "0.9" },
+      "txtContent": "Wszystkie modyfikacje są rejestrowane w bankowym rejestrze audytowym."
+    }
+  ]
+}</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- SEKCJA 7: INTERAKTYWNY SYMULATOR NA ŻYWO (SANDBOX) -->
+      <section class="topic-section" id="interaktywny-sandbox">
+        <div class="section-header">
+          <div class="section-title-wrap">
+            <div class="section-icon-badge emerald">⚡</div>
+            <div>
+              <h3>7. Interaktywny Symulator Listy Bankowej (Live Sandbox)</h3>
+              <p>Przetestuj działanie stylów JSON w czasie rzeczywistym bezpośrednio w przeglądarce</p>
+            </div>
+          </div>
+          <span class="section-reg-pill reg-code">Interaktywna Symulacja</span>
+        </div>
+
+        <p style="color:var(--text-soft); font-size:13.5px; line-height:1.6;">
+          Poniższa tabela odtwarza dokładny wygląd Microsoft Lists z zastosowanymi regułami formatowania JSON. Zmień status lub kliknij przyciski symulacji, aby zobaczyć dynamiczną rekonfigurację stylów:
+        </p>
+
+        <div class="sandbox-container">
+          <div class="sandbox-controls">
+            <span style="font-size:12.5px; font-weight:700; color:var(--text-main);">Szybka symulacja zdarzeń:</span>
+            <button class="sandbox-btn" onclick="simulateIncident('add')">➕ Dodaj nowy incydent krytyczny</button>
+            <button class="sandbox-btn" onclick="simulateIncident('resolve')">✓ Zaakceptuj wszystkie incydenty</button>
+            <button class="sandbox-btn" onclick="simulateIncident('reset')">🔄 Zresetuj tabelę demo</button>
+          </div>
+
+          <table class="sandbox-table" id="demoListsTable">
+            <thead>
+              <tr>
+                <th style="width: 25%;">Identyfikator Zagrożenia</th>
+                <th style="width: 20%;">Kategoria</th>
+                <th style="width: 18%;">Status Incydentu</th>
+                <th style="width: 18%;">Poziom Ryzyka (DORA)</th>
+                <th style="width: 19%;">Termin SLA</th>
+              </tr>
+            </thead>
+            <tbody id="demoTableBody">
+              <!-- Renderowane dynamicznie przez JS -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- SEKCJA 8: DOBRE PRAKTYKI & FAQ -->
+      <section class="topic-section" id="faq-troubleshooting">
+        <div class="section-header">
+          <div class="section-title-wrap">
+            <div class="section-icon-badge amber">💡</div>
+            <div>
+              <h3>8. Dobre Praktyki, Najczęstsze Błędy & FAQ</h3>
+              <p>Praktyczne wskazówki dla administratorów i twórców formularzy</p>
+            </div>
+          </div>
+          <span class="section-reg-pill reg-knf">Troubleshooting</span>
+        </div>
+
+        <div class="faq-list">
+          <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+              <span>Dlaczego mój kod JSON nie działa i wyświetla błąd składni (JSON Parsing Error)?</span>
+              <span class="faq-toggle-icon">▼</span>
+            </div>
+            <div class="faq-answer">
+              Najczęstszym błędem jest używanie niedozwolonych cudzysłowów drukarskich (tzw. curly quotes <code>„”</code>) zamiast czystych cudzysłowów programistycznych <code>""</code> lub brak przecinka między właściwościami obiektu. Drugim powodem jest użycie nazwy wyświetlanej (Display Name) zamiast wewnętrznej nazwy technicznej kolumny (Internal Name, np. <code>[$Status_x0020_Incydentu]</code> zamiast <code>[$Status Incydentu]</code>).
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+              <span>Czy formatowanie JSON modyfikuje wartości przechowywane w bazie danych?</span>
+              <span class="faq-toggle-icon">▼</span>
+            </div>
+            <div class="faq-answer">
+              <strong>Nie.</strong> Formatowanie JSON działa wyłącznie w warstwie prezentacji (interfejsu użytkownika w przeglądarce). Wartości w bazie danych, historii wersji oraz przy eksporcie do Power BI / Excela pozostają surowymi, niemodyfikowanymi danymi. Jest to kluczowe z punktu widzenia audytu KNF, ponieważ nie zachodzi ryzyko przekłamania surowych wpisów.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+              <span>Jak odwołać się do innych kolumn w formacie kolumny bieżącej?</span>
+              <span class="faq-toggle-icon">▼</span>
+            </div>
+            <div class="faq-answer">
+              Do wartości bieżącej kolumny odwołujesz się słowem kluczowym <code>@currentField</code>. Aby odwołać się do innej kolumny w tym samym wierszu (np. pobrać datę SLA podczas kolorowania statusu), użyj składni <code>[$NazwaWewnetrznaKolumny]</code>. Pamiętaj, że odwoływana kolumna musi być dodana do bieżącego widoku listy, w przeciwnym razie SharePoint zwróci pustą wartość.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+              <span>Czy formatowanie kolumn JSON działa w aplikacji mobilnej Microsoft Lists / Teams?</span>
+              <span class="faq-toggle-icon">▼</span>
+            </div>
+            <div class="faq-answer">
+              Tak! Od wersji schematu v2 (<code>column-formatting.schema.json</code>) formatowanie JSON jest w pełni respektowane w aplikacji mobilnej Microsoft Lists na iOS/Android oraz w kartach list osadzonych w kanałach Microsoft Teams.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- STOPKA FIRMOWA Z DANYMI -->
+      <footer class="main-footer" id="stopka-kontakt">
+        <div class="footer-left">
+          <div class="footer-comp-name">REMBIASZ GRC Tech Solutions Tomasz Rembiasz</div>
+          <div class="footer-comp-details">
+            NIP: 887-155-01-62 • Tworzenie aplikacji GRC dla Sektora Bankowego (Governance, Risk & Compliance), Oracle APEX, Python, systemy wsparcia procesów.
+          </div>
+          <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">
+            Wydanie: 2026.1 • Przewodnik Microsoft Lists & Formatowania JSON (Sektor Regulowany & Bankowy)
+          </div>
+        </div>
+
+        <div class="footer-right">
+          <div class="helpdesk-box">
+            <div class="helpdesk-box-title">Kontakt & Doradztwo GRC</div>
+            <div class="helpdesk-box-contact">
+              E-mail: <a href="mailto:trembiasz@gmail.com">trembiasz@gmail.com</a><br>
+              NIP: 887-155-01-62
+            </div>
+          </div>
+        </div>
+      </footer>
+
+    </main>
+
+  </div>
+
+  <!-- SKRYPTY INTERAKTYWNE -->
+  <script>
+    // Baza demo incydentów dla interaktywnego symulatora
+    const defaultIncidents = [
+      { id: "INC-DORA-2026-001", cat: "Dostawca ICT Cloud", status: "W analizie", score: 15, sla: "Za 18 godzin" },
+      { id: "INC-DORA-2026-002", cat: "Awaria Infrastruktury", status: "Zaakceptowany", score: 4, sla: "Za 4 dni" },
+      { id: "INC-DORA-2026-003", cat: "Cyberatak (DDoS)", status: "Nowy", score: 20, sla: "🚨 PO TERMINIE (2h)" },
+      { id: "INC-DORA-2026-004", cat: "Naruszenie RODO / Dane", status: "Zablokowany", score: 12, sla: "Za 28 godzin" }
+    ];
+
+    let currentIncidents = JSON.parse(JSON.stringify(defaultIncidents));
+
+    // Renderowanie tabeli demo w symulatorze
+    function renderDemoTable() {
+      const tbody = document.getElementById('demoTableBody');
+      tbody.innerHTML = '';
+
+      currentIncidents.forEach((item, index) => {
+        const tr = document.createElement('tr');
+
+        // Status Pill
+        let pillClass = 'status-new';
+        let pillIcon = '●';
+        if (item.status === 'W analizie') { pillClass = 'status-review'; pillIcon = '⏳'; }
+        else if (item.status === 'Zaakceptowany') { pillClass = 'status-approved'; pillIcon = '✓'; }
+        else if (item.status === 'Zablokowany') { pillClass = 'status-rejected'; pillIcon = '✕'; }
+
+        // Risk Heatmap Badge
+        let riskClass = 'risk-low';
+        let riskLabel = 'NISKIE';
+        if (item.score >= 16) { riskClass = 'risk-crit'; riskLabel = '⚠️ KRYTYCZNE'; }
+        else if (item.score >= 10) { riskClass = 'risk-high'; riskLabel = 'WYSOKIE'; }
+        else if (item.score >= 5) { riskClass = 'risk-med'; riskLabel = 'ŚREDNIE'; }
+
+        // SLA
+        let slaStyle = 'color:#065f46; background:#ecfdf5; border:1px solid #a7f3d0;';
+        if (item.sla.includes('PO TERMINIE')) {
+          slaStyle = 'color:#991b1b; background:#fee2e2; border:1px solid #fca5a5;';
+        } else if (item.sla.includes('18 godzin')) {
+          slaStyle = 'color:#92400e; background:#fef3c7; border:1px solid #fde68a;';
+        }
+
+        tr.innerHTML = `
+          <td style="font-weight:700; font-family:'JetBrains Mono'; color:#0f172a;">${item.id}</td>
+          <td>${item.cat}</td>
+          <td>
+            <span class="sp-pill ${pillClass}">
+              ${pillIcon} ${item.status}
+            </span>
+          </td>
+          <td>
+            <span class="sp-risk-badge ${riskClass}">
+              ${riskLabel} (${item.score})
+            </span>
+          </td>
+          <td>
+            <span style="display:inline-block; padding:3px 8px; border-radius:4px; font-size:11.5px; font-weight:700; ${slaStyle}">
+              ${item.sla}
+            </span>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Obsługa symulatora
+    function simulateIncident(action) {
+      if (action === 'add') {
+        const nextId = "INC-DORA-2026-0" + (currentIncidents.length + 1).toString().padStart(2, '0');
+        currentIncidents.unshift({
+          id: nextId,
+          cat: "Kluczowy Dostawca ICT (Core Banking)",
+          status: "Nowy",
+          score: 25,
+          sla: "🚨 PO TERMINIE (Natychmiast)"
+        });
+      } else if (action === 'resolve') {
+        currentIncidents.forEach(item => {
+          item.status = "Zaakceptowany";
+          item.score = 2;
+          item.sla = "Zakończone";
+        });
+      } else if (action === 'reset') {
+        currentIncidents = JSON.parse(JSON.stringify(defaultIncidents));
+      }
+      renderDemoTable();
+    }
+
+    // Kopiowanie kodu JSON do schowka
+    function copyCode(button, elementId) {
+      const codeElement = document.getElementById(elementId);
+      const textToCopy = codeElement.innerText;
+
+      navigator.clipboard.writeText(textToCopy).then(() => {
+        const originalText = button.innerHTML;
+        button.innerHTML = '✓ Skopiowano!';
+        button.classList.add('copied');
+        setTimeout(() => {
+          button.innerHTML = originalText;
+          button.classList.remove('copied');
+        }, 2000);
+      }).catch(err => {
+        alert('Nie udało się automatycznie skopiować tekstu. Zaznacz kod i użyj Ctrl+C.');
+      });
+    }
+
+    // Rozwijanie akordeonów FAQ
+    function toggleFaq(element) {
+      const parent = element.parentElement;
+      const isOpen = parent.classList.contains('open');
+      const icon = element.querySelector('.faq-toggle-icon');
+
+      if (isOpen) {
+        parent.classList.remove('open');
+        icon.textContent = '▼';
+      } else {
+        parent.classList.add('open');
+        icon.textContent = '▲';
+      }
+    }
+
+    // Wyszukiwarka Live Search
+    function filterContent() {
+      const input = document.getElementById('liveSearch');
+      const filter = input.value.toLowerCase().trim();
+      const sections = document.querySelectorAll('.topic-section');
+
+      sections.forEach(sec => {
+        if (!filter) {
+          sec.style.display = 'block';
+          return;
+        }
+
+        const text = sec.innerText.toLowerCase();
+        if (text.includes(filter)) {
+          sec.style.display = 'block';
+        } else {
+          sec.style.display = 'none';
+        }
+      });
+    }
+
+    // Scroll-Spy paska bocznego
+    window.addEventListener('scroll', () => {
+      const sections = document.querySelectorAll('.topic-section');
+      const navLinks = document.querySelectorAll('#sidebarNav a');
+      let currentSectionId = '';
+
+      sections.forEach(section => {
+        const rect = section.getBoundingClientRect();
+        if (rect.top <= 120 && rect.bottom >= 120) {
+          currentSectionId = section.getAttribute('id');
+        }
+      });
+
+      if (currentSectionId) {
+        navLinks.forEach(link => {
+          if (link.getAttribute('href') === '#' + currentSectionId) {
+            link.classList.add('active');
+          } else {
+            link.classList.remove('active');
+          }
+        });
+      }
+    });
+
+    // Inicjalizacja przy ładowaniu
+    document.addEventListener('DOMContentLoaded', () => {
+      renderDemoTable();
+    });
+  </script>
+</body>
+</html>
