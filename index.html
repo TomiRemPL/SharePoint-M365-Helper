@@ -936,7 +936,7 @@
         <div class="metric-card">
           <div class="metric-icon-box emerald">✓</div>
           <div class="metric-info">
-            <div class="metric-num">5 Modułów</div>
+            <div class="metric-num">6 Modułów</div>
             <div class="metric-label">Dostępne do wdrożenia</div>
           </div>
         </div>
@@ -944,7 +944,7 @@
         <div class="metric-card">
           <div class="metric-icon-box purple">🚀</div>
           <div class="metric-info">
-            <div class="metric-num">4 Moduły</div>
+            <div class="metric-num">3 Moduły</div>
             <div class="metric-label">W planie rozwoju (Roadmapa)</div>
           </div>
         </div>
@@ -1165,7 +1165,7 @@
         <div class="card-top">
           <div class="card-icon-box" style="background:#fee2e2; color:#e11d48;">🛡️</div>
           <div class="card-badges">
-            <span class="status-badge planned">⏱️ W przygotowaniu</span>
+            <span class="status-badge available">● Dostępny 1.0</span>
             <span class="category-label">Bezpieczeństwo & Audyt</span>
           </div>
         </div>
@@ -1186,9 +1186,9 @@
           <span class="tag-pill">#Purview</span>
         </div>
         <div class="card-footer-action">
-          <button class="btn-action-card btn-view-spec" onclick="openSpecModal('security-permissions')">
-            Zobacz zakres modułu (Wkrótce) 📋
-          </button>
+          <a href="sharepoint_security_permissions.html" class="btn-action-card btn-open">
+            Otwórz przewodnik bezpieczeństwa →
+          </a>
         </div>
       </article>
 
@@ -1322,37 +1322,37 @@
               <td><span class="reg-badge reg-knf">KNF Rekomendacja D</span> (G7)</td>
               <td>Kontrola tożsamości, zasada minimalnych uprawnień (Need-to-know), eliminacja kont współdzielonych.</td>
               <td>Precyzyjne poziomy uprawnień, blokada anonymous sharing, integracja z Entra ID i dostępem warunkowym.</td>
-              <td><strong>Bezpieczeństwo & Uprawnienia</strong></td>
+              <td><a href="sharepoint_security_permissions.html" style="color:var(--sp-blue); font-weight:700; text-decoration:none;">Bezpieczeństwo & Uprawnienia →</a></td>
             </tr>
             <tr>
               <td><span class="reg-badge reg-knf">KNF Rekomendacja D</span> (G9)</td>
               <td>Zapewnienie integralności danych, wersjonowanie i ścieżka audytowa zmian w procedurach bankowych.</td>
               <td>Wymuszone wersjonowanie główne/pomocnicze, logi Unified Audit Log, zatwierdzanie dokumentów (Content Approval).</td>
-              <td><strong>Podręcznik Codziennej Pracy</strong></td>
+              <td><a href="sharepoint_helper.html" style="color:var(--sp-blue); font-weight:700; text-decoration:none;">Podręcznik Codziennej Pracy →</a></td>
             </tr>
             <tr>
               <td><span class="reg-badge reg-dora">DORA (UE 2022/2554)</span> (Art. 9)</td>
               <td>Ochrona i zapobieganie: Klasyfikacja zasobów informacyjnych ICT oraz zarządzanie ryzykiem operacyjnym.</td>
               <td>Standaryzowane Typy Zawartości z metadanymi poziomu ryzyka, klasyfikacją poufności i cyklem życia.</td>
-              <td><strong>Galerie Projektanta (Architektura)</strong></td>
+              <td><a href="sharepoint_columns_content_types.html" style="color:var(--sp-blue); font-weight:700; text-decoration:none;">Galerie Projektanta (Architektura) →</a></td>
             </tr>
             <tr>
               <td><span class="reg-badge reg-dora">DORA (UE 2022/2554)</span> (Art. 11)</td>
               <td>Rejestr incydentów operacyjnych i ryzyk dostawców usług ICT w ustrukturyzowanej formie.</td>
               <td>Dedykowane rejestry w Microsoft Lists z formatowaniem JSON, obliczaniem SLA i automatycznym powiadamianiem.</td>
-              <td><strong>Lists & Rejestry JSON</strong></td>
+              <td><a href="sharepoint_lists_json.html" style="color:var(--sp-blue); font-weight:700; text-decoration:none;">Lists & Rejestry JSON →</a></td>
             </tr>
             <tr>
               <td><span class="reg-badge reg-pb">Prawo Bankowe</span> (Art. 104)</td>
               <td>Tajemnica Bankowa: Bezwzględna ochrona danych klientów i transakcji przed nieuprawnionym ujawnieniem.</td>
               <td>Etykiety poufności Purview, blokada pobierania na urządzenia prywatne (MAM), izolacja bibliotek kredytowych.</td>
-              <td><strong>Galerie Projektanta / CIF</strong></td>
+              <td><a href="sharepoint_columns_content_types.html" style="color:var(--sp-blue); font-weight:700; text-decoration:none;">Galerie Projektanta / CIF →</a></td>
             </tr>
             <tr>
               <td><span class="reg-badge reg-iso">ISO/IEC 27001:2022</span> (A.5.12)</td>
               <td>Klasyfikacja informacji i etykietowanie dokumentów zgodnie z przyjętą polityką bezpieczeństwa.</td>
               <td>Wstrzykiwanie metadanych SharePoint do nagłówków plików Word za pomocą Quick Parts i szablonów .dotx.</td>
-              <td><strong>Szablony Word & Quick Parts</strong></td>
+              <td><span style="color:var(--text-muted); font-weight:600;">Szablony Word & Quick Parts (Wkrótce)</span></td>
             </tr>
           </tbody>
         </table>
@@ -1393,6 +1393,7 @@
           <li><a href="sharepoint_helper.html">Podręcznik Codziennej Pracy</a></li>
           <li><a href="sharepoint_columns_content_types.html">Galerie Projektanta (Architektura)</a></li>
           <li><a href="sharepoint_lists_json.html">Microsoft Lists & Rejestry JSON</a></li>
+          <li><a href="sharepoint_security_permissions.html">Bezpieczeństwo & Uprawnienia Zero Trust</a></li>
           <li><a href="sharepoint_quickstart.html">Ściąga A4 do Druku (PDF)</a></li>
           <li><a href="sharepoint_quickstart.md">Ściąga Markdown dla Teams</a></li>
           <li><a href="https://github.com/TomiRemPL/SharePoint-M365-Helper" target="_blank" rel="noopener noreferrer">Repozytorium GitHub ↗</a></li>

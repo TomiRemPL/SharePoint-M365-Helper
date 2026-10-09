@@ -1,0 +1,1386 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SharePoint M365 – Bezpieczeństwo, Uprawnienia & Zero Trust w Sektorze Bankowym</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --sp-teal: #038387;
+      --sp-teal-dark: #025356;
+      --sp-teal-light: #f0fdfa;
+      --sp-purple: #7c3aed;
+      --sp-purple-dark: #5b21b6;
+      --sp-purple-light: #f5f3ff;
+      --sp-blue: #0078d4;
+      --sp-blue-dark: #106ebe;
+      --sp-blue-light: #eff6ff;
+      --bg-page: #f8fafc;
+      --surface: #ffffff;
+      --surface-subtle: #f1f5f9;
+      --border: #e2e8f0;
+      --border-focus: #e11d48;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --text-soft: #475569;
+      --emerald: #059669;
+      --emerald-dark: #065f46;
+      --emerald-bg: #ecfdf5;
+      --emerald-border: #a7f3d0;
+      --amber: #d97706;
+      --amber-dark: #92400e;
+      --amber-bg: #fffbeb;
+      --amber-border: #fde68a;
+      --rose: #e11d48;
+      --rose-dark: #9f1239;
+      --rose-bg: #fff1f2;
+      --rose-border: #fecdd3;
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 14px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+      --shadow-md: 0 4px 14px rgba(0,0,0,0.06);
+      --shadow-lg: 0 10px 25px rgba(0,0,0,0.08);
+      --sidebar-width: 290px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: var(--bg-page);
+      color: var(--text-main);
+      line-height: 1.55;
+      font-size: 14.5px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* GŁÓWNY NAGŁÓWEK APLIKACJI */
+    .app-header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      height: 66px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .sp-logo {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #e11d48 0%, #be123c 50%, #4c1d95 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      box-shadow: 0 3px 10px rgba(225, 29, 72, 0.28);
+    }
+
+    .sp-logo svg {
+      width: 20px;
+      height: 20px;
+      fill: currentColor;
+    }
+
+    .app-title h1 {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--text-main);
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+    }
+
+    .app-title p {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .search-box {
+      position: relative;
+      width: 340px;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 7px 12px 7px 34px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 12.5px;
+      background: var(--surface-subtle);
+      color: var(--text-main);
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    .search-box input:focus {
+      background: white;
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.12);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 13px;
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-nav-top {
+      background: var(--surface-subtle);
+      border: 1px solid var(--border);
+      color: var(--text-soft);
+      padding: 6px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+      font-weight: 700;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }
+
+    .btn-nav-top:hover {
+      background: white;
+      color: var(--text-main);
+      border-color: #cbd5e1;
+    }
+
+    /* UKŁAD Z PANELEM BOCZNYM */
+    .app-layout {
+      display: flex;
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 24px;
+      gap: 28px;
+    }
+
+    .sidebar {
+      width: var(--sidebar-width);
+      flex-shrink: 0;
+      position: sticky;
+      top: 90px;
+      height: calc(100vh - 114px);
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .sidebar-section-title {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      padding-left: 10px;
+    }
+
+    .nav-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .nav-item a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-soft);
+      text-decoration: none;
+      transition: all 0.15s ease;
+    }
+
+    .nav-item a:hover {
+      background: var(--surface-subtle);
+      color: var(--text-main);
+    }
+
+    .nav-item a.active {
+      background: #fff1f2;
+      color: #be123c;
+      font-weight: 700;
+      border-left: 3px solid #e11d48;
+    }
+
+    .nav-item a .icon {
+      font-size: 15px;
+      width: 20px;
+      text-align: center;
+    }
+
+    .content-area {
+      flex: 1;
+      min-width: 0;
+    }
+
+    /* BANNER HERO */
+    .welcome-hero {
+      background: linear-gradient(135deg, #ffffff 0%, #fff1f2 50%, #ffe4e6 100%);
+      border: 1px solid #fecdd3;
+      border-radius: var(--radius-lg);
+      padding: 26px 30px;
+      margin-bottom: 28px;
+      box-shadow: var(--shadow-sm);
+      position: relative;
+    }
+
+    .welcome-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(225, 29, 72, 0.12);
+      color: var(--rose-dark);
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 12px;
+    }
+
+    .welcome-hero h2 {
+      font-size: 23px;
+      font-weight: 800;
+      color: var(--text-main);
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+
+    .welcome-hero p {
+      font-size: 14px;
+      color: var(--text-soft);
+      line-height: 1.6;
+      max-width: 920px;
+    }
+
+    /* SEKCJE TEMATYCZNE */
+    .topic-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 28px 32px;
+      margin-bottom: 30px;
+      box-shadow: var(--shadow-sm);
+      scroll-margin-top: 80px;
+      transition: all 0.2s;
+    }
+
+    .topic-section:hover {
+      box-shadow: var(--shadow-md);
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1.5px solid var(--surface-subtle);
+      padding-bottom: 14px;
+      margin-bottom: 22px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .section-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-icon-badge {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .section-icon-badge.rose { background: var(--rose-bg); color: var(--rose); }
+    .section-icon-badge.purple { background: var(--sp-purple-light); color: var(--sp-purple); }
+    .section-icon-badge.amber { background: var(--amber-bg); color: var(--amber); }
+    .section-icon-badge.blue { background: var(--sp-blue-light); color: var(--sp-blue); }
+    .section-icon-badge.emerald { background: var(--emerald-bg); color: var(--emerald); }
+
+    .section-title-wrap h3 {
+      font-size: 19px;
+      font-weight: 800;
+      color: var(--text-main);
+      letter-spacing: -0.01em;
+    }
+
+    .section-title-wrap p {
+      font-size: 12.5px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .section-reg-pill {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .reg-knf { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+    .reg-dora { background: #dbeafe; color: #1e40af; border: 1px solid #bfdbfe; }
+    .reg-pb { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
+
+    /* TABELA MACIERZY UPRAWNIEŃ */
+    .perm-table-wrapper {
+      overflow-x: auto;
+      margin-top: 14px;
+    }
+
+    .perm-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      font-size: 13px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .perm-table th {
+      background: var(--surface-subtle);
+      padding: 11px 14px;
+      text-align: left;
+      font-weight: 700;
+      color: var(--text-main);
+      border-bottom: 2px solid var(--border);
+    }
+
+    .perm-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-soft);
+      vertical-align: middle;
+      background: #ffffff;
+    }
+
+    .perm-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .perm-table tr:hover td {
+      background: #fafbfc;
+    }
+
+    .role-badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 11.5px;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .role-owner { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
+    .role-member { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
+    .role-visitor { background: #dbeafe; color: #1e40af; border: 1px solid #bfdbfe; }
+    .role-auditor { background: #f3e8ff; color: #6b21a8; border: 1px solid #d8b4fe; }
+
+    .perm-check { color: #059669; font-weight: 800; font-size: 14px; }
+    .perm-cross { color: #e11d48; font-weight: 800; font-size: 14px; }
+
+    /* KARTY ZŁOTEJ REGUŁY DZIEDZICZENIA */
+    .rules-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .rule-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 18px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .rule-card.warning-card {
+      border-left: 4px solid var(--rose);
+      background: #fffdfd;
+    }
+
+    .rule-card.good-card {
+      border-left: 4px solid var(--emerald);
+      background: #fdfffe;
+    }
+
+    .rule-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .rule-desc {
+      font-size: 13px;
+      color: var(--text-soft);
+      line-height: 1.5;
+    }
+
+    /* INTERAKTYWNY KALKULATOR RYZYKA UPRAWNIEŃ */
+    .audit-calculator {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      margin-top: 18px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .calc-question {
+      margin-bottom: 18px;
+      padding-bottom: 14px;
+      border-bottom: 1px dashed var(--border);
+    }
+
+    .calc-question label {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--text-main);
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .calc-options {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .calc-btn-opt {
+      padding: 8px 14px;
+      border-radius: 6px;
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: var(--surface-subtle);
+      color: var(--text-soft);
+      transition: all 0.2s;
+    }
+
+    .calc-btn-opt:hover {
+      background: #e2e8f0;
+      color: var(--text-main);
+    }
+
+    .calc-btn-opt.selected {
+      background: var(--text-main);
+      color: white;
+      border-color: var(--text-main);
+    }
+
+    .calc-result-box {
+      margin-top: 20px;
+      padding: 20px;
+      border-radius: var(--radius-md);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .calc-result-box.risk-low {
+      background: #ecfdf5;
+      border: 1px solid #a7f3d0;
+      color: #065f46;
+    }
+
+    .calc-result-box.risk-high {
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      color: #92400e;
+    }
+
+    .calc-result-box.risk-crit {
+      background: #fff1f2;
+      border: 1px solid #fecdd3;
+      color: #9f1239;
+    }
+
+    .calc-result-title {
+      font-size: 16px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .calc-result-desc {
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    /* ALERTY I CALLOUTY */
+    .alert-box {
+      border-radius: var(--radius-md);
+      padding: 16px 20px;
+      font-size: 13px;
+      margin-top: 18px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      line-height: 1.55;
+    }
+
+    .alert-box.alert-knf {
+      background: #fee2e2;
+      border: 1px solid #fecaca;
+      color: #991b1b;
+    }
+
+    .alert-box.alert-pb {
+      background: #fef3c7;
+      border: 1px solid #fde68a;
+      color: #92400e;
+    }
+
+    .alert-box.alert-tip {
+      background: #ecfdf5;
+      border: 1px solid #a7f3d0;
+      color: #065f46;
+    }
+
+    .alert-icon {
+      font-size: 18px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    /* AKORDEONY FAQ */
+    .faq-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .faq-item {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      transition: all 0.2s;
+    }
+
+    .faq-item.open {
+      border-color: #cbd5e1;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .faq-question {
+      padding: 14px 18px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 700;
+      font-size: 13.5px;
+      color: var(--text-main);
+      user-select: none;
+    }
+
+    .faq-question:hover {
+      background: var(--surface-subtle);
+    }
+
+    .faq-toggle-icon {
+      font-size: 11px;
+      color: var(--text-muted);
+      transition: transform 0.2s;
+    }
+
+    .faq-item.open .faq-toggle-icon {
+      transform: rotate(180deg);
+    }
+
+    .faq-answer {
+      display: none;
+      padding: 0 18px 16px 18px;
+      font-size: 13px;
+      color: var(--text-soft);
+      line-height: 1.6;
+      border-top: 1px solid var(--surface-subtle);
+      background: #fafbfc;
+    }
+
+    .faq-item.open .faq-answer {
+      display: block;
+      padding-top: 12px;
+    }
+
+    /* STOPKA FIRMOWA Z DANYMI */
+    .main-footer {
+      background: white;
+      border-top: 2px solid #e11d48;
+      border-radius: var(--radius-lg);
+      padding: 24px 30px;
+      margin-top: 40px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .footer-left {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .footer-comp-name {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .footer-comp-details {
+      font-size: 12px;
+      color: var(--text-muted);
+      max-width: 650px;
+    }
+
+    .helpdesk-box {
+      background: var(--surface-subtle);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 10px 16px;
+      display: inline-block;
+      text-align: left;
+    }
+
+    .helpdesk-box-title {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #be123c;
+      margin-bottom: 2px;
+    }
+
+    .helpdesk-box-contact {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .helpdesk-box-contact a {
+      color: var(--sp-blue);
+      text-decoration: none;
+    }
+
+    /* PRINT RULES */
+    @media print {
+      .app-header, .sidebar, .search-box, .header-actions {
+        display: none !important;
+      }
+      .app-layout {
+        padding: 0 !important;
+        display: block !important;
+      }
+      .content-area {
+        max-width: 100% !important;
+      }
+      .topic-section {
+        border: none !important;
+        box-shadow: none !important;
+        page-break-inside: avoid;
+      }
+    }
+
+    @media (max-width: 1024px) {
+      .sidebar { display: none; }
+      .app-layout { padding: 16px; }
+      .rules-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAGŁÓWEK APLIKACJI -->
+  <header class="app-header">
+    <div class="header-left">
+      <div class="sp-logo">
+        <svg viewBox="0 0 24 24">
+          <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/>
+        </svg>
+      </div>
+      <div class="app-title">
+        <h1>SharePoint M365 – Bezpieczeństwo & Zero Trust</h1>
+        <p>Architektura Uprawnień, Zgodność z KNF Rek. D, DORA & Tajemnicą Bankową</p>
+      </div>
+    </div>
+
+    <!-- Live Search -->
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="liveSearch" placeholder="Szukaj w uprawnieniach (np. audytor, dziedziczenie, linki, goście)..." onkeyup="filterContent()">
+    </div>
+
+    <div class="header-actions">
+      <a href="index.html" class="btn-nav-top" title="Powrót do strony głównej portalu wiedzy">
+        <span>🏠</span> Portal Główny
+      </a>
+      <a href="sharepoint_columns_content_types.html" class="btn-nav-top" title="Przejdź do architektury informacji">
+        <span>🏛️</span> Galerie Projektanta
+      </a>
+      <button onclick="window.print()" class="btn-nav-top" style="cursor:pointer;">
+        🖨️ Drukuj / PDF
+      </button>
+    </div>
+  </header>
+
+  <!-- GŁÓWNY UKŁAD Z PANELEM BOCZNYM -->
+  <div class="app-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-section-title">Spis Zagadnień</div>
+      <ul class="nav-list" id="sidebarNav">
+        <li class="nav-item"><a href="#zero-trust-intro" class="active"><span class="icon">🛡️</span> 1. Filozofia Zero Trust</a></li>
+        <li class="nav-item"><a href="#poziomy-uprawnien"><span class="icon">👥</span> 2. Matryca Uprawnień</a></li>
+        <li class="nav-item"><a href="#rola-audytor"><span class="icon">👁️</span> 3. Dedykowana Rola Audytor</a></li>
+        <li class="nav-item"><a href="#higiena-dziedziczenia"><span class="icon">🌳</span> 4. Higiena Dziedziczenia</a></li>
+        <li class="nav-item"><a href="#dostep-zewnetrzny"><span class="icon">🔗</span> 5. Udostępnianie & Goście B2B</a></li>
+        <li class="nav-item"><a href="#purview-dlp"><span class="icon">🏷️</span> 6. Purview, Szyfrowanie & DLP</a></li>
+        <li class="nav-item"><a href="#audyt-kalkulator"><span class="icon">⚡</span> 7. Kalkulator Ryzyka KNF</a></li>
+        <li class="nav-item"><a href="#faq-uprawnienia"><span class="icon">💡</span> 8. Dobre Praktyki & FAQ</a></li>
+      </ul>
+    </aside>
+
+    <!-- OBSZAR TREŚCI -->
+    <main class="content-area">
+
+      <!-- BANNER POWITALNY -->
+      <section class="welcome-hero">
+        <div class="welcome-badge">🛡️ Cyberbezpieczeństwo & KNF Rekomendacja D</div>
+        <h2>Zarządzanie Uprawnieniami i Ochrona Danych w Modelu Zero Trust</h2>
+        <p>
+          Kompleksowy przewodnik projektowania architektury dostępu do zasobów SharePoint & Microsoft 365 w sektorze bankowym. Zasada wiedzy koniecznej (Need-to-Know), eliminacja niekontrolowanego udostępniania zewnętrznego, ochrona tajemnicy bankowej (art. 104 Prawa Bankowego) oraz weryfikacja zgodności z rozporządzeniem <strong>DORA</strong> i wytycznymi <strong>KNF</strong>.
+        </p>
+      </section>
+
+      <!-- SEKCJA 1: ZERO TRUST A SEKTOR BANKOWY -->
+      <section class="topic-section" id="zero-trust-intro">
+        <div class="section-header">
+          <div class="section-title-wrap">
+            <div class="section-icon-badge rose">🛡️</div>
+            <div>
+              <h3>1. Filozofia Zero Trust w SharePoint M365 a Regulacje Bankowe</h3>
+              <p>Zasada najmniejszych uprawnień (Least Privilege) i tożsamość jako nowy perymetr obrony</p>
+            </div>
+          </div>
+          <span class="section-reg-pill reg-knf">KNF Rek. D (G7) • DORA Art. 9</span>
+        </div>
+
+        <p style="color:var(--text-soft); font-size:13.5px; line-height:1.6;">
+          Tradycyjny model bezpieczeństwa obwodowego (zaufana sieć wewnętrzna banku vs niezaufany Internet) jest w erze pracy hybrydowej i chmury Microsoft 365 całkowicie niewystarczający. Architektura SharePoint w banku musi realizować 3 fundamenty <strong>Zero Trust</strong>:
+        </p>
+
+        <div class="rules-grid">
+          <div class="rule-card">
+            <div class="rule-title"><span>🔍</span> Jawna Weryfikacja (Verify Explicitly)</div>
+            <div class="rule-desc">
+              Zawsze uwierzytelniaj i autoryzuj na podstawie wszystkich dostępnych punktów danych: tożsamości użytkownika, lokalizacji, kondycji urządzenia (Intune compliant), wrażliwości dokumentu i anomalii behawioralnych.
+            </div>
+          </div>
+
+          <div class="rule-card">
+            <div class="rule-title"><span>🗝️</span> Minimalne Uprawnienia (Least Privilege)</div>
+            <div class="rule-desc">
+              Ogranicz dostęp za pomocą Just-In-Time (JIT) i Just-Enough-Access (JEA). Zapewnij dostęp wyłącznie do tych bibliotek, które są niezbędne do wykonywania bieżących obowiązków służbowych (Zasada Need-to-Know).
+            </div>
+          </div>
+
+          <div class="rule-card">
+            <div class="rule-title"><span>🚨</span> Zakładaj Naruszenie (Assume Breach)</div>
+            <div class="rule-desc">
+              Minimalizuj promień rażenia (Blast Radius) poprzez segmentację bibliotek, szyfrowanie plików etykietami Purview i stały monitoring zdarzeń masowego pobierania danych w SOC/SIEM.
+            </div>
+          </div>
+        </div>
+
+        <div class="alert-box alert-knf">
+          <span class="alert-icon">⚖️</span>
+          <div>
+            <strong>KNF Rekomendacja D – Rek. G7.1 & G7.2:</strong> Bank powinien posiadać sformalizowane zasady przydzielania i odbierania uprawnień w systemach ICT, oparte o zasadę wiedzy koniecznej (need-to-know) oraz zasadę minimalnych uprawnień. Uprawnienia muszą być rozliczane indywidualnie, a konta współdzielone są zabronione.
+          </div>
+        </div>
+      </section>
+
+      <!-- SEKCJA 2: MATRYCA POZIOMÓW UPRAWNIEŃ -->
+      <section class="topic-section" id="poziomy-uprawnien">
+        <div class="section-header">
+          <div class="section-title-wrap">
+            <div class="section-icon-badge purple">👥</div>
+            <div>
+              <h3>2. Matryca Uprawnień: Standardowe Role vs Realia Bankowe</h3>
+              <p>Porównanie poziomów dostępu i dlaczego rola "Edycja" w banku wymaga ograniczenia</p>
+            </div>
+          </div>
+          <span class="section-reg-pill reg-knf">Zarządzanie Rolami</span>
+        </div>
+
+        <p style="color:var(--text-soft); font-size:13.5px; line-height:1.6; margin-bottom:16px;">
+          Standardowe poziomy uprawnień w SharePoint Online są zaprojektowane dla otwartej współpracy korporacyjnej, co w banku rodzi istotne ryzyka. Poniższa matryca przedstawia optymalną konfigurację:
+        </p>
+
+        <div class="perm-table-wrapper">
+          <table class="perm-table">
+            <thead>
+              <tr>
+                <th style="width: 22%;">Poziom Uprawnień</th>
+                <th style="width: 18%;">Grupa SharePoint</th>
+                <th style="width: 40%;">Zakres Operacji</th>
+                <th style="width: 20%;">Rekomendacja Bankowa</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="role-badge role-owner">Pełna Kontrola</span></td>
+                <td>Właściciele witryny</td>
+                <td>Zarządzanie uprawnieniami, tworzenie list, kasowanie witryny, zmiana struktury metadanych.</td>
+                <td><span style="color:#be123c; font-weight:700;">Max. 2 osoby</span> (Administrator witryny / CISO)</td>
+              </tr>
+              <tr>
+                <td><span class="role-badge role-member">Edycja (Standard)</span></td>
+                <td>Członkowie witryny</td>
+                <td>Dodawanie, edycja, <strong>usuwanie bibliotek</strong>, kasowanie list, zmiana kolumn.</td>
+                <td><span style="color:#b45309; font-weight:700;">⚠️ Zablokuj w Banku</span> – za wysokie uprawnienia</td>
+              </tr>
+              <tr>
+                <td><span class="role-badge role-member" style="background:#ecfdf5; color:#047857; border-color:#a7f3d0;">Współtworzenie (Contribute)</span></td>
+                <td>Zastępuje "Edycję"</td>
+                <td>Dodawanie i modyfikacja plików, brak uprawnień do niszczenia struktury biblioteki i usuwania list.</td>
+                <td><span style="color:#047857; font-weight:700;">✓ Zalecany Standard</span> dla pracowników biznesowych</td>
+              </tr>
+              <tr>
+                <td><span class="role-badge role-visitor">Odczyt (Read)</span></td>
+                <td>Odwiedzający</td>
+                <td>Podgląd, otwieranie plików, pobieranie na dysk lokalny, drukowanie.</td>
+                <td>Dla pozostałych działów potrzebujących dostępu do regulacji</td>
+              </tr>
+              <tr>
+                <td><span class="role-badge role-auditor">Tylko Podgląd (Restricted)</span></td>
+                <td>Audyt / Kontrola</td>
+                <td>Podgląd dokumentu wyłącznie w przeglądarce Office Online. <strong>Zakaz pobierania i kopiowania.</strong></td>
+                <td><span style="color:#6b21a8; font-weight:700;">★ Standard GRC</span> dla kontroli wewnętrznej i KNF</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- SEKCJA 3: DEDYKOWANA ROLA AUDYTOR (RESTRICTED VIEW) -->
+      <section class="topic-section" id="rola-audytor">
+        <div class="section-header">
+          <div class="section-title-wrap">
+            <div class="section-icon-badge emerald">👁️</div>
+            <div>
+              <h3>3. Dedykowana Rola Bankowa: "Audytor – Tylko Podgląd bez Pobierania"</h3>
+              <p>Konfiguracja poziomu uprawnień blokującego wyciek danych (Block Download)</p>
+            </div>
+          </div>
+          <span class="section-reg-pill reg-pb">Art. 104 Prawo Bankowe</span>
+        </div>
+
+        <p style="color:var(--text-soft); font-size:13.5px; line-height:1.6; margin-bottom:16px;">
+          Podczas inspekcji KNF lub audytu zewnętrznego audytorzy muszą mieć wgląd do dokumentacji kredytowej (CIF), analiz ryzyka czy instrukcji bezpieczeństwa, jednak <strong>nie powinni mieć technicznej możliwości pobrania tych plików na nośniki zewnętrzne</strong>.
+        </p>
+
+        <div class="rules-grid">
+          <div class="rule-card good-card">
+            <div class="rule-title"><span>🛡️</span> Czym jest poziom "Wyświetlanie z ograniczeniami" (Restricted View)?</div>
+            <div class="rule-desc">
+              Jest to wbudowany lub konfigurowalny poziom uprawnień, który pozwala użytkownikom na wyświetlanie stron i dokumentów <strong>wyłącznie w przeglądarce internetowej</strong> (Office Online / PDF Viewer). 
+              <br><br>
+              Użytkownik z tym poziomem:
+              <ul style="padding-left:18px; margin-top:6px;">
+                <li>Nie widzi przycisku <strong>„Pobierz” (Download)</strong></li>
+                <li>Nie może zsynchronizować biblioteki przez <strong>OneDrive Sync</strong></li>
+                <li>Nie może wydrukować pliku z poziomu przeglądarki</li>
+                <li>Nie może zaznaczyć i skopiować tekstu ze schowka</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="rule-card">
+            <div class="rule-title"><span>⚙️</span> Jak utworzyć rolę w SharePoint Online?</div>
+            <div class="rule-desc">
+              1. Przejdź do: <em>Ustawienia witryny &gt; Uprawnienia witryny &gt; Poziomy uprawnień</em>.
+              <br>
+              2. Kliknij: <em>Dodaj poziom uprawnień</em> i nadaj nazwę: <code>Bank_Audytor_BezPobierania</code>.
+              <br>
+              3. Zaznacz wyłącznie flagi:
+              <ul style="padding-left:18px; margin-top:6px; font-family:'JetBrains Mono'; font-size:11.5px;">
+                <li>✓ Wyświetlanie elementów (View Items)</li>
+                <li>✓ Otwieranie elementów (Open Items)</li>
+                <li>✓ Wyświetlanie stron (View Pages)</li>
+                <li>✕ (Odznacz: Otwórz elementy z prawem pobrania)</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SEKCJA 4: HIGIENA DZIEDZICZENIA UPRAWNIEŃ -->
+      <section class="topic-section" id="higiena-dziedziczenia">
+        <div class="section-header">
+          <div class="section-title-wrap">
+            <div class="section-icon-badge amber">🌳</div>
+            <div>
+              <h3>4. Higiena Dziedziczenia: Złote Zasady i Walka z "Broken Inheritance"</h3>
+              <p>Dlaczego łamanie dziedziczenia na poziomie folderów i plików jest koszmarem audytora</p>
+            </div>
+          </div>
+          <span class="section-reg-pill reg-knf">Integralność Struktury</span>
+        </div>
+
+        <p style="color:var(--text-soft); font-size:13.5px; line-height:1.6;">
+          Domyślnie uprawnienia dziedziczą się kaskadowo: <strong>Witryna ➔ Biblioteka ➔ Folder ➔ Plik</strong>. Wielu administratorów pod naciskiem użytkowników klika <em>„Zatrzymaj dziedziczenie uprawnień”</em> na poziomie pojedynczych folderów lub plików. W bankowości jest to <strong>najpoważniejszy błąd architektoniczny</strong>.
+        </p>
+
+        <div class="rules-grid">
+          <div class="rule-card warning-card">
+            <div class="rule-title"><span>⚠️</span> Skutki łamania dziedziczenia na plikach:</div>
+            <div class="rule-desc">
+              <ul style="padding-left:18px; display:flex; flex-direction:column; gap:6px;">
+                <li><strong>Niewidoczne wycieki danych:</strong> Gdy ktoś doda nowego pracownika do witryny, pliki z unikalnymi uprawnieniami nie zaktualizują się – lub odwrotnie, usunięcie pracownika z witryny może pozostawić jego dostęp do unikalnego pliku!</li>
+                <li><strong>Paraliż podczas kontroli KNF:</strong> Raportowanie kto ma dostęp do danej umowy staje się niemożliwe bez skomplikowanych skryptów PowerShell.</li>
+                <li><strong>Limit 5 000 zakresów (Unique Scopes):</strong> Po przekroczeniu 5 000 plików ze złamanym dziedziczeniem w jednej bibliotece SharePoint zaczyna drastycznie zwalniać i blokować indeksowanie wyszukiwania.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="rule-card good-card">
+            <div class="rule-title"><span>✅</span> Złota Reguła: "Jedna Biblioteka = Jedno Uprawnienie"</div>
+            <div class="rule-desc">
+              Jeśli pewne dokumenty (np. wnioski kredytowe Zarządu) wymagają innego dostępu niż reszta dokumentacji:
+              <br><br>
+              <strong>NIGDY nie twórz podfolderu ze złamanym dziedziczeniem!</strong>
+              <br><br>
+              Zamiast tego: Utwórz <strong>osobną dedykowaną bibliotekę dokumentów</strong> (np. <code>Dokumentacja_Zarząd_Poufne</code>) lub <strong>osobną podwitrynę / kanał prywatny Teams</strong>. Zarządzanie uprawnieniami na poziomie całej biblioteki jest przejrzyste, w pełni audytowalne i odporne na błędy ludzkie.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SEKCJA 5: UDOSTĘPNIANIE ZEWNĘTRZNE I GOŚCIE B2B -->
+      <section class="topic-section" id="dostep-zewnetrzny">
+        <div class="section-header">
+          <div class="section-title-wrap">
+            <div class="section-icon-badge blue">🔗</div>
+            <div>
+              <h3>5. Udostępnianie Zewnętrzne (Guest Sharing) a Art. 104 Prawa Bankowego</h3>
+              <p>Zasady linków anonimowych, linków organizacyjnych i kont Azure AD B2B</p>
+            </div>
+          </div>
+          <span class="section-reg-pill reg-pb">Tajemnica Bankowa</span>
+        </div>
+
+        <p style="color:var(--text-soft); font-size:13.5px; line-height:1.6; margin-bottom:16px;">
+          Art. 104 Prawa Bankowego nakłada bezwzględny obowiązek zachowania tajemnicy bankowej pod groźbą odpowiedzialności karnej i odszkodowawczej. Konfiguracja udostępniania w SharePoint musi to odzwierciedlać:
+        </p>
+
+        <div class="perm-table-wrapper">
+          <table class="perm-table">
+            <thead>
+              <tr>
+                <th style="width: 25%;">Typ Łącza w M365</th>
+                <th style="width: 35%;">Mechanizm Działania</th>
+                <th style="width: 40%;">Status Bezpieczeństwa w Banku</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Każdy z linkiem (Anonymous)</strong></td>
+                <td>Dostęp bez logowania dla każdego, kto posiada link. Brak weryfikacji tożsamości.</td>
+                <td><span style="color:#be123c; font-weight:800;">🚫 BEZWZGLĘDNIE ZABLOKOWANE</span> na poziomie tenanta banku.</td>
+              </tr>
+              <tr>
+                <td><strong>Osoby w organizacji (Org-wide)</strong></td>
+                <td>Każdy pracownik banku po kliknięciu uzyskuje dostęp (nawet z innych działów).</td>
+                <td><span style="color:#b45309; font-weight:700;">⚠️ WYSOKIE RYZYKO</span> – wyłącz dla bibliotek kredytowych i kadrowych.</td>
+              </tr>
+              <tr>
+                <td><strong>Osoby z istniejącym dostępem</strong></td>
+                <td>Link nie zmienia uprawnień – służy tylko do nawigacji dla osób już uprawnionych.</td>
+                <td><span style="color:#047857; font-weight:700;">✓ BEZPIECZNE</span> – zalecany domyślny typ linku.</td>
+              </tr>
+              <tr>
+                <td><strong>Określone osoby (Specific People)</strong></td>
+                <td>Wymusza logowanie konkretnego użytkownika (wewnętrznego lub zweryfikowanego Gościa B2B).</td>
+                <td><span style="color:#047857; font-weight:700;">✓ ZEZWOLONE</span> – pod warunkiem weryfikacji MFA gościa.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="alert-box alert-pb">
+          <span class="alert-icon">🛡️</span>
+          <div>
+            <strong>Zasady dla Kont Gości B2B (External Guests):</strong> Gość zewnętrzny (np. audytor PwC, kancelaria prawna) może uzyskać dostęp wyłącznie poprzez konto w Entra ID (Azure AD B2B). Wymagane jest wymuszenie wieloskładnikowego uwierzytelniania (MFA), a dostęp powinien automatycznie wygasać po 30 lub 90 dniach (Guest Access Expiration).
+          </div>
+        </div>
+      </section>
+
+      <!-- SEKCJA 6: PURVIEW, SZYFROWANIE & DLP -->
+      <section class="topic-section" id="purview-dlp">
+        <div class="section-header">
+          <div class="section-title-wrap">
+            <div class="section-icon-badge purple">🏷️</div>
+            <div>
+              <h3>6. Microsoft Purview: Etykiety Poufności, Szyfrowanie & Zasady DLP</h3>
+              <p>Ochrona dokumentu niezależnie od tego, gdzie został pobrany lub wysłany</p>
+            </div>
+          </div>
+          <span class="section-reg-pill reg-dora">DORA Art. 9 • Ochrona Danych</span>
+        </div>
+
+        <p style="color:var(--text-soft); font-size:13.5px; line-height:1.6; margin-bottom:16px;">
+          Samo zabezpieczenie witryny SharePoint nie chroni pliku, jeśli uprawniony pracownik pobierze go na dysk i wyśle mailem. Dlatego w bankowości SharePoint łączy się z <strong>Microsoft Purview Information Protection</strong>:
+        </p>
+
+        <div class="rules-grid">
+          <div class="rule-card">
+            <div class="rule-title"><span>🔒</span> Etykiety Poufności z Szyfrowaniem</div>
+            <div class="rule-desc">
+              Dokument oznaczony etykietą <em>„Tajemnica Bankowa”</em> zostaje zaszyfrowany kluczem kryptograficznym. Nawet jeśli plik wycieknie na pendrive, nikt spoza uprawnionej grupy bankowej nie będzie w stanie go otworzyć.
+            </div>
+          </div>
+
+          <div class="rule-card">
+            <div class="rule-title"><span>🛑</span> Polityki DLP (Data Loss Prevention)</div>
+            <div class="rule-desc">
+              Automatyczne skanery przeszukują zawartość wgrywanych plików. Jeśli plik zawiera polski numer PESEL, numer dowodu osobistego lub numery kart płatniczych, system automatycznie blokuje możliwość jego udostępnienia na zewnątrz.
+            </div>
+          </div>
+
+          <div class="rule-card">
+            <div class="rule-title"><span>📱</span> Dostęp Warunkowy (MAM / CA)</div>
+            <div class="rule-desc">
+              Jeśli pracownik loguje się z prywatnego komputera lub telefonu (urządzenie niezarządzane przez bank), SharePoint zezwala wyłącznie na podgląd w przeglądarce, blokując pobieranie plików lokalnie.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SEKCJA 7: INTERAKTYWNY KALKULATOR RYZYKA KNF -->
+      <section class="topic-section" id="audyt-kalkulator">
+        <div class="section-header">
+          <div class="section-title-wrap">
+            <div class="section-icon-badge rose">⚡</div>
+            <div>
+              <h3>7. Interaktywny Audytor Uprawnień: Kalkulator Zgodności KNF & DORA</h3>
+              <p>Oceń poziom ryzyka architektury uprawnień swojej witryny w 3 szybkich krokach</p>
+            </div>
+          </div>
+          <span class="section-reg-pill reg-code">Interaktywny Audytor</span>
+        </div>
+
+        <p style="color:var(--text-soft); font-size:13.5px; line-height:1.6;">
+          Wybierz aktualną konfigurację swojej witryny lub biblioteki dokumentów, aby obliczyć szacunkowy poziom ryzyka audytowego i otrzymać konkretne zalecenia korygujące:
+        </p>
+
+        <div class="audit-calculator">
+          <!-- PYTANIE 1 -->
+          <div class="calc-question">
+            <label>1. Jaki jest stan udostępniania zewnętrznego w witrynie?</label>
+            <div class="calc-options" id="opt-sharing">
+              <button class="calc-btn-opt selected" onclick="setCalcOption('sharing', 'none', this)">Tylko pracownicy banku (Zablokowane)</button>
+              <button class="calc-btn-opt" onclick="setCalcOption('sharing', 'guests', this)">Zweryfikowani goście B2B z MFA</button>
+              <button class="calc-btn-opt" onclick="setCalcOption('sharing', 'anonymous', this)">Włączone linki anonimowe („Każdy”)</button>
+            </div>
+          </div>
+
+          <!-- PYTANIE 2 -->
+          <div class="calc-question">
+            <label>2. Jak zarządzane jest dziedziczenie uprawnień w bibliotece?</label>
+            <div class="calc-options" id="opt-inheritance">
+              <button class="calc-btn-opt selected" onclick="setCalcOption('inheritance', 'clean', this)">Czyste dziedziczenie (Brak złamanych folderów)</button>
+              <button class="calc-btn-opt" onclick="setCalcOption('inheritance', 'folders', this)">Kilka folderów ze złamanym dziedziczeniem</button>
+              <button class="calc-btn-opt" onclick="setCalcOption('inheritance', 'items', this)">Masowe unikalne uprawnienia na pojedynczych plikach</button>
+            </div>
+          </div>
+
+          <!-- PYTANIE 3 -->
+          <div class="calc-question">
+            <label>3. Jaka domyślna rola jest przypisana do grupy Członków (Members)?</label>
+            <div class="calc-options" id="opt-roles">
+              <button class="calc-btn-opt selected" onclick="setCalcOption('roles', 'contribute', this)">Współtworzenie (Contribute – bez kasowania list)</button>
+              <button class="calc-btn-opt" onclick="setCalcOption('roles', 'edit', this)">Standardowa Edycja (Edit – pełne kasowanie)</button>
+              <button class="calc-btn-opt" onclick="setCalcOption('roles', 'full', this)">Wszyscy mają Pełną Kontrolę (Owners)</button>
+            </div>
+          </div>
+
+          <!-- WYNIK AUDYTU -->
+          <div class="calc-result-box risk-low" id="calcResultBox">
+            <div class="calc-result-title" id="calcResultTitle">
+              <span>✓ WYNIK: ZGODNOŚĆ Z KNF REKOMENDACJA D (Niskie Ryzyko)</span>
+            </div>
+            <div class="calc-result-desc" id="calcResultDesc">
+              Twoja konfiguracja realizuje model Zero Trust. Brak złamanego dziedziczenia i brak linków anonimowych zapewnia pełną rozliczalność i bezpieczeństwo tajemnicy bankowej.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SEKCJA 8: DOBRE PRAKTYKI & FAQ -->
+      <section class="topic-section" id="faq-uprawnienia">
+        <div class="section-header">
+          <div class="section-title-wrap">
+            <div class="section-icon-badge amber">💡</div>
+            <div>
+              <h3>8. Dobre Praktyki, Najczęstsze Błędy & FAQ</h3>
+              <p>Praktyczne rozwiązania typowych dylematów architektonicznych</p>
+            </div>
+          </div>
+          <span class="section-reg-pill reg-knf">FAQ & Baza Wiedzy</span>
+        </div>
+
+        <div class="faq-list">
+          <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+              <span>Czy uprawnienia należy nadawać bezpośrednio użytkownikom, czy przez Grupy?</span>
+              <span class="faq-toggle-icon">▼</span>
+            </div>
+            <div class="faq-answer">
+              <strong>Bezwzględnie przez Grupy!</strong> Nadawanie uprawnień bezpośrednio użytkownikom (Direct Permissions) jest w sektorze bankowym zakazane przez audyt. Należy stosować grupy zabezpieczeń w Entra ID (Security Groups) lub role-based access control (RBAC). Gdy pracownik zmienia stanowisko, zmiana członkostwa w jednej grupie automatycznie aktualizuje jego uprawnienia we wszystkich bibliotekach.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+              <span>Jak przeprowadzić okresowy przegląd uprawnień (Access Review) wymagany przez KNF?</span>
+              <span class="faq-toggle-icon">▼</span>
+            </div>
+            <div class="faq-answer">
+              W SharePoint Online Właściciel witryny może w menu <em>Ustawienia witryny &gt; Uprawnienia witryny</em> wygenerować <strong>Raport dotyczący udostępniania</strong> (Sharing Report w formacie CSV). Ponadto w Microsoft Entra ID P2 zaleca się skonfigurowanie automatycznych kampanii <strong>Entra Access Reviews</strong>, które co 90 lub 180 dni wymuszają na kierownikach departamentów potwierdzenie lub odebranie dostępów podwładnych.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+              <span>Co dzieje się z plikami w SharePoint, gdy pracownik odchodzi z banku (Offboarding)?</span>
+              <span class="faq-toggle-icon">▼</span>
+            </div>
+            <div class="faq-answer">
+              Gdy tożsamość pracownika zostanie zablokowana w Entra ID, natychmiast traci on dostęp do wszystkich witryn SharePoint i plików OneDrive. Pliki w witrynach zespołowych pozostają nienaruszone, a historia wersji nadal wskazuje jego nazwisko jako autora wcześniejszych modyfikacji, co zapewnia pełną ciągłość dowodową dla audytu.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+              <span>Czym różni się Grupa Microsoft 365 od tradycyjnej Grupy SharePoint?</span>
+              <span class="faq-toggle-icon">▼</span>
+            </div>
+            <div class="faq-answer">
+              Grupa M365 (powiązana z zespołem Teams) zarządza tożsamością w całym ekosystemie: witryną SharePoint, skrzynką pocztową Exchange, Plannerem i OneNote. Tradycyjna Grupa SharePoint działa lokalnie wyłącznie w granicach danej witryny. W nowoczesnym SharePoint zaleca się wykorzystywanie Grup M365 do zarządzania ogólnym dostępem zespołu, a dedykowanych Grup SharePoint wyłącznie do specyficznych podzbiorów (np. podgrupa Audytorów).
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- STOPKA FIRMOWA Z DANYMI -->
+      <footer class="main-footer" id="stopka-kontakt">
+        <div class="footer-left">
+          <div class="footer-comp-name">REMBIASZ GRC Tech Solutions Tomasz Rembiasz</div>
+          <div class="footer-comp-details">
+            NIP: 887-155-01-62 • Tworzenie aplikacji GRC dla Sektora Bankowego (Governance, Risk & Compliance), Oracle APEX, Python, systemy wsparcia procesów.
+          </div>
+          <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">
+            Wydanie: 2026.1 • Przewodnik Bezpieczeństwa, Uprawnień & Zero Trust SharePoint M365
+          </div>
+        </div>
+
+        <div class="footer-right">
+          <div class="helpdesk-box">
+            <div class="helpdesk-box-title">Kontakt & Doradztwo GRC</div>
+            <div class="helpdesk-box-contact">
+              E-mail: <a href="mailto:trembiasz@gmail.com">trembiasz@gmail.com</a><br>
+              NIP: 887-155-01-62
+            </div>
+          </div>
+        </div>
+      </footer>
+
+    </main>
+
+  </div>
+
+  <!-- SKRYPTY INTERAKTYWNE -->
+  <script>
+    // Stan kalkulatora ryzyka
+    const calcState = {
+      sharing: 'none',
+      inheritance: 'clean',
+      roles: 'contribute'
+    };
+
+    function setCalcOption(category, value, button) {
+      calcState[category] = value;
+
+      // Zaznaczenie przycisku
+      const parent = button.parentElement;
+      parent.querySelectorAll('.calc-btn-opt').forEach(btn => btn.classList.remove('selected'));
+      button.classList.add('selected');
+
+      evaluateRisk();
+    }
+
+    function evaluateRisk() {
+      const box = document.getElementById('calcResultBox');
+      const title = document.getElementById('calcResultTitle');
+      const desc = document.getElementById('calcResultDesc');
+
+      box.className = 'calc-result-box';
+
+      // Ocena krytyczna
+      if (calcState.sharing === 'anonymous') {
+        box.classList.add('risk-crit');
+        title.innerHTML = '<span>🚨 WYNIK: KRYTYCZNE NARUSZENIE (Niezgodność z Prawem Bankowym)</span>';
+        desc.innerHTML = '<strong>Wykryto linki anonimowe!</strong> Zgodnie z art. 104 Prawa Bankowego i wytycznymi KNF, anonimowe linki współdzielenia stanowią bezpośrednie zagrożenie ujawnienia tajemnicy bankowej. Należy natychmiast wyłączyć Anonymous Sharing na poziomie witryny i tenanta.';
+        return;
+      }
+
+      if (calcState.inheritance === 'items' && calcState.roles === 'full') {
+        box.classList.add('risk-crit');
+        title.innerHTML = '<span>🚨 WYNIK: KRYTYCZNE RYZYKO OPERACYJNE (Brak Kontroli)</span>';
+        desc.innerHTML = 'Połączenie masowo łamanego dziedziczenia z pełną kontrolą dla wszystkich uniemożliwia wykazanie rozliczalności podczas audytu KNF. Wymagana pilna konsolidacja uprawnień i restrukturyzacja biblioteki.';
+        return;
+      }
+
+      // Ocena wysoka / ostrzeżenie
+      if (calcState.inheritance === 'items' || calcState.roles === 'edit' || (calcState.sharing === 'guests' && calcState.inheritance === 'folders')) {
+        box.classList.add('risk-high');
+        title.innerHTML = '<span>⚠️ WYNIK: PODWYŻSZONE RYZYKO AUDYTOWE (Wymaga Działań Korygujących)</span>';
+        desc.innerHTML = 'Wykryto elementy obniżające odporność operacyjną (np. standardowa rola Edycja pozwalająca na kasowanie bibliotek lub łamane dziedziczenie w podfolderach). Zalecana zmiana roli na Współtworzenie (Contribute) oraz odizolowanie wrażliwych plików do dedykowanej biblioteki.';
+        return;
+      }
+
+      // Ocena niska / zgodna
+      box.classList.add('risk-low');
+      title.innerHTML = '<span>✓ WYNIK: ZGODNOŚĆ Z KNF REKOMENDACJA D (Niskie Ryzyko / Zero Trust)</span>';
+      desc.innerHTML = 'Twoja konfiguracja spełnia wymogi nadzorcze i realizuje zasady Zero Trust. Czyste dziedziczenie uprawnień, brak linków anonimowych i kontrolowana rola Współtworzenia zapewniają bezpieczeństwo i audytowalność.';
+    }
+
+    // Rozwijanie akordeonów FAQ
+    function toggleFaq(element) {
+      const parent = element.parentElement;
+      const isOpen = parent.classList.contains('open');
+      const icon = element.querySelector('.faq-toggle-icon');
+
+      if (isOpen) {
+        parent.classList.remove('open');
+        icon.textContent = '▼';
+      } else {
+        parent.classList.add('open');
+        icon.textContent = '▲';
+      }
+    }
+
+    // Wyszukiwarka Live Search
+    function filterContent() {
+      const input = document.getElementById('liveSearch');
+      const filter = input.value.toLowerCase().trim();
+      const sections = document.querySelectorAll('.topic-section');
+
+      sections.forEach(sec => {
+        if (!filter) {
+          sec.style.display = 'block';
+          return;
+        }
+
+        const text = sec.innerText.toLowerCase();
+        if (text.includes(filter)) {
+          sec.style.display = 'block';
+        } else {
+          sec.style.display = 'none';
+        }
+      });
+    }
+
+    // Scroll-Spy paska bocznego
+    window.addEventListener('scroll', () => {
+      const sections = document.querySelectorAll('.topic-section');
+      const navLinks = document.querySelectorAll('#sidebarNav a');
+      let currentSectionId = '';
+
+      sections.forEach(section => {
+        const rect = section.getBoundingClientRect();
+        if (rect.top <= 120 && rect.bottom >= 120) {
+          currentSectionId = section.getAttribute('id');
+        }
+      });
+
+      if (currentSectionId) {
+        navLinks.forEach(link => {
+          if (link.getAttribute('href') === '#' + currentSectionId) {
+            link.classList.add('active');
+          } else {
+            link.classList.remove('active');
+          }
+        });
+      }
+    });
+  </script>
+</body>
+</html>
