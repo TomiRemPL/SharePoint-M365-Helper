@@ -20,7 +20,7 @@ Każda tworzona strona HTML, dokument Markdown czy szablon dokumentacji **MUSA**
 - **Nazwa Firmy:** `REMBIASZ GRC Tech Solutions Tomasz Rembiasz`
 - **NIP:** `887-155-01-62`
 - **E-mail:** `trembiasz@gmail.com`
-- **Profil działalności:** Tworzenie aplikacji GRC dla Sektora Bankowego (Governance, Risk & Compliance),Oracle APEX, Python, systemy wsparcia procesów.
+- **Profil działalności:** Tworzenie aplikacji GRC dla Sektora Bankowego (Governance, Risk & Compliance), Oracle APEX, Python, systemy wsparcia procesów.
 
 ---
 

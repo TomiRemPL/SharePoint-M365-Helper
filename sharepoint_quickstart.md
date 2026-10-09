@@ -74,7 +74,7 @@
 
 * **Firma:** `REMBIASZ GRC Tech Solutions Tomasz Rembiasz`
 * **NIP:** `887-155-01-62`
-* **Profil działalności:** `Doradztwo GRC, Bezpieczeństwo Informacji & Architektura Microsoft 365`
+* **Profil działalności:** Tworzenie aplikacji GRC dla Sektora Bankowego (Governance, Risk & Compliance), Oracle APEX, Python, systemy wsparcia procesów.
 * **Kontakt:**
   * ✉️ **E-mail:** `trembiasz@gmail.com`
   * 📞 **NIP:** `887-155-01-62`
