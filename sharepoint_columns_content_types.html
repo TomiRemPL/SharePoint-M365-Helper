@@ -713,6 +713,173 @@
       text-decoration: none;
     }
 
+    /* FORMATOWANIE KOLUMN JSON */
+    .json-template-card {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      margin-bottom: 24px;
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .template-header {
+      background: var(--surface-subtle);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .template-header-title {
+      font-size: 14.5px;
+      font-weight: 800;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .template-target-tag {
+      font-size: 11px;
+      font-weight: 700;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      padding: 3px 8px;
+      border-radius: 6px;
+      color: var(--text-soft);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .template-body {
+      padding: 20px;
+      display: grid;
+      grid-template-columns: 1fr 1.25fr;
+      gap: 20px;
+    }
+
+    .preview-pane {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .pane-title {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .preview-render-box {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      flex-grow: 1;
+      justify-content: center;
+    }
+
+    .sp-pill-preview {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 14px;
+      width: fit-content;
+    }
+
+    .pill-secret {
+      background: #fef2f2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+    }
+
+    .pill-topsecret {
+      background: #4c1d95;
+      color: #ffffff;
+      border: 1px solid #3b0764;
+      box-shadow: 0 2px 6px rgba(76, 29, 149, 0.25);
+    }
+
+    .pill-rodo {
+      background: #eff6ff;
+      color: #1e40af;
+      border: 1px solid #bfdbfe;
+    }
+
+    .pill-internal {
+      background: #f1f5f9;
+      color: #475569;
+      border: 1px solid #cbd5e1;
+    }
+
+    .code-pane {
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .code-container {
+      background: #0f172a;
+      border-radius: var(--radius-sm);
+      padding: 14px;
+      color: #f8fafc;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.8px;
+      line-height: 1.5;
+      overflow-x: auto;
+      max-height: 270px;
+      overflow-y: auto;
+      border: 1px solid #1e293b;
+    }
+
+    .btn-copy-code {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: #334155;
+      color: #f8fafc;
+      border: 1px solid #475569;
+      border-radius: 5px;
+      padding: 4px 9px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.2s;
+      z-index: 5;
+    }
+
+    .btn-copy-code:hover {
+      background: #475569;
+      color: #ffffff;
+    }
+
+    .btn-copy-code.copied {
+      background: #059669;
+      border-color: #059669;
+      color: white;
+    }
+
     @media (max-width: 1024px) {
       .sidebar {
         display: none;
@@ -721,6 +888,9 @@
         padding: 20px 16px;
       }
       .grid-2, .grid-3 {
+        grid-template-columns: 1fr;
+      }
+      .template-body {
         grid-template-columns: 1fr;
       }
     }
@@ -778,8 +948,9 @@
         <li class="nav-item"><a href="#dziedziczenie"><span class="icon">🌳</span> 4. Drzewo Dziedziczenia</a></li>
         <li class="nav-item"><a href="#scenariusze"><span class="icon">💼</span> 5. Przykłady Biznesowe</a></li>
         <li class="nav-item"><a href="#zaawansowane"><span class="icon">🚀</span> 6. Hub & Quick Parts</a></li>
-        <li class="nav-item"><a href="#instrukcja"><span class="icon">📋</span> 7. Instrukcja Krok po Kroku</a></li>
-        <li class="nav-item"><a href="#faq-bledy"><span class="icon">💡</span> 8. Dobre Praktyki & FAQ</a></li>
+        <li class="nav-item"><a href="#formatowanie-json"><span class="icon">🎨</span> 7. Formatowanie JSON</a></li>
+        <li class="nav-item"><a href="#instrukcja"><span class="icon">📋</span> 8. Instrukcja Krok po Kroku</a></li>
+        <li class="nav-item"><a href="#faq-bledy"><span class="icon">💡</span> 9. Dobre Praktyki & FAQ</a></li>
       </ul>
 
       <div class="sidebar-widget">
@@ -1227,13 +1398,246 @@
         </div>
       </section>
 
-      <!-- TEMAT 7: INSTRUKCJA KROK PO KROKU -->
+      <!-- TEMAT 7: FORMATOWANIE KOLUMN Z UŻYCIEM JSON -->
+      <section class="topic-section" id="formatowanie-json">
+        <div class="section-header">
+          <div class="section-title-wrap">
+            <div class="section-icon-badge" style="background:#e0e7ff; color:#4338ca;">🎨</div>
+            <div>
+              <h3>7. Formatowanie Pól Kolumn z użyciem JSON (Site Column JSON Formatting)</h3>
+              <p>Dziedziczenie deklaratywnego formatowania wizualnego w całym tenancie bankowym</p>
+            </div>
+          </div>
+          <span class="section-badge" style="background:#e0e7ff; color:#4338ca;">JSON Formatter</span>
+        </div>
+
+        <p style="color:var(--text-soft); font-size:13.5px; line-height:1.6; margin-bottom:16px;">
+          Jedną z najpotężniejszych, a rzadko wykorzystywanych cech <strong>Kolumn Witryny (Site Columns)</strong> jest możliwość przypisania kodu formatowania JSON (właściwość <code>CustomFormatter</code>) <strong>bezpośrednio w definicji kolumny</strong>. 
+          Gdy taka kolumna witryny wejdzie w skład Typu Zawartości (np. <em>Bankowy Dokument Bazowy</em>) i zostanie wdrożona do kilkudziesięciu różnych bibliotek w organizacji, <strong>każda biblioteka automatycznie dziedziczy ten sam profesjonalny wygląd</strong> – bez potrzeby ręcznej konfiguracji widoków przez lokalnych administratorów!
+        </p>
+
+        <!-- SZABLON 1: TAJEMNICA BANKOWA (PILL BADGE) -->
+        <div class="json-template-card">
+          <div class="template-header">
+            <div class="template-header-title">
+              <span>Szablon 1: Klauzula Poufności & Tajemnica Bankowa (Pill Badge z Kłódką)</span>
+            </div>
+            <span class="template-target-tag">Kolumna: [Bank_TajemnicaBankowa] (Choice)</span>
+          </div>
+
+          <div class="template-body">
+            <div class="preview-pane">
+              <div class="pane-title">
+                <span>Podgląd Renderowania w Bibliotece</span>
+                <span style="color:#059669;">● Live CSS Preview</span>
+              </div>
+              <div class="preview-render-box">
+                <div>
+                  <div style="font-size:11px; color:var(--text-muted); margin-bottom:4px;">Gdy: "Poufne (Art. 104 Pr. Bank.)":</div>
+                  <span class="sp-pill-preview pill-secret">🔒 Poufne (Art. 104)</span>
+                </div>
+                <div>
+                  <div style="font-size:11px; color:var(--text-muted); margin-bottom:4px;">Gdy: "Ściśle Tajne / Zarząd":</div>
+                  <span class="sp-pill-preview pill-topsecret">🛡️ Ściśle Tajne</span>
+                </div>
+                <div>
+                  <div style="font-size:11px; color:var(--text-muted); margin-bottom:4px;">Gdy: "Dane Osobowe (RODO)":</div>
+                  <span class="sp-pill-preview pill-rodo">👤 RODO / Klient</span>
+                </div>
+                <div>
+                  <div style="font-size:11px; color:var(--text-muted); margin-bottom:4px;">Gdy: "Zwykłe / Wewnętrzne":</div>
+                  <span class="sp-pill-preview pill-internal">📄 Wewnętrzne</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="code-pane">
+              <button class="btn-copy-code" onclick="copyCode(this, 'code-col-secrecy')">
+                <span>📋 Kopiuj JSON</span>
+              </button>
+              <pre class="code-container" id="code-col-secrecy"><code>{
+  "$schema": "https://developer.microsoft.com/json-schemas/sp/v2/column-formatting.schema.json",
+  "elmType": "div",
+  "style": {
+    "display": "inline-flex",
+    "align-items": "center",
+    "padding": "4px 10px",
+    "border-radius": "14px",
+    "font-size": "12px",
+    "font-weight": "700",
+    "background-color": "=if(@currentField == 'Poufne (Art. 104 Pr. Bank.)', '#fef2f2', if(@currentField == 'Ściśle Tajne / Zarząd', '#4c1d95', if(@currentField == 'Dane Osobowe (RODO)', '#eff6ff', '#f1f5f9')))",
+    "color": "=if(@currentField == 'Poufne (Art. 104 Pr. Bank.)', '#991b1b', if(@currentField == 'Ściśle Tajne / Zarząd', '#ffffff', if(@currentField == 'Dane Osobowe (RODO)', '#1e40af', '#475569')))",
+    "border": "=if(@currentField == 'Poufne (Art. 104 Pr. Bank.)', '1px solid #fecaca', if(@currentField == 'Ściśle Tajne / Zarząd', '1px solid #3b0764', if(@currentField == 'Dane Osobowe (RODO)', '1px solid #bfdbfe', '1px solid #cbd5e1')))"
+  },
+  "children": [
+    {
+      "elmType": "span",
+      "style": { "margin-right": "5px" },
+      "txtContent": "=if(@currentField == 'Poufne (Art. 104 Pr. Bank.)', '🔒', if(@currentField == 'Ściśle Tajne / Zarząd', '🛡️', if(@currentField == 'Dane Osobowe (RODO)', '👤', '📄')))"
+    },
+    {
+      "elmType": "span",
+      "txtContent": "@currentField"
+    }
+  ]
+}</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- SZABLON 2: KWOTA EKSPOZYCJI KREDYTOWEJ -->
+        <div class="json-template-card">
+          <div class="template-header">
+            <div class="template-header-title">
+              <span>Szablon 2: Kwota Ekspozycji Kredytowej (Skala Ryzyka Komitetu Kredytowego)</span>
+            </div>
+            <span class="template-target-tag">Kolumna: [Bank_KwotaEkspozycji] (Waluta / Liczba)</span>
+          </div>
+
+          <div class="template-body">
+            <div class="preview-pane">
+              <div class="pane-title">
+                <span>Podgląd Progowania Kwot Kredytów</span>
+                <span style="color:#059669;">● Live CSS Preview</span>
+              </div>
+              <div class="preview-render-box">
+                <div>
+                  <div style="font-size:11px; color:var(--text-muted); margin-bottom:4px;">Poniżej 250 000 PLN (Oddział):</div>
+                  <span style="font-family:'JetBrains Mono'; font-weight:700; color:#15803d; background:#dcfce7; padding:4px 8px; border-radius:4px; border:1px solid #86efac; display:inline-block;">
+                    145 000,00 PLN
+                  </span>
+                </div>
+                <div>
+                  <div style="font-size:11px; color:var(--text-muted); margin-bottom:4px;">250 000 – 1 000 000 PLN (Komitet Ryzyka):</div>
+                  <span style="font-family:'JetBrains Mono'; font-weight:700; color:#c2410c; background:#ffedd5; padding:4px 8px; border-radius:4px; border:1px solid #fdba74; display:inline-block;">
+                    680 000,00 PLN
+                  </span>
+                </div>
+                <div>
+                  <div style="font-size:11px; color:var(--text-muted); margin-bottom:4px;">Powyżej 1 000 000 PLN (Zarząd Banku):</div>
+                  <span style="font-family:'JetBrains Mono'; font-weight:800; color:#be123c; background:#ffe4e6; padding:4px 8px; border-radius:4px; border:1px solid #fda4af; display:inline-block;">
+                    ⚠️ 4 250 000,00 PLN (DUŻA EKSPOZYCJA)
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="code-pane">
+              <button class="btn-copy-code" onclick="copyCode(this, 'code-col-exposure')">
+                <span>📋 Kopiuj JSON</span>
+              </button>
+              <pre class="code-container" id="code-col-exposure"><code>{
+  "$schema": "https://developer.microsoft.com/json-schemas/sp/v2/column-formatting.schema.json",
+  "elmType": "div",
+  "style": {
+    "display": "inline-flex",
+    "align-items": "center",
+    "font-family": "monospace",
+    "font-size": "12.5px",
+    "font-weight": "=if(@currentField >= 1000000, '800', '700')",
+    "padding": "3px 9px",
+    "border-radius": "5px",
+    "background-color": "=if(@currentField >= 1000000, '#ffe4e6', if(@currentField >= 250000, '#ffedd5', '#dcfce7'))",
+    "color": "=if(@currentField >= 1000000, '#be123c', if(@currentField >= 250000, '#c2410c', '#15803d'))",
+    "border": "=if(@currentField >= 1000000, '1px solid #fda4af', if(@currentField >= 250000, '1px solid #fdba74', '1px solid #86efac'))"
+  },
+  "children": [
+    {
+      "elmType": "span",
+      "txtContent": "=if(@currentField >= 1000000, '⚠️ ', '') + toLocaleString(@currentField) + ' PLN' + if(@currentField >= 1000000, ' (KOMITET CENTRALNY)', '')"
+    }
+  ]
+}</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- SZABLON 3: DATA PRZEGLĄDU PROCEDURY (KNF REKOMENDACJA D) -->
+        <div class="json-template-card">
+          <div class="template-header">
+            <div class="template-header-title">
+              <span>Szablon 3: Monitor Ważności Procedury Bankowej (KNF Rekomendacja D)</span>
+            </div>
+            <span class="template-target-tag">Kolumna: [Bank_DataPrzegladu] (Data i godzina)</span>
+          </div>
+
+          <div class="template-body">
+            <div class="preview-pane">
+              <div class="pane-title">
+                <span>Podgląd Cyklu Życia Regulacji Wewnętrznej</span>
+                <span style="color:#059669;">● Live CSS Preview</span>
+              </div>
+              <div class="preview-render-box">
+                <div>
+                  <div style="font-size:11px; color:var(--text-muted); margin-bottom:4px;">Gdy termin przeglądu odległy (&gt;30 dni):</div>
+                  <span style="display:inline-flex; align-items:center; gap:5px; padding:3px 8px; border-radius:4px; font-size:12px; font-weight:700; color:#065f46; background:#ecfdf5; border:1px solid #a7f3d0;">
+                    ✓ Ważna (Przegląd za 240 dni)
+                  </span>
+                </div>
+                <div>
+                  <div style="font-size:11px; color:var(--text-muted); margin-bottom:4px;">Gdy do przeglądu pozostało &lt;30 dni:</div>
+                  <span style="display:inline-flex; align-items:center; gap:5px; padding:3px 8px; border-radius:4px; font-size:12px; font-weight:700; color:#92400e; background:#fef3c7; border:1px solid #fde68a;">
+                    ⏳ Wymaga Rewizji (&lt;30 dni)
+                  </span>
+                </div>
+                <div>
+                  <div style="font-size:11px; color:var(--text-muted); margin-bottom:4px;">Gdy data przeglądu minęła:</div>
+                  <span style="display:inline-flex; align-items:center; gap:5px; padding:3px 8px; border-radius:4px; font-size:12px; font-weight:700; color:#991b1b; background:#fee2e2; border:1px solid #fca5a5;">
+                    🚨 NIEAKTUALNA (Naruszenie KNF D)
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="code-pane">
+              <button class="btn-copy-code" onclick="copyCode(this, 'code-col-audit')">
+                <span>📋 Kopiuj JSON</span>
+              </button>
+              <pre class="code-container" id="code-col-audit"><code>{
+  "$schema": "https://developer.microsoft.com/json-schemas/sp/v2/column-formatting.schema.json",
+  "elmType": "div",
+  "style": {
+    "display": "inline-flex",
+    "align-items": "center",
+    "gap": "6px",
+    "padding": "4px 9px",
+    "border-radius": "5px",
+    "font-size": "12px",
+    "font-weight": "700",
+    "background-color": "=if(@currentField < @now, '#fee2e2', if(@currentField < @now + 2592000000, '#fef3c7', '#ecfdf5'))",
+    "color": "=if(@currentField < @now, '#991b1b', if(@currentField < @now + 2592000000, '#92400e', '#065f46'))",
+    "border": "=if(@currentField < @now, '1px solid #fca5a5', if(@currentField < @now + 2592000000, '1px solid #fde68a', '1px solid #a7f3d0'))"
+  },
+  "children": [
+    {
+      "elmType": "span",
+      "txtContent": "=if(@currentField < @now, '🚨 PRZETERMINOWANA: ', if(@currentField < @now + 2592000000, '⏳ ZBLIŻA SIĘ PRZEGLĄD: ', '✓ WAŻNA: ')) + toLocaleDateString(@currentField)"
+    }
+  ]
+}</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="callout callout-teal" style="margin-top:20px;">
+          <span class="callout-icon">💡</span>
+          <div>
+            <strong>Wdrożenie automatyczne przez PowerShell (IaC):</strong> Formatowanie JSON można wstrzyknąć do Kolumny Witryny w skrypcie PnP.PowerShell bezdotykowo:
+            <br>
+            <code style="display:inline-block; margin-top:6px; background:rgba(0,0,0,0.06); padding:4px 8px; border-radius:4px; font-family:'JetBrains Mono'; font-size:12px;">
+              Set-PnPField -Identity "Bank_TajemnicaBankowa" -Values @{ CustomFormatter = (Get-Content "format_tajemnica.json" -Raw) }
+            </code>
+          </div>
+        </div>
+      </section>
+
+      <!-- TEMAT 8: INSTRUKCJA KROK PO KROKU -->
       <section class="topic-section" id="instrukcja">
         <div class="section-header">
           <div class="section-title-wrap">
             <div class="section-icon-badge" style="background:#ecfeff; color:#0891b2;">📋</div>
             <div>
-              <h3>7. Instrukcja Wdrożenia Krok po Kroku</h3>
+              <h3>8. Instrukcja Wdrożenia Krok po Kroku</h3>
               <p>Checklista architekta: od czystej witryny do działającej biblioteki</p>
             </div>
           </div>
@@ -1291,13 +1695,13 @@
         </div>
       </section>
 
-      <!-- TEMAT 8: DOBRE PRAKTYKI & FAQ -->
+      <!-- TEMAT 9: DOBRE PRAKTYKI & FAQ -->
       <section class="topic-section" id="faq-bledy">
         <div class="section-header">
           <div class="section-title-wrap">
             <div class="section-icon-badge" style="background:#fee2e2; color:#ef4444;">💡</div>
             <div>
-              <h3>8. Dobre Praktyki, Najczęstsze Błędy & FAQ</h3>
+              <h3>9. Dobre Praktyki, Najczęstsze Błędy & FAQ</h3>
               <p>Jak unikać pułapek architektonicznych i rozwiązywać problemy konfiguracyjne</p>
             </div>
           </div>
@@ -1373,6 +1777,24 @@
   </div>
 
   <script>
+    // Kopiowanie kodu JSON do schowka
+    function copyCode(button, elementId) {
+      const codeElement = document.getElementById(elementId);
+      const textToCopy = codeElement.innerText;
+
+      navigator.clipboard.writeText(textToCopy).then(() => {
+        const originalText = button.innerHTML;
+        button.innerHTML = '✓ Skopiowano!';
+        button.classList.add('copied');
+        setTimeout(() => {
+          button.innerHTML = originalText;
+          button.classList.remove('copied');
+        }, 2000);
+      }).catch(err => {
+        alert('Zaznacz kod i skopiuj za pomocą Ctrl+C.');
+      });
+    }
+
     // Accordion FAQ toggle
     function toggleFaq(element) {
       const parent = element.parentElement;

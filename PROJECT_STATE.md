@@ -42,6 +42,7 @@
    * Wyczerpujący podręcznik architektury informacji: *Kolumny witryny* (Site Columns) oraz *Typy zawartości* (Site Content Types).
    * Hierarchia dziedziczenia oparta o nadrzędny `Bankowy Dokument Bazowy`.
    * Trzy gotowe scenariusze bankowe (Kredyty CIF, Compliance & AML, Procedury KNF/DORA).
+   * **Formatowanie JSON Kolumn Witryny**: szablony JSON z dziedziczeniem w całym tenancie (`Bank_TajemnicaBankowa` z kłódką, progi ekspozycji kredytowej `Bank_KwotaEkspozycji`, monitor ważności procedury `Bank_DataPrzegladu` KNF D).
    * Dwukierunkowa nawigacja: powrót do `index.html` i przełącznik do podręcznika codziennego.
 
 5. **`sharepoint_helper.html` (Podręcznik Codziennej Pracy)**:
