@@ -36,7 +36,7 @@
    * Silnik wyrażeń (Expression Engine): formuły `=if(...)`, operatory arytmetyczne i logiczne, tokeny kontekstowe (`@currentField`, `[$Col]`, `@now`, `@me`, `@rowIndex`, `@window.innerWidth`) oraz funkcje dat i łańcuchów znaków.
    * 3 zakresy formatowania: Kolumny (Column Formatting), Widoki (View Formatting: `rowFormatter`, `additionalRowClass`, `tileProps`, `groupProps`, `hideSelection`, `hideColumnHeader`), Formularze (Form Formatting: nagłówek, podział na sekcje body, stopka).
    * Zaawansowane wzorce: uruchamianie Flow (`customRowAction: executeFlow`), pętla `forEach` na polach multi-choice/multi-person, hover card popover (`customCardProps`), ikony Fluent UI (`iconName`).
-   * Interaktywny Inspektor Stylów Flexbox & Generator JSON w czasie rzeczywistym z podglądem na żywo.
+   * Dwa interaktywne narzędzia na żywo: Inspektor Stylów Flexbox/Badge oraz Kreator & Symulator Formularza SharePoint (Header, Body Sections, Footer Drawer Mockup) z natychmiastowym generowaniem kodu JSON.
 
 4. **`sharepoint_word_templates.html` (Szablony Word .dotx, Quick Parts & Organization Assets Library)**:
    * Dwukierunkowa synchronizacja metadanych SharePoint z plikami Microsoft Word za pośrednictwem Custom XML Data Binding i Document Properties.
