@@ -1,0 +1,1592 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SharePoint M365 – Automatyzacja Wdrożeń: PnP.PowerShell & CLI M365 w Sektorze Bankowym</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* Kolorystyka PowerShell & Cyber Resilience */
+      --ps-blue: #0ea5e9;
+      --ps-blue-dark: #0284c7;
+      --ps-navy: #0f172a;
+      --ps-slate: #1e293b;
+      --ps-cyan: #38bdf8;
+      --ps-cyan-light: #f0f9ff;
+
+      --sp-teal: #038387;
+      --sp-teal-dark: #025356;
+      --sp-blue: #0078d4;
+      --sp-blue-dark: #106ebe;
+      --sp-blue-light: #eff6ff;
+
+      /* Powierzchnie i tła */
+      --bg-page: #f8fafc;
+      --surface: #ffffff;
+      --surface-subtle: #f1f5f9;
+      --border: #e2e8f0;
+      --border-focus: #0ea5e9;
+
+      /* Typografia */
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --text-soft: #475569;
+
+      /* Statusy i akcenty GRC */
+      --emerald: #059669;
+      --emerald-dark: #065f46;
+      --emerald-bg: #ecfdf5;
+      --emerald-border: #a7f3d0;
+      --amber: #d97706;
+      --amber-dark: #92400e;
+      --amber-bg: #fffbeb;
+      --amber-border: #fde68a;
+      --rose: #e11d48;
+      --rose-dark: #9f1239;
+      --rose-bg: #fff1f2;
+      --rose-border: #fecdd3;
+      --indigo: #4f46e5;
+      --indigo-bg: #eef2ff;
+
+      /* Promienie i cienie */
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 14px;
+      --radius-xl: 18px;
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.08);
+      --sidebar-width: 290px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: var(--bg-page);
+      color: var(--text-main);
+      line-height: 1.55;
+      font-size: 14.5px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* NAGŁÓWEK GŁÓWNY */
+    .app-header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      height: 66px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .ps-logo {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #0284c7 0%, #0f172a 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #38bdf8;
+      box-shadow: 0 3px 10px rgba(2, 132, 199, 0.3);
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 800;
+      font-size: 16px;
+    }
+
+    .header-titles h1 {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--text-main);
+      line-height: 1.2;
+      letter-spacing: -0.01em;
+    }
+
+    .header-titles p {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-header {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      border-radius: var(--radius-md);
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text-soft);
+      cursor: pointer;
+    }
+
+    .btn-header:hover {
+      background: var(--surface-subtle);
+      border-color: #cbd5e1;
+      color: var(--text-main);
+    }
+
+    .btn-header.primary {
+      background: #0284c7;
+      color: #ffffff;
+      border-color: #0284c7;
+      box-shadow: 0 2px 6px rgba(2, 132, 199, 0.25);
+    }
+
+    .btn-header.primary:hover {
+      background: #0369a1;
+      border-color: #0369a1;
+    }
+
+    /* UKŁAD GŁÓWNY */
+    .app-layout {
+      display: flex;
+      max-width: 1540px;
+      margin: 0 auto;
+      padding: 24px;
+      gap: 24px;
+      min-height: calc(100vh - 66px);
+    }
+
+    /* PASEK BOCZNY */
+    .app-sidebar {
+      width: var(--sidebar-width);
+      flex-shrink: 0;
+      position: sticky;
+      top: 90px;
+      height: fit-content;
+      max-height: calc(100vh - 110px);
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      padding-right: 4px;
+    }
+
+    .sidebar-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 16px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .sidebar-title {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .search-box {
+      position: relative;
+      margin-bottom: 12px;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 8px 12px 8px 32px;
+      font-size: 12.5px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      background: var(--surface-subtle);
+      color: var(--text-main);
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    .search-input:focus {
+      border-color: var(--ps-blue);
+      background: #ffffff;
+      box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.15);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+
+    .nav-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .nav-list a {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 10px;
+      border-radius: var(--radius-sm);
+      color: var(--text-soft);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      transition: all 0.15s ease;
+      line-height: 1.35;
+    }
+
+    .nav-list a:hover {
+      background: var(--surface-subtle);
+      color: var(--ps-blue-dark);
+    }
+
+    .nav-list a.active {
+      background: var(--ps-cyan-light);
+      color: var(--ps-blue-dark);
+      font-weight: 700;
+      border-left: 3px solid var(--ps-blue-dark);
+    }
+
+    .badge-counter {
+      margin-left: auto;
+      font-size: 11px;
+      background: var(--surface-subtle);
+      padding: 2px 6px;
+      border-radius: 10px;
+      color: var(--text-muted);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* OBSZAR TREŚCI */
+    .content-area {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+
+    /* BANNER HERO */
+    .hero-panel {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0284c7 100%);
+      color: #ffffff;
+      border-radius: var(--radius-xl);
+      padding: 28px 32px;
+      box-shadow: var(--shadow-lg);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-panel::after {
+      content: '>_';
+      position: absolute;
+      right: 20px;
+      bottom: -15px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 140px;
+      font-weight: 900;
+      color: rgba(255, 255, 255, 0.04);
+      pointer-events: none;
+    }
+
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(14, 165, 233, 0.25);
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 11.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 12px;
+      color: #38bdf8;
+    }
+
+    .hero-panel h2 {
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.25;
+      margin-bottom: 10px;
+    }
+
+    .hero-panel p {
+      font-size: 14.5px;
+      line-height: 1.6;
+      color: rgba(255, 255, 255, 0.9);
+      max-width: 900px;
+    }
+
+    .hero-stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 14px;
+      margin-top: 22px;
+    }
+
+    .hero-stat-card {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: var(--radius-md);
+      padding: 12px 16px;
+    }
+
+    .hero-stat-val {
+      font-size: 18px;
+      font-weight: 800;
+      color: #38bdf8;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .hero-stat-lbl {
+      font-size: 11.5px;
+      color: rgba(255, 255, 255, 0.82);
+      font-weight: 500;
+      margin-top: 2px;
+    }
+
+    /* SEKCJE TEMATYCZNE */
+    .topic-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: 28px 32px;
+      box-shadow: var(--shadow-sm);
+      scroll-margin-top: 86px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 16px;
+      margin-bottom: 22px;
+    }
+
+    .section-header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-icon-badge {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-md);
+      background: var(--ps-cyan-light);
+      color: var(--ps-blue-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 19px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .section-header h2 {
+      font-size: 19px;
+      font-weight: 800;
+      color: var(--text-main);
+      letter-spacing: -0.01em;
+    }
+
+    .section-header p {
+      font-size: 12.5px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* ALERTY I WYMOGI BANKOWE */
+    .alert-box {
+      border-radius: var(--radius-md);
+      padding: 16px 20px;
+      margin: 18px 0;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      line-height: 1.55;
+      font-size: 13.5px;
+    }
+
+    .alert-box.alert-knf {
+      background: #fef2f2;
+      border: 1px solid var(--rose-border);
+      color: #881337;
+    }
+
+    .alert-box.alert-knf .alert-icon {
+      color: var(--rose);
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .alert-box.alert-info {
+      background: var(--ps-cyan-light);
+      border: 1px solid #bae6fd;
+      color: #0369a1;
+    }
+
+    .alert-box.alert-info .alert-icon {
+      color: #0284c7;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .alert-box.alert-success {
+      background: var(--emerald-bg);
+      border: 1px solid var(--emerald-border);
+      color: var(--emerald-dark);
+    }
+
+    .alert-box.alert-success .alert-icon {
+      color: var(--emerald);
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .alert-box.alert-warning {
+      background: var(--amber-bg);
+      border: 1px solid var(--amber-border);
+      color: var(--amber-dark);
+    }
+
+    .alert-box.alert-warning .alert-icon {
+      color: var(--amber);
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .alert-title {
+      font-weight: 700;
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+
+    /* CODE BOX */
+    .code-box {
+      background: #0f172a;
+      color: #f8fafc;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      margin: 18px 0;
+      border: 1px solid #1e293b;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .code-box-header {
+      background: #1e293b;
+      padding: 8px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      color: #94a3b8;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .code-box-header .lang-tag {
+      font-weight: 600;
+      color: #38bdf8;
+    }
+
+    .btn-copy {
+      background: #334155;
+      color: #e2e8f0;
+      border: none;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-copy:hover {
+      background: #475569;
+      color: #ffffff;
+    }
+
+    .code-box pre {
+      padding: 16px;
+      overflow-x: auto;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      line-height: 1.55;
+      margin: 0;
+    }
+
+    /* TABELA DANYCH */
+    .data-table-container {
+      width: 100%;
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      margin: 18px 0;
+      background: #ffffff;
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 13.5px;
+    }
+
+    .data-table th {
+      background: var(--surface-subtle);
+      padding: 12px 14px;
+      font-weight: 700;
+      color: var(--text-main);
+      border-bottom: 1px solid var(--border);
+      font-size: 12.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .data-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-soft);
+      vertical-align: top;
+    }
+
+    .data-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .data-table tr:hover td {
+      background: #fbfdff;
+    }
+
+    .badge-grc {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 12px;
+      text-transform: uppercase;
+    }
+
+    .badge-grc.red { background: #fee2e2; color: #991b1b; }
+    .badge-grc.amber { background: #fef3c7; color: #92400e; }
+    .badge-grc.green { background: #dcfce7; color: #166534; }
+    .badge-grc.blue { background: #dbeafe; color: #1e40af; }
+
+    /* SYMULATOR INTERAKTYWNY GENERATORA PNP */
+    .sandbox-container {
+      background: #ffffff;
+      border: 2px solid #bae6fd;
+      border-radius: var(--radius-xl);
+      padding: 24px;
+      margin: 22px 0;
+      box-shadow: var(--shadow-md);
+    }
+
+    .sandbox-grid {
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 24px;
+    }
+
+    @media (max-width: 1100px) {
+      .sandbox-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .builder-panel {
+      background: var(--surface-subtle);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .builder-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 8px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .form-group label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-soft);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .form-group label span {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--ps-blue-dark);
+    }
+
+    .form-control {
+      padding: 8px 10px;
+      font-size: 13px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: #ffffff;
+      color: var(--text-main);
+      outline: none;
+      transition: border 0.15s;
+    }
+
+    .form-control:focus {
+      border-color: var(--ps-blue);
+      box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.18);
+    }
+
+    .checkbox-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .checkbox-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12.5px;
+      color: var(--text-main);
+      cursor: pointer;
+    }
+
+    .checkbox-label input {
+      cursor: pointer;
+      accent-color: var(--ps-blue-dark);
+    }
+
+    /* FAQ ACCORDION */
+    .faq-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin: 18px 0;
+    }
+
+    .faq-item {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      background: var(--surface);
+      transition: all 0.2s;
+    }
+
+    .faq-item.open {
+      border-color: var(--ps-blue);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .faq-question {
+      padding: 14px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--text-main);
+      background: var(--surface);
+    }
+
+    .faq-question:hover {
+      background: var(--surface-subtle);
+    }
+
+    .faq-toggle-icon {
+      font-size: 12px;
+      color: var(--text-muted);
+      transition: transform 0.2s;
+    }
+
+    .faq-answer {
+      display: none;
+      padding: 14px 18px;
+      background: #ffffff;
+      border-top: 1px solid var(--border);
+      font-size: 13.5px;
+      line-height: 1.6;
+      color: var(--text-soft);
+    }
+
+    .faq-item.open .faq-answer {
+      display: block;
+    }
+
+    /* STOPKA GŁÓWNA */
+    .main-footer {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: 32px 24px;
+      margin-top: 40px;
+    }
+
+    .footer-inner {
+      max-width: 1540px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .footer-left {
+      max-width: 650px;
+    }
+
+    .footer-comp-name {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 4px;
+    }
+
+    .footer-comp-details {
+      font-size: 12.5px;
+      color: var(--text-soft);
+      line-height: 1.5;
+    }
+
+    .footer-right {
+      text-align: right;
+    }
+
+    .helpdesk-box {
+      background: var(--surface-subtle);
+      border: 1px solid var(--border);
+      padding: 12px 18px;
+      border-radius: var(--radius-md);
+    }
+
+    .helpdesk-box-title {
+      font-size: 11.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .helpdesk-box-contact {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .helpdesk-box-contact a {
+      color: var(--ps-blue-dark);
+      text-decoration: none;
+    }
+
+    .helpdesk-box-contact a:hover {
+      text-decoration: underline;
+    }
+
+    /* MEDIA PRINT */
+    @media print {
+      .app-header,
+      .app-sidebar,
+      .btn-copy,
+      .builder-panel,
+      .btn-header {
+        display: none !important;
+      }
+
+      .app-layout {
+        display: block;
+        padding: 0;
+      }
+
+      .topic-section {
+        border: none;
+        box-shadow: none;
+        padding: 10px 0;
+        page-break-inside: avoid;
+      }
+
+      .sandbox-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAGŁÓWEK GŁÓWNY -->
+  <header class="app-header">
+    <div class="header-left">
+      <div class="ps-logo">&gt;_</div>
+      <div class="header-titles">
+        <h1>Automatyzacja Wdrożeń: PnP.PowerShell & CLI M365</h1>
+        <p>Infrastruktura jako Kod (IaC), Provisioning & Audyt Zgodności DORA w Bankowości</p>
+      </div>
+    </div>
+    <div class="header-right">
+      <a href="index.html" class="btn-header">← Portal Główny</a>
+      <a href="sharepoint_security_permissions.html" class="btn-header">Zero Trust & Audyt</a>
+      <a href="sharepoint_word_templates.html" class="btn-header">Szablony Word .dotx</a>
+      <button class="btn-header primary" onclick="window.print()">Drukuj / Eksport PDF</button>
+    </div>
+  </header>
+
+  <!-- GŁÓWNY UKŁAD -->
+  <div class="app-layout">
+
+    <!-- PASEK BOCZNY -->
+    <aside class="app-sidebar">
+      <div class="sidebar-card">
+        <div class="sidebar-title">Spis Sekcji Modułu</div>
+
+        <div class="search-box">
+          <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input type="text" id="liveSearch" class="search-input" placeholder="Filtruj tematy..." oninput="filterContent()">
+        </div>
+
+        <nav>
+          <ul class="nav-list" id="sidebarNav">
+            <li><a href="#sec-intro" class="active">1. Wymogi Bankowe & IaC <span class="badge-counter">DORA</span></a></li>
+            <li><a href="#sec-auth">2. Uwierzytelnianie & Certyfikaty <span class="badge-counter">Entra ID</span></a></li>
+            <li><a href="#sec-provisioning">3. Skrypt Provisioningu Architektury <span class="badge-counter">.ps1</span></a></li>
+            <li><a href="#sec-audit">4. Skrypt Audytowy Uprawnień <span class="badge-counter">CSV</span></a></li>
+            <li><a href="#sec-templates">5. Replikacja DEV $\rightarrow$ TEST $\rightarrow$ PROD <span class="badge-counter">PnP Schema</span></a></li>
+            <li><a href="#sec-generator">6. Generator Skryptów Live <span class="badge-counter">Builder</span></a></li>
+            <li><a href="#sec-antipatterns">7. Antywzorce & API Throttling <span class="badge-counter">Bezpieczeństwo</span></a></li>
+            <li><a href="#sec-faq">8. FAQ & Checklista Audytora <span class="badge-counter">GRC</span></a></li>
+          </ul>
+        </nav>
+      </div>
+
+      <!-- KARTA POMOCNICZA -->
+      <div class="sidebar-card" style="background:#f0f9ff; border-color:#bae6fd;">
+        <div style="font-size:12px; font-weight:700; color:#0369a1; margin-bottom:6px;">Pliki Skryptów w Repozytorium</div>
+        <p style="font-size:12px; color:#0c4a6e; line-height:1.45;">
+          Gotowe do natychmiastowego uruchomienia skrypty <code>.ps1</code> są bezpośrednio dostępne w katalogu głównym projektu:
+          <br>• <code>deploy_bank_architecture.ps1</code>
+          <br>• <code>audit_sharepoint_permissions_dora.ps1</code>
+        </p>
+      </div>
+    </aside>
+
+    <!-- OBSZAR TREŚCI -->
+    <main class="content-area">
+
+      <!-- BANNER HERO -->
+      <section class="hero-panel" id="sec-intro">
+        <div class="hero-tag">⚡ Architektura jako Kod (IaC) • Zgodność z DORA & Ładem ICT</div>
+        <h2>Pełna Automatyzacja Provisioningu, Migracji i Audytu SharePoint Online za pomocą PnP.PowerShell</h2>
+        <p>
+          Wdrażanie standardu <strong>Infrastructure as Code (IaC)</strong> w środowiskach Microsoft 365 banku. Eliminacja błędów ludzkich (Human Error), powtarzalny provisioning kolumn witryny, typów zawartości i bibliotek w 30 sekund oraz automatyczny audyt wyłamanych uprawnień i linków anonimowych pod nadzór KNF i DORA.
+        </p>
+
+        <div class="hero-stats-row">
+          <div class="hero-stat-card">
+            <div class="hero-stat-val">30 Sekund</div>
+            <div class="hero-stat-lbl">Czas wdrożenia architektury zamiast 4h w GUI</div>
+          </div>
+          <div class="hero-stat-card">
+            <div class="hero-stat-val">Zero Passwords</div>
+            <div class="hero-stat-lbl">Uwierzytelnianie certyfikatem X.509 w Entra ID</div>
+          </div>
+          <div class="hero-stat-card">
+            <div class="hero-stat-val">DORA Art. 9/11</div>
+            <div class="hero-stat-lbl">Audyt unikalnych uprawnień i raporty CSV</div>
+          </div>
+          <div class="hero-stat-card">
+            <div class="hero-stat-val">Sites.Selected</div>
+            <div class="hero-stat-lbl">Izolacja uprawnień bez ryzyka dla całego tenanta</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SEKCJA 1: DLACZEGO PNP.POWERSHELL W BANKOWOŚCI -->
+      <section class="topic-section">
+        <div class="section-header">
+          <div class="section-header-left">
+            <div class="section-icon-badge">🏛️</div>
+            <div>
+              <h2>1. Dlaczego PnP.PowerShell w Sektorze Bankowym?</h2>
+              <p>Zastąpienie manualnej konfiguracji w przeglądarce kontrolowanym kodem z repozytorium Git</p>
+            </div>
+          </div>
+        </div>
+
+        <p>
+          W instytucjach finansowych ręczne tworzenie kolumn witryny, grup, ról i bibliotek przez interfejs graficzny przeglądarki (tzw. <em>Click-Ops</em>) stanowi poważne ryzyko operacyjne. Rozporządzenie <strong>DORA (Art. 9 i 11)</strong> oraz <strong>wytyczne KNF w zakresie zarządzania ryzykiem ICT</strong> nakazują, aby procedury konfiguracyjne były powtarzalne, weryfikowalne i udokumentowane.
+        </p>
+
+        <div class="alert-box alert-knf">
+          <div class="alert-icon">⚠️</div>
+          <div>
+            <div class="alert-title">Ryzyko Pracy Ręcznej (Click-Ops) vs Standard IaC</div>
+            Ręczna zmiana uprawnień lub dodanie kolumny na środowisku testowym (DEV/TEST), która nie zostanie dokładnie powtórzona na środowisku produkcyjnym (PROD), prowadzi do awarii przepływów Power Automate, utraty metadanych regulacyjnych oraz niezgodności audytowej. Podejście Infrastructure as Code (IaC) oparte o <code>PnP.PowerShell</code> gwarantuje, że kod skryptu podlega wersjonowaniu w Git i procedurze Peer-Review przed wykonaniem na produkcji.
+          </div>
+        </div>
+
+        <div class="data-table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Obszar Wdrożeniowy</th>
+                <th>Ręczna Konfiguracja w Przeglądarce (GUI)</th>
+                <th>Automatyzacja PnP.PowerShell (IaC)</th>
+                <th>Wymóg DORA / KNF ICT</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Czas Wdrożenia</strong></td>
+                <td>3 do 5 godzin klikania formularzy i ustawień.</td>
+                <td>Poniżej 30 sekund z poziomu konsoli PowerShell.</td>
+                <td>Odporność operacyjna (DORA Art. 11)</td>
+              </tr>
+              <tr>
+                <td><strong>Powtarzalność DEV $\rightarrow$ PROD</strong></td>
+                <td>Wysokie ryzyko pominięcia kolumny lub błędu w typie danych.</td>
+                <td>100% identyczna konfiguracja XML/Schema.</td>
+                <td>Zarządzanie zmianą w systemach ICT</td>
+              </tr>
+              <tr>
+                <td><strong>Ścieżka Audytowa (Audit Trail)</strong></td>
+                <td>Brak historii kto i kiedy zmodyfikował właściwość kolumny.</td>
+                <td>Pełna historia commitów w Git (kto, kiedy, dlaczego zatwierdził).</td>
+                <td>Rozliczalność i dowodowość nadzorcza</td>
+              </tr>
+              <tr>
+                <td><strong>Audyt Bezpieczeństwa</strong></td>
+                <td>Niemożliwy ręczny przegląd tysięcy plików pod kątem uprawnień.</td>
+                <td>Zautomatyzowany skrypt skanujący i raport CSV w 2 minuty.</td>
+                <td>DORA Art. 9: Kontrola uprawnień i Zero Trust</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- SEKCJA 2: UWIERZYTELNIANIE & CERTYFIKATY -->
+      <section class="topic-section" id="sec-auth">
+        <div class="section-header">
+          <div class="section-header-left">
+            <div class="section-icon-badge">🔐</div>
+            <div>
+              <h2>2. Bezpieczne Uwierzytelnianie: Rejestracja Aplikacji Entra ID & Certyfikat X.509</h2>
+              <p>Eliminacja haseł w skryptach i zasada najmniejszych uprawnień dzięki Sites.Selected</p>
+            </div>
+          </div>
+        </div>
+
+        <p>
+          W banku <strong>bezwzględnie zabronione jest przechowywanie haseł użytkowników w kodzie skryptów</strong>. Do automatyzacji w harmonogramach (np. Azure DevOps Pipelines, zadania zaplanowane Windows, skrypty nocne) należy stosować uwierzytelnianie bezhasłowe oparte na <strong>Certyfikacie X.509</strong> zarejestrowanym w Microsoft Entra ID.
+        </p>
+
+        <div class="alert-box alert-warning">
+          <div class="alert-icon">🛑</div>
+          <div>
+            <div class="alert-title">Antywzorzec Uprawnień: Zakaz stosowania Sites.FullControl.All</div>
+            Tradycyjne nadanie aplikacji uprawnienia <code>Sites.FullControl.All</code> w Microsoft Graph daje skryptowi nieograniczony dostęp do każdego pliku i biblioteki w całym banku (ryzyko krytyczne naruszenia art. 104 Prawa Bankowego!). W bankowości stosuje się uprawnienie <strong><code>Sites.Selected</code></strong>, a następnie za pomocą polecenia PowerShell przyznaje się prawa aplikacji wyłącznie do jednej, konkretnej witryny!
+          </div>
+        </div>
+
+        <h3 style="font-size:15px; font-weight:700; margin:16px 0 8px 0;">Wzorzec Łączenia za Pomocą Certyfikatu (Bezhasłowo):</h3>
+
+        <div class="code-box">
+          <div class="code-box-header">
+            <span class="lang-tag">PowerShell: Connect-PnPOnline z Certyfikatem</span>
+            <button class="btn-copy" onclick="copySnippet(this)">Kopiuj kod</button>
+          </div>
+          <pre><code># 1. Połączenie nienadzorowane (Unattended) z użyciem certyfikatu z magazynu Windows
+$siteUrl   = "https://twojbank.sharepoint.com/sites/governance"
+$clientId  = "11112222-3333-4444-5555-666677778888" # App Registration w Entra ID
+$tenant    = "twojbank.onmicrosoft.com"
+$thumbprint= "A1B2C3D4E5F60718293A4B5C6D7E8F9012345678" # Odcisk certyfikatu X.509
+
+Connect-PnPOnline -Url $siteUrl `
+                  -ClientId $clientId `
+                  -Thumbprint $thumbprint `
+                  -Tenant $tenant
+
+Write-Host "Pomyślnie uwierzytelniono bezhasłowo za pomocą certyfikatu X.509." -ForegroundColor Green</code></pre>
+        </div>
+      </section>
+
+      <!-- SEKCJA 3: SKRYPT PROVISIONINGU ARCHITEKTURY -->
+      <section class="topic-section" id="sec-provisioning">
+        <div class="section-header">
+          <div class="section-header-left">
+            <div class="section-icon-badge">💻</div>
+            <div>
+              <h2>3. Skrypt Provisioningu Architektury Bankowej (IaC)</h2>
+              <p>Jednorazowe wdrożenie kolumn witryny, typów zawartości i biblioteki z wymuszonym wersjonowaniem</p>
+            </div>
+          </div>
+        </div>
+
+        <p>
+          Poniższy skrypt pochodzi bezpośrednio z pliku <a href="deploy_bank_architecture.ps1" style="color:var(--ps-blue-dark); font-weight:700;"><code>deploy_bank_architecture.ps1</code></a> w tym repozytorium. Tworzy on w pełni audytowalną strukturę danych zgodną z DORA i wytycznymi KNF w zakresie ryzyka ICT:
+        </p>
+
+        <div class="code-box">
+          <div class="code-box-header">
+            <span class="lang-tag">PowerShell: deploy_bank_architecture.ps1</span>
+            <button class="btn-copy" onclick="copySnippet(this)">Kopiuj skrypt</button>
+          </div>
+          <pre><code># Import i weryfikacja modułu
+Import-Module PnP.PowerShell -MinimumVersion 2.2.0
+
+$SiteUrl = "https://twojbank.sharepoint.com/sites/pion-ryzyka"
+Connect-PnPOnline -Url $SiteUrl -Interactive
+
+$GroupName = "Bank GRC - Kolumny Regulacyjne"
+
+# 1. Tworzenie Kolumn Witryny (Site Columns)
+Add-PnPField -Type Text -InternalName "Bank_NumerProcedury" -DisplayName "Numer Sprawy / Identyfikator Aktu" -Group $GroupName
+Add-PnPField -Type Choice -InternalName "Bank_Departament" -DisplayName "Departament Właścicielski" -Group $GroupName `
+             -Choices @("Ryzyko Kredytowe", "CISO & DORA", "Compliance & AML", "Audyt Wewnętrzny")
+Add-PnPField -Type Choice -InternalName "Bank_TajemnicaBankowa" -DisplayName "Klauzula Poufności (Art. 104 Pr. Bank.)" -Group $GroupName `
+             -Choices @("ŚCIŚLE POUFNE • TAJEMNICA BANKOWA", "POUFNE WEWNĘTRZNE", "JAWNE")
+Add-PnPField -Type DateTime -InternalName "Bank_DataWejscia" -DisplayName "Data Wejścia w Życie" -Group $GroupName
+Add-PnPField -Type DateTime -InternalName "Bank_DataPrzegladu" -DisplayName "Termin Przeglądu (DORA Art. 11)" -Group $GroupName
+
+# 2. Tworzenie Typu Zawartości (Content Type) z dziedziczeniem z typu "Document"
+$ctName = "Bankowa Procedura Regulacyjna"
+$ct = Add-PnPContentType -Name $ctName -Group "Bank GRC - Typy Zawartości" -ParentContentType (Get-PnPContentType -Identity "Document")
+
+# Wiązanie kolumn z typem zawartości
+@("Bank_NumerProcedury", "Bank_Departament", "Bank_TajemnicaBankowa", "Bank_DataWejscia", "Bank_DataPrzegladu") | ForEach-Object {
+    Add-PnPFieldToContentType -Field $_ -ContentType $ctName
+}
+
+# 3. Utworzenie dedykowanej biblioteki z rygorem wersjonowania
+$libTitle = "Centralny Rejestr Procedur i Polityk ICT"
+New-PnPList -Title $libTitle -Template DocumentLibrary -Url "ProceduryBankoweICT"
+
+# Włączenie 50 wersji głównych i 10 pomocniczych oraz przypisanie typu zawartości
+Set-PnPList -Identity $libTitle -ContentTypesEnabled $true -EnableVersioning $true -MajorVersionLimit 50 -EnableMinorVersions $true -MinorVersionLimit 10
+Add-PnPContentTypeToList -List $libTitle -ContentType $ctName -DefaultContentType
+
+Write-Host "✓ Wdrożono kompletną architekturę w 30 sekund!" -ForegroundColor Green</code></pre>
+        </div>
+      </section>
+
+      <!-- SEKCJA 4: SKRYPT AUDYTOWY UPRAWNIEŃ -->
+      <section class="topic-section" id="sec-audit">
+        <div class="section-header">
+          <div class="section-header-left">
+            <div class="section-icon-badge">📊</div>
+            <div>
+              <h2>4. Skrypt Audytowy Uprawnień & Wykrywania Linków Anonimowych</h2>
+              <p>Automatyczne skanowanie dziedziczenia i eksport raportu CSV dla Audytu i CISO</p>
+            </div>
+          </div>
+        </div>
+
+        <p>
+          Wymóg <strong>DORA Art. 9 (Zarządzanie Tożsamością i Dostępem)</strong> nakazuje bankom regularny przegląd praw dostępu (Access Review) i eliminację nadmiarowych uprawnień. Poniższy skrypt z pliku <a href="audit_sharepoint_permissions_dora.ps1" style="color:var(--ps-blue-dark); font-weight:700;"><code>audit_sharepoint_permissions_dora.ps1</code></a> skanuje strukturę SharePoint i identyfikuje naruszenia:
+        </p>
+
+        <div class="code-box">
+          <div class="code-box-header">
+            <span class="lang-tag">PowerShell: audit_sharepoint_permissions_dora.ps1</span>
+            <button class="btn-copy" onclick="copySnippet(this)">Kopiuj skrypt audytowy</button>
+          </div>
+          <pre><code># Pobranie bibliotek i weryfikacja unikalnych uprawnień
+$libraries = Get-PnPList | Where-Object { $_.BaseType -eq "DocumentLibrary" -and -not $_.Hidden }
+$results = @()
+
+foreach ($lib in $libraries) {
+    # 1. Sprawdzenie czy biblioteka wyłamała dziedziczenie
+    $hasUnique = Get-PnPProperty -ClientObject $lib -Property HasUniqueRoleAssignments
+    $roles = Get-PnPListPermissions -Identity $lib.Title
+
+    foreach ($role in $roles) {
+        $isDirectUser = ($role.Member.PrincipalType.ToString() -eq "User")
+        $risk = if ($isDirectUser) { "WYSOKIE (Naruszenie Zero Trust: użytkownik bezpośredni)" } `
+                elseif ($hasUnique) { "ŚREDNIE (Złamane dziedziczenie biblioteki)" } `
+                else { "NISKIE (Czyste dziedziczenie)" }
+
+        $results += [PSCustomObject]@{
+            Biblioteka           = $lib.Title
+            ZłamaneDziedziczenie = $hasUnique
+            Podmiot              = $role.Member.Title
+            TypPodmiotu          = $role.Member.PrincipalType
+            Uprawnienia          = ($role.RoleDefinitionBindings | Select-Object -ExpandProperty Name) -join "; "
+            PoziomRyzyka         = $risk
+        }
+    }
+}
+
+# Zapis raportu do formatu CSV zgodnego z wymogami audytu KNF
+$results | Export-Csv -Path "Raport_Uprawnien_DORA_2026.csv" -NoTypeInformation -Encoding utf8BOM -Delimiter ";"
+Write-Host "Zapisano raport audytowy CSV!" -ForegroundColor Green</code></pre>
+        </div>
+      </section>
+
+      <!-- SEKCJA 5: REPLIKACJA DEV -> TEST -> PROD -->
+      <section class="topic-section" id="sec-templates">
+        <div class="section-header">
+          <div class="section-header-left">
+            <div class="section-icon-badge">🔄</div>
+            <div>
+              <h2>5. Replikacja Konfiguracji DEV $\rightarrow$ TEST $\rightarrow$ PROD (PnP Template Schema)</h2>
+              <p>Eksport kompletnego szablonu witryny do pliku .pnp i bezbłędne wdrożenie na produkcji</p>
+            </div>
+          </div>
+        </div>
+
+        <p>
+          Format <strong>PnP Provisioning Schema</strong> umożliwia wyekstrahowanie całej architektury (kolumn, widoków, formularzy, szablonów stron, list) do jednego pliku <code>szablon_bankowy.pnp</code> lub <code>.xml</code>, a następnie wstrzyknięcie go na czystą witrynę produkcyjną w pipeline CI/CD:
+        </p>
+
+        <div class="code-box">
+          <div class="code-box-header">
+            <span class="lang-tag">PowerShell: Eksport i Import Szablonu PnP</span>
+            <button class="btn-copy" onclick="copySnippet(this)">Kopiuj kod</button>
+          </div>
+          <pre><code># KROK 1: Eksport konfiguracji ze środowiska DEV
+Connect-PnPOnline -Url "https://twojbank-dev.sharepoint.com/sites/cif-kredyty" -Interactive
+Get-PnPSiteTemplate -Out "Bank_CIF_Template.pnp" `
+                    -Handlers Fields, ContentTypes, Lists `
+                    -ExcludeContentTypes "Folder"
+
+Write-Host "✓ Wyeksportowano szablon architektury do pliku Bank_CIF_Template.pnp" -ForegroundColor Green
+
+# KROK 2: Aplikacja szablonu na środowisku PROD
+Connect-PnPOnline -Url "https://twojbank.sharepoint.com/sites/cif-kredyty-prod" -Interactive
+Invoke-PnPSiteTemplate -Path "Bank_CIF_Template.pnp"
+
+Write-Host "✓ Pomyślnie zreplikowano architekturę na środowisku produkcyjnym!" -ForegroundColor Green</code></pre>
+        </div>
+      </section>
+
+      <!-- SEKCJA 6: GENERATOR SKRYPTÓW LIVE (SANDBOX) -->
+      <section class="topic-section" id="sec-generator">
+        <div class="section-header">
+          <div class="section-header-left">
+            <div class="section-icon-badge">⚡</div>
+            <div>
+              <h2>6. Interaktywny Generator Skryptów PnP.PowerShell (Live Builder)</h2>
+              <p>Skonfiguruj parametry bankowe po lewej stronie — gotowy kod PowerShell wygeneruje się w czasie rzeczywistym</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="sandbox-container">
+          <div class="sandbox-grid">
+            <!-- PANEL PARAMETRÓW -->
+            <div class="builder-panel">
+              <div class="builder-title">
+                <span>Konfigurator Parametrów Wdrożenia</span>
+                <span style="font-family:'JetBrains Mono', monospace; font-size:11px; color:#0284c7;">IaC Generator</span>
+              </div>
+
+              <div class="form-group">
+                <label>Adres URL Witryny: <span>$SiteUrl</span></label>
+                <input type="text" id="genSiteUrl" class="form-control" value="https://twojbank.sharepoint.com/sites/ryzyko-ict" oninput="generatePnpScript()">
+              </div>
+
+              <div class="form-group">
+                <label>Nazwa Biblioteki Dokumentów: <span>$LibraryTitle</span></label>
+                <input type="text" id="genLibTitle" class="form-control" value="Rejestr Regulacji i Polityk DORA" oninput="generatePnpScript()">
+              </div>
+
+              <div class="form-group">
+                <label>Metoda Uwierzytelniania: <span>Auth</span></label>
+                <select id="genAuthMethod" class="form-control" onchange="generatePnpScript()">
+                  <option value="cert">Certyfikat X.509 (Entra ID App - Zalecane na PROD)</option>
+                  <option value="interactive">Interaktywne Logowanie MFA (Doraźne dla Admina)</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label>Wybór Kolumn Regulacyjnych do Utworzenia:</label>
+                <div class="checkbox-group">
+                  <label class="checkbox-label">
+                    <input type="checkbox" id="chkColDocNum" checked onchange="generatePnpScript()">
+                    <span>Numer Sprawy / Identyfikator Aktu</span>
+                  </label>
+                  <label class="checkbox-label">
+                    <input type="checkbox" id="chkColTajemnica" checked onchange="generatePnpScript()">
+                    <span>Tajemnica Bankowa (Art. 104)</span>
+                  </label>
+                  <label class="checkbox-label">
+                    <input type="checkbox" id="chkColDora" checked onchange="generatePnpScript()">
+                    <span>Termin Przeglądu DORA Art. 11</span>
+                  </label>
+                  <label class="checkbox-label">
+                    <input type="checkbox" id="chkColDept" checked onchange="generatePnpScript()">
+                    <span>Departament Właścicielski</span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>Opcje Bezpieczeństwa Biblioteki:</label>
+                <div class="checkbox-group">
+                  <label class="checkbox-label">
+                    <input type="checkbox" id="chkVersioning" checked onchange="generatePnpScript()">
+                    <span>Wymuś Wersjonowanie (50 wersji DORA)</span>
+                  </label>
+                  <label class="checkbox-label">
+                    <input type="checkbox" id="chkApproval" checked onchange="generatePnpScript()">
+                    <span>Włącz Akceptację Zawartości (Content Approval)</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- WYGENEROWANY KOD POWERSHELL -->
+            <div class="code-box" style="margin:0; display:flex; flex-direction:column;">
+              <div class="code-box-header">
+                <span class="lang-tag">PowerShell: Wygenerowany Skrypt Wdrożeniowy</span>
+                <button class="btn-copy" onclick="copySnippet(this)">Kopiuj wygenerowany skrypt</button>
+              </div>
+              <pre><code id="generatedScriptCode"># Generowanie kodu w toku...</code></pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SEKCJA 7: ANTYWZORCE I LIMITACJE API -->
+      <section class="topic-section" id="sec-antipatterns">
+        <div class="section-header">
+          <div class="section-header-left">
+            <div class="section-icon-badge">🛑</div>
+            <div>
+              <h2>7. Typowe Błędy, Antywzorce & Ograniczenia API (Throttling)</h2>
+              <p>Zasady tworzenia stabilnych skryptów odpornych na limity HTTP 429 i 503 w chmurze Microsoft</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="data-table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Antywzorzec / Powszechny Błąd</th>
+                <th>Skutki Techniczne i Audytowe</th>
+                <th>Zalecana Dobra Praktyka Bankowa</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Hardcodowanie poświadczeń (-Credentials)</strong></td>
+                <td>Naruszenie polityk bezpieczeństwa; wyciek haseł administratora z repozytoriów Git.</td>
+                <td>Stosuj wyłącznie certyfikaty X.509 w magazynie maszynowym lub Azure Key Vault.</td>
+              </tr>
+              <tr>
+                <td><strong>Brak obsługi Throttlingu (Błędy 429 / 503)</strong></td>
+                <td>Pętla zapytań o tysiące plików zostaje zablokowana przez mechanizmy ochronne Microsoft 365.</td>
+                <td>Moduł <code>PnP.PowerShell</code> posiada wbudowany retry-logic. Dodawaj <code>Start-Sleep -Milliseconds 250</code> przy pętlach masowych.</td>
+              </tr>
+              <tr>
+                <td><strong>Używanie globalnego Sites.FullControl.All</strong></td>
+                <td>Aplikacja ma prawa kasowania i odczytu baz CIF innych departamentów banku.</td>
+                <td>Stosuj <code>Sites.Selected</code> i nadawaj uprawnienia per witryna poleceniem <code>Grant-PnPAzureADAppSitePermission</code>.</td>
+              </tr>
+              <tr>
+                <td><strong>Uruchamianie skryptów w starym Windows PowerShell 5.1</strong></td>
+                <td>Brak wsparcia dla nowszych funkcji PnP.PowerShell v2.x i wolniejsze przetwarzanie zapytań.</td>
+                <td>Wdrażaj wyłącznie <strong>PowerShell 7.2+ (Core)</strong> na stacjach administracyjnych i serwerach CI/CD.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- SEKCJA 8: FAQ & CHECKLISTA AUDYTOWA -->
+      <section class="topic-section" id="sec-faq">
+        <div class="section-header">
+          <div class="section-header-left">
+            <div class="section-icon-badge">❓</div>
+            <div>
+              <h2>8. Najczęściej Zadawane Pytania (FAQ) & Checklista Audytowa</h2>
+              <p>Praktyczne wskazówki dla inżynierów M365 i oficerów bezpieczeństwa IT (CISO)</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-list">
+          <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+              <span>Jakie uprawnienia są wymagane do uruchomienia skryptów PnP.PowerShell?</span>
+              <span class="faq-toggle-icon">▼</span>
+            </div>
+            <div class="faq-answer">
+              Do operacji na poziomie pojedynczej witryny wystarczą uprawnienia <strong>Właściciela Witryny (Site Collection Administrator)</strong>. Do rejestracji kolumn w Content Type Hub lub konfiguracji Organization Assets Library wymagana jest rola <strong>SharePoint Administrator</strong> w tenancie Microsoft 365.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+              <span>Czy skrypt PnP.PowerShell może uszkodzić istniejące dane w bibliotece?</span>
+              <span class="faq-toggle-icon">▼</span>
+            </div>
+            <div class="faq-answer">
+              Prezentowane skrypty provisioningu stosują zasadę <strong>idempotentności</strong>: przed utworzeniem kolumny czy typu zawartości sprawdzają, czy obiekt już istnieje (<code>Get-PnPField -Identity ...</code>). Jeśli obiekt istnieje, skrypt nie modyfikuje go ani nie usuwa istniejących danych.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+              <span>Gdzie przechowywać raporty audytowe CSV, aby spełniały wymogi DORA?</span>
+              <span class="faq-toggle-icon">▼</span>
+            </div>
+            <div class="faq-answer">
+              Raporty z okresowych audytów uprawnień należy zapisywać w dedykowanej, odizolowanej bibliotece Audytu Wewnętrznego z włączonym wersjonowaniem oraz polityką retencji WORM (Write Once, Read Many) w Microsoft Purview, uniemożliwiającą modyfikację lub usunięcie pliku przez określony czas (np. 5 lat).
+            </div>
+          </div>
+        </div>
+
+        <div class="alert-box alert-success" style="margin-top:24px;">
+          <div class="alert-icon">✅</div>
+          <div>
+            <div class="alert-title">Bankowa Checklista Gotowości Automatyzacji do Wdrożenia na Środowisku PROD</div>
+            <ul style="padding-left:18px; margin-top:6px; line-height:1.55;">
+              <li>[ ] Kod skryptu przeszedł pomyślnie testy na środowisku piaskownicy (Sandbox/DEV).</li>
+              <li>[ ] Skrypt używa uwierzytelniania certyfikatem X.509 — brak poświadczeń użytkownika w kodzie.</li>
+              <li>[ ] Aplikacja Entra ID posiada ograniczenie uprawnień <code>Sites.Selected</code>.</li>
+              <li>[ ] Raport uprawnień został zweryfikowany pod kątem braku użytkowników bezpośrednich (Direct Permissions).</li>
+              <li>[ ] Wersjonowanie w bibliotekach zostało ustawione na minimum 50 wersji głównych.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- STOPKA FIRMOWA -->
+      <footer class="main-footer">
+        <div class="footer-inner">
+          <div class="footer-left">
+            <div class="footer-comp-name">REMBIASZ GRC Tech Solutions Tomasz Rembiasz</div>
+            <div class="footer-comp-details">
+              NIP: 887-155-01-62 • Tworzenie aplikacji GRC dla Sektora Bankowego (Governance, Risk & Compliance), Oracle APEX, Python, systemy wsparcia procesów.
+            </div>
+            <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">
+              Wydanie: 2026.1 • Przewodnik Automatyzacji Wdrożeń: PnP.PowerShell & CLI M365 w Sektorze Bankowym
+            </div>
+          </div>
+
+          <div class="footer-right">
+            <div class="helpdesk-box">
+              <div class="helpdesk-box-title">Kontakt & Doradztwo GRC</div>
+              <div class="helpdesk-box-contact">
+                E-mail: <a href="mailto:trembiasz@gmail.com">trembiasz@gmail.com</a><br>
+                NIP: 887-155-01-62
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
+
+    </main>
+  </div>
+
+  <!-- SKRYPTY INTERAKTYWNE -->
+  <script>
+    // Generator skryptu PnP w Sandboxie
+    function generatePnpScript() {
+      const siteUrl = document.getElementById('genSiteUrl').value.trim() || 'https://twojbank.sharepoint.com/sites/twoja-witryna';
+      const libTitle = document.getElementById('genLibTitle').value.trim() || 'Biblioteka Dokumentów Bankowych';
+      const auth = document.getElementById('genAuthMethod').value;
+      const colDocNum = document.getElementById('chkColDocNum').checked;
+      const colTajemnica = document.getElementById('chkColTajemnica').checked;
+      const colDora = document.getElementById('chkColDora').checked;
+      const colDept = document.getElementById('chkColDept').checked;
+      const versioning = document.getElementById('chkVersioning').checked;
+      const approval = document.getElementById('chkApproval').checked;
+
+      let code = `# ===================================================================\n`;
+      code += `# BANK GRC PROVISIONING SCRIPT - PNP.POWERSHELL (DORA & ICT)\n`;
+      code += `# REMBIASZ GRC Tech Solutions Tomasz Rembiasz • NIP: 887-155-01-62\n`;
+      code += `# ===================================================================\n\n`;
+
+      code += `# 1. Uwierzytelnienie w SharePoint Online\n`;
+      if (auth === 'cert') {
+        code += `$SiteUrl   = "${siteUrl}"\n`;
+        code += `$ClientId  = "11112222-3333-4444-5555-666677778888" # Entra ID App\n`;
+        code += `$Thumbprint= "A1B2C3D4E5F60718293A4B5C6D7E8F9012345678" # Magazyn Certyfikatów\n`;
+        code += `$Tenant    = "twojbank.onmicrosoft.com"\n\n`;
+        code += `Connect-PnPOnline -Url $SiteUrl -ClientId $ClientId -Thumbprint $Thumbprint -Tenant $Tenant\n`;
+      } else {
+        code += `$SiteUrl = "${siteUrl}"\n`;
+        code += `Connect-PnPOnline -Url $SiteUrl -Interactive\n`;
+      }
+
+      code += `\n$GroupName = "Bank GRC - Kolumny Regulacyjne"\n\n`;
+      code += `# 2. Tworzenie Kolumn Witryny (Site Columns)\n`;
+
+      if (colDocNum) {
+        code += `Add-PnPField -Type Text -InternalName "Bank_NumerProcedury" -DisplayName "Numer Sprawy / Identyfikator Aktu" -Group $GroupName\n`;
+      }
+      if (colDept) {
+        code += `Add-PnPField -Type Choice -InternalName "Bank_Departament" -DisplayName "Departament Właścicielski" -Group $GroupName \\\n`;
+        code += `             -Choices @("Ryzyko Kredytowe", "CISO & DORA", "Compliance & AML", "Audyt Wewnętrzny")\n`;
+      }
+      if (colTajemnica) {
+        code += `Add-PnPField -Type Choice -InternalName "Bank_TajemnicaBankowa" -DisplayName "Klauzula Poufności (Art. 104 Pr. Bank.)" -Group $GroupName \\\n`;
+        code += `             -Choices @("ŚCIŚLE POUFNE • TAJEMNICA BANKOWA", "POUFNE WEWNĘTRZNE", "JAWNE")\n`;
+      }
+      if (colDora) {
+        code += `Add-PnPField -Type DateTime -InternalName "Bank_DataPrzegladu" -DisplayName "Termin Przeglądu (DORA Art. 11)" -Group $GroupName\n`;
+      }
+
+      code += `\n# 3. Tworzenie Biblioteki i Konfiguracja Bezpieczeństwa\n`;
+      code += `$libTitle = "${libTitle}"\n`;
+      code += `$existingLib = Get-PnPList -Identity $libTitle -ErrorAction SilentlyContinue\n`;
+      code += `if (-not $existingLib) {\n`;
+      code += `    New-PnPList -Title $libTitle -Template DocumentLibrary -Url ($libTitle -replace '\\s+', '')\n`;
+      code += `}\n\n`;
+
+      let setParams = [`-Identity $libTitle`, `-ContentTypesEnabled $true`];
+      if (versioning) {
+        setParams.push(`-EnableVersioning $true -MajorVersionLimit 50 -EnableMinorVersions $true -MinorVersionLimit 10`);
+      }
+      if (approval) {
+        setParams.push(`-EnableModeration $true`);
+      }
+
+      code += `Set-PnPList ${setParams.join(' ')}\n\n`;
+      code += `Write-Host "✓ Wdrożenie zakończone sukcesem!" -ForegroundColor Green\n`;
+
+      document.getElementById('generatedScriptCode').textContent = code;
+    }
+
+    // Kopiowanie snippetów kodu
+    function copySnippet(btn) {
+      const code = btn.closest('.code-box').querySelector('code').innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        const originalText = btn.textContent;
+        btn.textContent = 'Skopiowano!';
+        btn.style.background = '#059669';
+        setTimeout(() => {
+          btn.textContent = originalText;
+          btn.style.background = '#334155';
+        }, 2000);
+      });
+    }
+
+    // Rozwijanie akordeonów FAQ
+    function toggleFaq(element) {
+      const parent = element.parentElement;
+      const isOpen = parent.classList.contains('open');
+      const icon = element.querySelector('.faq-toggle-icon');
+
+      if (isOpen) {
+        parent.classList.remove('open');
+        icon.textContent = '▼';
+      } else {
+        parent.classList.add('open');
+        icon.textContent = '▲';
+      }
+    }
+
+    // Wyszukiwarka Live Search
+    function filterContent() {
+      const input = document.getElementById('liveSearch');
+      const filter = input.value.toLowerCase().trim();
+      const sections = document.querySelectorAll('.topic-section');
+
+      sections.forEach(sec => {
+        if (!filter) {
+          sec.style.display = 'block';
+          return;
+        }
+
+        const text = sec.innerText.toLowerCase();
+        if (text.includes(filter)) {
+          sec.style.display = 'block';
+        } else {
+          sec.style.display = 'none';
+        }
+      });
+    }
+
+    // Scroll-Spy
+    window.addEventListener('scroll', () => {
+      const sections = document.querySelectorAll('.topic-section, .hero-panel');
+      const navLinks = document.querySelectorAll('#sidebarNav a');
+      let currentSectionId = '';
+
+      sections.forEach(section => {
+        const rect = section.getBoundingClientRect();
+        if (rect.top <= 140 && rect.bottom >= 140) {
+          currentSectionId = section.getAttribute('id');
+        }
+      });
+
+      if (currentSectionId) {
+        navLinks.forEach(link => {
+          if (link.getAttribute('href') === '#' + currentSectionId) {
+            link.classList.add('active');
+          } else {
+            link.classList.remove('active');
+          }
+        });
+      }
+    });
+
+    // Inicjalizacja generatora na starcie
+    generatePnpScript();
+  </script>
+</body>
+</html>

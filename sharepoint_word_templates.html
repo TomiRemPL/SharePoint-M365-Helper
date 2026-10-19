@@ -1178,7 +1178,7 @@
 
       <!-- BANNER HERO -->
       <section class="hero-panel" id="sec-intro">
-        <div class="hero-tag">🏛️ Standaryzacja Regulacji Wewnętrznych • KNF Rekomendacja D G9 & DORA</div>
+        <div class="hero-tag">🏛️ Standaryzacja Regulacji Wewnętrznych • DORA & Ład ICT</div>
         <h2>Automatyczna Synchronizacja Metadanych SharePoint z Dokumentami Word (.dotx)</h2>
         <p>
           Wdrażanie mechanizmu <strong>Quick Parts (Document Properties)</strong> oraz centralnej dystrybucji szablonów za pośrednictwem <strong>Organization Assets Library</strong>. Eliminacja ręcznego przepisywania numerów procedur, dat ważności i klauzul poufności. Zapewnienie pełnej spójności pomiędzy atrybutami w SharePoint a fizyczną treścią wydruku lub pliku PDF.
@@ -1223,8 +1223,8 @@
         <div class="alert-box alert-knf">
           <div class="alert-icon">⚠️</div>
           <div>
-            <div class="alert-title">KNF Rekomendacja D (G9) & DORA Art. 9: Integralność Wewnętrznych Regulacji</div>
-            Zgodnie z Rekomendacją D Bank ma obowiązek zapewnić, że każdy pracownik stosuje aktualną i zatwierdzoną wersję procedury. Klasycznym błędem audytowym jest tzw. <em>rozbieżność metadanych</em>: w SharePoint plik posiada status „Obowiązujący” i wersję 3.0, podczas gdy w tabelce tytułowej dokumentu Word widnieje „Wersja robocza 2.1” oraz nieaktualne nazwisko właściciela biznesowego.
+            <div class="alert-title">DORA Art. 11 & Ład ICT: Integralność Wewnętrznych Regulacji</div>
+            Zgodnie z wymogami unijnego rozporządzenia DORA (Art. 11) oraz wytycznymi KNF w zakresie ryzyka ICT, Bank ma obowiązek zapewnić, że każdy pracownik stosuje aktualną i zatwierdzoną wersję procedury. Klasycznym błędem audytowym jest tzw. <em>rozbieżność metadanych</em>: w SharePoint plik posiada status „Obowiązujący” i wersję 3.0, podczas gdy w tabelce tytułowej dokumentu Word widnieje „Wersja robocza 2.1” oraz nieaktualne nazwisko właściciela biznesowego.
           </div>
         </div>
 
@@ -1252,7 +1252,7 @@
                 <td><span class="badge-grc amber">WYSOKIE</span></td>
               </tr>
               <tr>
-                <td><strong>KNF Rekomendacja D G9 (Cykl Przeglądów)</strong></td>
+                <td><strong>DORA Art. 11 (Cykl Przeglądów Regulacji)</strong></td>
                 <td>Brak informacji w wydrukowanym dokumencie o dacie utraty ważności regulacji.</td>
                 <td>Pole <code>Bank_DataPrzegladu</code> widoczne w metryce na 1. stronie dokumentu.</td>
                 <td><span class="badge-grc amber">WYSOKIE</span></td>
@@ -1463,11 +1463,11 @@
                 <td>Dzień wejścia w życie regulacji na mocy uchwały Zarządu.</td>
               </tr>
               <tr>
-                <td>Metryka: Przegląd KNF</td>
+                <td>Metryka: Przegląd DORA / ICT</td>
                 <td><code>Bank_DataPrzegladu</code></td>
                 <td><code>Bank_DataPrzegladu</code></td>
                 <td>Data i godzina</td>
-                <td>Wymóg Rekomendacji D G9: data planowanego rocznego audytu procedury.</td>
+                <td>Wymóg DORA Art. 11: data planowanego rocznego przeglądu procedury.</td>
               </tr>
               <tr>
                 <td>Stopka: Poufność</td>
@@ -1622,7 +1622,7 @@ Write-Host "Pomyślnie zarejestrowano bibliotekę szablonów bankowych w Microso
               </div>
 
               <div class="form-group">
-                <label>Data Rewizji KNF (Rek. D): <span>[Bank_DataPrzegladu]</span></label>
+                <label>Data Rewizji DORA (Ład ICT): <span>[Bank_DataPrzegladu]</span></label>
                 <input type="date" id="simDateReview" class="form-control" value="2027-04-30" oninput="updateWordPage()">
               </div>
 
@@ -1678,7 +1678,7 @@ Write-Host "Pomyślnie zarejestrowano bibliotekę szablonów bankowych w Microso
                     <td class="val"><span class="qp-highlight" id="wpDateEffective">2026-05-01</span></td>
                   </tr>
                   <tr>
-                    <td class="lbl">Termin Przeglądu (KNF Rek. D):</td>
+                    <td class="lbl">Termin Przeglądu (DORA Art. 11):</td>
                     <td class="val"><span class="qp-highlight" id="wpDateReview">2027-04-30</span></td>
                   </tr>
                   <tr>
@@ -1687,7 +1687,7 @@ Write-Host "Pomyślnie zarejestrowano bibliotekę szablonów bankowych w Microso
                   </tr>
                   <tr>
                     <td class="lbl">Podstawa Prawna / Reżim:</td>
-                    <td class="val">Uchwała Zarządu Banku nr 42/2026 • KNF Rekomendacja S i D</td>
+                    <td class="val">Uchwała Zarządu Banku nr 42/2026 • Rozporządzenie DORA & KNF ICT</td>
                   </tr>
                 </tbody>
               </table>

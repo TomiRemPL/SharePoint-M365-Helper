@@ -765,7 +765,7 @@
       </div>
       <div class="app-title">
         <h1>SharePoint M365 – Bezpieczeństwo & Zero Trust</h1>
-        <p>Architektura Uprawnień, Zgodność z KNF Rek. D, DORA & Tajemnicą Bankową</p>
+        <p>Architektura Uprawnień, Zgodność z DORA, Wytycznymi KNF ICT & Tajemnicą Bankową</p>
       </div>
     </div>
 
@@ -811,10 +811,10 @@
 
       <!-- BANNER POWITALNY -->
       <section class="welcome-hero">
-        <div class="welcome-badge">🛡️ Cyberbezpieczeństwo & KNF Rekomendacja D</div>
+        <div class="welcome-badge">🛡️ Cyberbezpieczeństwo, DORA & Ład ICT</div>
         <h2>Zarządzanie Uprawnieniami i Ochrona Danych w Modelu Zero Trust</h2>
         <p>
-          Kompleksowy przewodnik projektowania architektury dostępu do zasobów SharePoint & Microsoft 365 w sektorze bankowym. Zasada wiedzy koniecznej (Need-to-Know), eliminacja niekontrolowanego udostępniania zewnętrznego, ochrona tajemnicy bankowej (art. 104 Prawa Bankowego) oraz weryfikacja zgodności z rozporządzeniem <strong>DORA</strong> i wytycznymi <strong>KNF</strong>.
+          Kompleksowy przewodnik projektowania architektury dostępu do zasobów SharePoint & Microsoft 365 w sektorze bankowym. Zasada wiedzy koniecznej (Need-to-Know), eliminacja niekontrolowanego udostępniania zewnętrznego, ochrona tajemnicy bankowej (art. 104 Prawa Bankowego) oraz weryfikacja zgodności z rozporządzeniem <strong>DORA</strong> i wytycznymi <strong>KNF w zakresie ryzyka ICT</strong>.
         </p>
       </section>
 
@@ -828,7 +828,7 @@
               <p>Zasada najmniejszych uprawnień (Least Privilege) i tożsamość jako nowy perymetr obrony</p>
             </div>
           </div>
-          <span class="section-reg-pill reg-knf">KNF Rek. D (G7) • DORA Art. 9</span>
+          <span class="section-reg-pill reg-knf">DORA Art. 9 • Wytyczne KNF ICT</span>
         </div>
 
         <p style="color:var(--text-soft); font-size:13.5px; line-height:1.6;">
@@ -861,7 +861,7 @@
         <div class="alert-box alert-knf">
           <span class="alert-icon">⚖️</span>
           <div>
-            <strong>KNF Rekomendacja D – Rek. G7.1 & G7.2:</strong> Bank powinien posiadać sformalizowane zasady przydzielania i odbierania uprawnień w systemach ICT, oparte o zasadę wiedzy koniecznej (need-to-know) oraz zasadę minimalnych uprawnień. Uprawnienia muszą być rozliczane indywidualnie, a konta współdzielone są zabronione.
+            <strong>DORA Art. 9 & Wytyczne KNF w zakresie ryzyka ICT (Zarządzanie Tożsamością i Dostępem):</strong> Bank ma obowiązek wdrożyć sformalizowane zasady przydzielania i odbierania uprawnień w systemach teleinformatycznych, oparte o zasadę wiedzy koniecznej (need-to-know) oraz minimalnych uprawnień (least privilege). Uprawnienia muszą być rozliczane indywidualnie, a konta współdzielone są bezwzględnie zabronione.
           </div>
         </div>
       </section>
@@ -890,7 +890,7 @@
                 <th style="width: 22%;">Poziom Uprawnień</th>
                 <th style="width: 18%;">Grupa SharePoint</th>
                 <th style="width: 40%;">Zakres Operacji</th>
-                <th style="width: 20%;">Rekomendacja Bankowa</th>
+                <th style="width: 20%;">Dobra Praktyka Bankowa</th>
               </tr>
             </thead>
             <tbody>
@@ -1174,7 +1174,7 @@
           <!-- WYNIK AUDYTU -->
           <div class="calc-result-box risk-low" id="calcResultBox">
             <div class="calc-result-title" id="calcResultTitle">
-              <span>✓ WYNIK: ZGODNOŚĆ Z KNF REKOMENDACJA D (Niskie Ryzyko)</span>
+              <span>✓ WYNIK: ZGODNOŚĆ Z DORA & STANDARDEM ICT (Niskie Ryzyko)</span>
             </div>
             <div class="calc-result-desc" id="calcResultDesc">
               Twoja konfiguracja realizuje model Zero Trust. Brak złamanego dziedziczenia i brak linków anonimowych zapewnia pełną rozliczalność i bezpieczeństwo tajemnicy bankowej.
@@ -1318,7 +1318,7 @@
 
       // Ocena niska / zgodna
       box.classList.add('risk-low');
-      title.innerHTML = '<span>✓ WYNIK: ZGODNOŚĆ Z KNF REKOMENDACJA D (Niskie Ryzyko / Zero Trust)</span>';
+      title.innerHTML = '<span>✓ WYNIK: ZGODNOŚĆ Z DORA & STANDARDEM ICT (Niskie Ryzyko / Zero Trust)</span>';
       desc.innerHTML = 'Twoja konfiguracja spełnia wymogi nadzorcze i realizuje zasady Zero Trust. Czyste dziedziczenie uprawnień, brak linków anonimowych i kontrolowana rola Współtworzenia zapewniają bezpieczeństwo i audytowalność.';
     }
 

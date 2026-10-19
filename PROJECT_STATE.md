@@ -19,8 +19,8 @@
 1. **`index.html` (Główny Portal Wiedzy i Hub Nawigacyjny)**:
    * Nowoczesny dashboard w klasie Enterprise / Banking GRC integrujący wszystkie moduły.
    * Globalny Live Search w czasie rzeczywistym z obsługą słów kluczowych i pustego stanu wyników.
-   * Karty modułów dostępnych (8) oraz kart modułów planowanych w roadmapie (1) z interaktywnym modalem specyfikacji zakresu.
-   * Matryca Zgodności Regulacyjnej GRC (KNF Rekomendacja D G7/G9, DORA Art. 9/11, Prawo Bankowe Art. 104, ISO 27001).
+   * Wszystkie 9 modułów produkcyjnie wdrożonych (100% pokrycia roadmapy).
+   * Matryca Zgodności Regulacyjnej GRC (DORA Art. 9/11, wytyczne KNF w zakresie ryzyka ICT, Prawo Bankowe Art. 104, ISO 27001).
    * Czysty nagłówek z bezpośrednim kontaktem e-mail i repozytorium GitHub oraz pełna stopka firmowa.
 
 2. **Dedykowany Skill Agenta: `.agents/skills/sharepoint-content-creator/SKILL.md`**:
@@ -32,25 +32,25 @@
 
 3. **`sharepoint_word_templates.html` (Szablony Word .dotx, Quick Parts & Organization Assets Library)**:
    * Dwukierunkowa synchronizacja metadanych SharePoint z plikami Microsoft Word za pośrednictwem Custom XML Data Binding i Document Properties.
-   * Standaryzacja metryki dokumentu regulacyjnego: numer procedury, departament, właściciel biznesowy, data wejścia w życie, data przeglądu KNF.
+   * Standaryzacja metryki dokumentu regulacyjnego: numer procedury, departament, właściciel biznesowy, data wejścia w życie, data przeglądu DORA / ICT.
    * Wymuszona klauzula Tajemnicy Bankowej (art. 104 Prawa Bankowego) w nagłówku i stopce dokumentu.
    * Pełny skrypt PowerShell do wdrożenia centralnego repozytorium szablonów w tenancie (*Organization Assets Library - OfficeTemplateLibrary*).
    * Interaktywny symulator live sandbox: dynamiczne wprowadzanie metadanych SharePoint z natychmiastowym podglądem karty tytułowej Word oraz przełącznikiem widoku kodów pól `{ Quick Parts }`.
 
-4. **`sharepoint_power_automate.html` (Automatyzacja Obiegów, Power Automate & Alerty KNF)**:
+4. **`sharepoint_power_automate.html` (Automatyzacja Obiegów, Power Automate & Alerty KNF / DORA)**:
    * Wzorcowe obiegi akceptacji procedur regulacyjnych: opiniowanie równoległe (Compliance/Ryzyko/IT) oraz sekwencyjny podpis Zarządu Banku.
    * Atomowa, unikalna numeracja spraw i procedur (np. `PROC/RYZ/2026/0042`) bez ryzyka kolizji współbieżnych (Race Condition).
-   * Cykliczny monitoring i alerty rocznego przeglądu procedur (KNF Rekomendacja D G9) w cyklach T-60, T-30 i T-0 dni.
+   * Cykliczny monitoring i alerty rocznego przeglądu procedur (DORA Art. 11 & ład ICT) w cyklach T-60, T-30 i T-0 dni.
    * Post-Approval Lockdown: automatyczne zamrażanie uprawnień do wersji tylko do odczytu przez SharePoint REST API i konwersja do PDF/A.
    * Gotowe wyrażenia WExpressions, OData Filter Queries, wzorzec obsługi błędów Try-Catch (Scope Run After) oraz interaktywny symulator procesu na żywo.
 
 5. **`sharepoint_security_permissions.html` (Bezpieczeństwo, Uprawnienia & Zero Trust w Sektorze Bankowym)**:
-   * Projektowanie architektury uprawnień w modelu Zero Trust z uwzględnieniem art. 104 Prawa Bankowego i Rekomendacji D KNF (G7, G9).
+   * Projektowanie architektury uprawnień w modelu Zero Trust z uwzględnieniem art. 104 Prawa Bankowego, rozporządzenia DORA oraz wytycznych ICT KNF.
    * Dedykowana rola *Audytor (Restricted View / Blokada Pobierania)* zapobiegająca niekontrolowanemu wyciekowi danych.
    * Zarządzanie dziedziczeniem, limity SharePoint (50k unikalnych uprawnień) i higiena bibliotek dokumentów.
    * Restrykcje dostępu gości (B2B Guest Sharing) i bezpieczne alternatywy dla linków anonimowych.
    * Etykietowanie wrażliwości w Microsoft Purview, szyfrowanie RMS, ochrona urządzeń prywatnych (MAM) i audyt w Unified Audit Log.
-   * Interaktywny symulator / kalkulator ryzyka KNF z natychmiastową oceną konfiguracji i zaleceniami wdrożeniowymi.
+   * Interaktywny symulator / kalkulator ryzyka KNF / DORA z natychmiastową oceną konfiguracji i zaleceniami wdrożeniowymi.
 
 6. **`sharepoint_lists_json.html` (Microsoft Lists & Rejestry Bankowe JSON)**:
    * Zastąpienie ryzykownych arkuszy Excela audytowalnymi rejestrami MS Lists (Rejestr Ryzyka ICT & Incydentów DORA).
@@ -62,8 +62,8 @@
 7. **`sharepoint_columns_content_types.html` (Galerie Projektanta stron sieci Web)**:
    * Wyczerpujący podręcznik architektury informacji: *Kolumny witryny* (Site Columns) oraz *Typy zawartości* (Site Content Types).
    * Hierarchia dziedziczenia oparta o nadrzędny `Bankowy Dokument Bazowy`.
-   * Trzy gotowe scenariusze bankowe (Kredyty CIF, Compliance & AML, Procedury KNF/DORA).
-   * **Formatowanie JSON Kolumn Witryny**: szablony JSON z dziedziczeniem w całym tenancie (`Bank_TajemnicaBankowa` z kłódką, progi ekspozycji kredytowej `Bank_KwotaEkspozycji`, monitor ważności procedury `Bank_DataPrzegladu` KNF D).
+   * Trzy gotowe scenariusze bankowe (Kredyty CIF, Compliance & AML, Procedury DORA/ICT).
+   * **Formatowanie JSON Kolumn Witryny**: szablony JSON z dziedziczeniem w całym tenancie (`Bank_TajemnicaBankowa` z kłódką, progi ekspozycji kredytowej `Bank_KwotaEkspozycji`, monitor ważności procedury `Bank_DataPrzegladu` DORA/ICT).
    * Dwukierunkowa nawigacja: powrót do `index.html` i przełącznik do podręcznika codziennego.
 
 8. **`sharepoint_helper.html` (Podręcznik Codziennej Pracy)**:
@@ -76,20 +76,24 @@
 10. **`sharepoint_quickstart.md`**:
     * Podręczna wersja Markdown do wklejenia w Microsoft Teams, OneNote lub intranet.
 
-11. **`README.md` & `.gitignore`**:
+11. **`sharepoint_pnp_powershell.html` & Skrypty `.ps1` (Automatyzacja Wdrożeń: PnP.PowerShell & CLI M365)**:
+    * Kompletny przewodnik wdrożeń Infrastructure as Code (IaC) w SharePoint Online.
+    * Gotowe skrypty: `deploy_bank_architecture.ps1` (provisioning w 30 sek.) oraz `audit_sharepoint_permissions_dora.ps1` (skanowanie uprawnień i raport CSV).
+    * Bezpieczne uwierzytelnianie certyfikatem X.509 w Entra ID oraz izolacja uprawnień `Sites.Selected`.
+    * Interaktywny generator skryptów na żywo (Live Builder) oraz procedury migracji PnP Provisioning Schema.
+
+12. **`README.md` & `.gitignore`**:
     * Kompletna dokumentacja projektu i czysta konfiguracja gita.
 
 ---
 
 ## 🎯 Główne Ustalenia Architektoniczne
 - **Brak zależności zewnętrznych:** Wszystkie narzędzia HTML działają w 100% offline/lokalnie po dwukrotnym kliknięciu w dowolnej przeglądarce.
-- **Specyfika bankowa:** Wszystkie przykłady i schematy uwzględniają specyfikę polskiego i unijnego sektora bankowego (art. 104 Prawa Bankowego, Rekomendacja D KNF, DORA).
+- **Specyfika bankowa:** Wszystkie przykłady i schematy uwzględniają specyfikę polskiego i unijnego sektora bankowego (art. 104 Prawa Bankowego, rozporządzenie DORA, wytyczne KNF w zakresie ryzyka ICT).
 - **Zintegrowana siatka nawigacyjna:** Wszystkie podstrony posiadają wzajemne łącza prowadzące do portalu głównego `index.html` oraz sąsiednich podręczników.
 
 ---
 
-## 🚀 Kolejny Krok Implementacyjny (Roadmapa)
-1. **Priorytet 5: `sharepoint_pnp_powershell.html` oraz skrypty `.ps1` (Automatyzacja Wdrożeń PnP.PowerShell & CLI M365)**:
-   - Skrypt automatycznego provisioningu architektury jako kod (IaC): tworzenie kolumn witryny, typów zawartości i bibliotek bankowych w 30 sekund.
-   - Skrypt audytowy: inwentaryzacja unikalnych uprawnień, wykrywanie linków anonimowych i generowanie raportu CSV pod kontrolę KNF.
-   - Replikacja konfiguracji i artefaktów pomiędzy środowiskami (Dev -> Test -> Prod) bez pracy ręcznej w interfejsie webowym.
+## 🚀 Stan Projektu & Podsumowanie Roadmapy
+* **Wszystkie 9 modułów zdefiniowanych w roadmapie portalu zostało w 100% zrealizowanych, przetestowanych i opublikowanych.**
+* Repozytorium stanowi kompletny, samowystarczalny pakiet narzędziowy Enterprise GRC dla instytucji finansowych podlegających reżimowi DORA i KNF ICT.
