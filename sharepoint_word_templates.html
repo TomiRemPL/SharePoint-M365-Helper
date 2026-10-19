@@ -1,0 +1,2051 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SharePoint M365 – Szablony Dokumentów Word (.dotx) & Quick Parts w Sektorze Bankowym</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* Kolorystyka Microsoft Word & Corporate Banking */
+      --word-blue: #185abd;
+      --word-blue-dark: #103f82;
+      --word-blue-light: #eff6ff;
+      --word-accent: #2b78e4;
+      --sp-teal: #038387;
+      --sp-teal-dark: #025356;
+      --sp-teal-light: #f0fdfa;
+      --sp-blue: #0078d4;
+      --sp-blue-dark: #106ebe;
+      --sp-blue-light: #eff6ff;
+
+      /* Powierzchnie i tła */
+      --bg-page: #f8fafc;
+      --surface: #ffffff;
+      --surface-subtle: #f1f5f9;
+      --border: #e2e8f0;
+      --border-focus: #185abd;
+
+      /* Typografia */
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --text-soft: #475569;
+
+      /* Statusy i akcenty GRC */
+      --emerald: #059669;
+      --emerald-dark: #065f46;
+      --emerald-bg: #ecfdf5;
+      --emerald-border: #a7f3d0;
+      --amber: #d97706;
+      --amber-dark: #92400e;
+      --amber-bg: #fffbeb;
+      --amber-border: #fde68a;
+      --rose: #e11d48;
+      --rose-dark: #9f1239;
+      --rose-bg: #fff1f2;
+      --rose-border: #fecdd3;
+      --indigo: #4f46e5;
+      --indigo-bg: #eef2ff;
+
+      /* Promienie i cienie */
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 14px;
+      --radius-xl: 18px;
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.08);
+      --sidebar-width: 290px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: var(--bg-page);
+      color: var(--text-main);
+      line-height: 1.55;
+      font-size: 14.5px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* NAGŁÓWEK GŁÓWNY */
+    .app-header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      height: 66px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .word-logo {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #185abd 0%, #103f82 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      box-shadow: 0 3px 10px rgba(24, 90, 189, 0.3);
+      font-weight: 800;
+      font-size: 18px;
+    }
+
+    .header-titles h1 {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--text-main);
+      line-height: 1.2;
+      letter-spacing: -0.01em;
+    }
+
+    .header-titles p {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-header {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      border-radius: var(--radius-md);
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text-soft);
+      cursor: pointer;
+    }
+
+    .btn-header:hover {
+      background: var(--surface-subtle);
+      border-color: #cbd5e1;
+      color: var(--text-main);
+    }
+
+    .btn-header.primary {
+      background: var(--word-blue);
+      color: #ffffff;
+      border-color: var(--word-blue);
+      box-shadow: 0 2px 6px rgba(24, 90, 189, 0.25);
+    }
+
+    .btn-header.primary:hover {
+      background: var(--word-blue-dark);
+      border-color: var(--word-blue-dark);
+    }
+
+    /* UKŁAD GŁÓWNY (Sidebar + Treść) */
+    .app-layout {
+      display: flex;
+      max-width: 1540px;
+      margin: 0 auto;
+      padding: 24px;
+      gap: 24px;
+      min-height: calc(100vh - 66px);
+    }
+
+    /* PASEK BOCZNY */
+    .app-sidebar {
+      width: var(--sidebar-width);
+      flex-shrink: 0;
+      position: sticky;
+      top: 90px;
+      height: fit-content;
+      max-height: calc(100vh - 110px);
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      padding-right: 4px;
+    }
+
+    .sidebar-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 16px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .sidebar-title {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .search-box {
+      position: relative;
+      margin-bottom: 12px;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 8px 12px 8px 32px;
+      font-size: 12.5px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      background: var(--surface-subtle);
+      color: var(--text-main);
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    .search-input:focus {
+      border-color: var(--word-blue);
+      background: #ffffff;
+      box-shadow: 0 0 0 3px rgba(24, 90, 189, 0.12);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+
+    .nav-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .nav-list a {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 10px;
+      border-radius: var(--radius-sm);
+      color: var(--text-soft);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      transition: all 0.15s ease;
+      line-height: 1.35;
+    }
+
+    .nav-list a:hover {
+      background: var(--surface-subtle);
+      color: var(--word-blue);
+    }
+
+    .nav-list a.active {
+      background: var(--word-blue-light);
+      color: var(--word-blue-dark);
+      font-weight: 700;
+      border-left: 3px solid var(--word-blue);
+    }
+
+    .badge-counter {
+      margin-left: auto;
+      font-size: 11px;
+      background: var(--surface-subtle);
+      padding: 2px 6px;
+      border-radius: 10px;
+      color: var(--text-muted);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* OBSZAR TREŚCI */
+    .content-area {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+
+    /* BANNER HERO MODUŁU */
+    .hero-panel {
+      background: linear-gradient(135deg, #103f82 0%, #185abd 60%, #0284c7 100%);
+      color: #ffffff;
+      border-radius: var(--radius-xl);
+      padding: 28px 32px;
+      box-shadow: var(--shadow-lg);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-panel::after {
+      content: '';
+      position: absolute;
+      right: -30px;
+      bottom: -40px;
+      width: 220px;
+      height: 220px;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.18);
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 11.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 12px;
+    }
+
+    .hero-panel h2 {
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.25;
+      margin-bottom: 10px;
+    }
+
+    .hero-panel p {
+      font-size: 14.5px;
+      line-height: 1.6;
+      color: rgba(255, 255, 255, 0.9);
+      max-width: 900px;
+    }
+
+    .hero-stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 14px;
+      margin-top: 22px;
+    }
+
+    .hero-stat-card {
+      background: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: var(--radius-md);
+      padding: 12px 16px;
+    }
+
+    .hero-stat-val {
+      font-size: 18px;
+      font-weight: 800;
+      color: #ffffff;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .hero-stat-lbl {
+      font-size: 11.5px;
+      color: rgba(255, 255, 255, 0.82);
+      font-weight: 500;
+      margin-top: 2px;
+    }
+
+    /* SEKCJE TEMATYCZNE */
+    .topic-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: 28px 32px;
+      box-shadow: var(--shadow-sm);
+      scroll-margin-top: 86px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 16px;
+      margin-bottom: 22px;
+    }
+
+    .section-header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-icon-badge {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-md);
+      background: var(--word-blue-light);
+      color: var(--word-blue);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 19px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .section-header h2 {
+      font-size: 19px;
+      font-weight: 800;
+      color: var(--text-main);
+      letter-spacing: -0.01em;
+    }
+
+    .section-header p {
+      font-size: 12.5px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* ALERTY I WYMOGI BANKOWE */
+    .alert-box {
+      border-radius: var(--radius-md);
+      padding: 16px 20px;
+      margin: 18px 0;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      line-height: 1.55;
+      font-size: 13.5px;
+    }
+
+    .alert-box.alert-knf {
+      background: #fef2f2;
+      border: 1px solid var(--rose-border);
+      color: #881337;
+    }
+
+    .alert-box.alert-knf .alert-icon {
+      color: var(--rose);
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .alert-box.alert-info {
+      background: var(--word-blue-light);
+      border: 1px solid #bfdbfe;
+      color: #1e3a8a;
+    }
+
+    .alert-box.alert-info .alert-icon {
+      color: var(--word-blue);
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .alert-box.alert-success {
+      background: var(--emerald-bg);
+      border: 1px solid var(--emerald-border);
+      color: var(--emerald-dark);
+    }
+
+    .alert-box.alert-success .alert-icon {
+      color: var(--emerald);
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .alert-box.alert-warning {
+      background: var(--amber-bg);
+      border: 1px solid var(--amber-border);
+      color: var(--amber-dark);
+    }
+
+    .alert-box.alert-warning .alert-icon {
+      color: var(--amber);
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .alert-title {
+      font-weight: 700;
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+
+    /* KROKI IMPLEMENTACJI */
+    .step-timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin: 20px 0;
+    }
+
+    .step-item {
+      display: flex;
+      gap: 16px;
+      background: var(--surface-subtle);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 18px 20px;
+      transition: all 0.2s ease;
+    }
+
+    .step-item:hover {
+      border-color: #cbd5e1;
+      background: #ffffff;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .step-num {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--word-blue);
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 14px;
+      flex-shrink: 0;
+      box-shadow: 0 2px 6px rgba(24, 90, 189, 0.3);
+    }
+
+    .step-content {
+      flex: 1;
+    }
+
+    .step-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .step-desc {
+      font-size: 13.5px;
+      color: var(--text-soft);
+      line-height: 1.55;
+    }
+
+    /* TABELA DANYCH */
+    .data-table-container {
+      width: 100%;
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      margin: 18px 0;
+      background: #ffffff;
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 13.5px;
+    }
+
+    .data-table th {
+      background: var(--surface-subtle);
+      padding: 12px 14px;
+      font-weight: 700;
+      color: var(--text-main);
+      border-bottom: 1px solid var(--border);
+      font-size: 12.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .data-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-soft);
+      vertical-align: top;
+    }
+
+    .data-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .data-table tr:hover td {
+      background: #fbfdff;
+    }
+
+    .code-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      background: #f1f5f9;
+      color: #0f172a;
+      padding: 2px 6px;
+      border-radius: 4px;
+      border: 1px solid #e2e8f0;
+      font-weight: 600;
+    }
+
+    .badge-grc {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 12px;
+      text-transform: uppercase;
+    }
+
+    .badge-grc.red { background: #fee2e2; color: #991b1b; }
+    .badge-grc.amber { background: #fef3c7; color: #92400e; }
+    .badge-grc.green { background: #dcfce7; color: #166534; }
+    .badge-grc.blue { background: #dbeafe; color: #1e40af; }
+
+    /* CODE BOX */
+    .code-box {
+      background: #0f172a;
+      color: #f8fafc;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      margin: 18px 0;
+      border: 1px solid #1e293b;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .code-box-header {
+      background: #1e293b;
+      padding: 8px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      color: #94a3b8;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .code-box-header .lang-tag {
+      font-weight: 600;
+      color: #38bdf8;
+    }
+
+    .btn-copy {
+      background: #334155;
+      color: #e2e8f0;
+      border: none;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-copy:hover {
+      background: #475569;
+      color: #ffffff;
+    }
+
+    .code-box pre {
+      padding: 16px;
+      overflow-x: auto;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      line-height: 1.55;
+      margin: 0;
+    }
+
+    /* SYMULATOR INTERAKTYWNY (LIVE SANDBOX) */
+    .sandbox-container {
+      background: #ffffff;
+      border: 2px solid #bfdbfe;
+      border-radius: var(--radius-xl);
+      padding: 24px;
+      margin: 22px 0;
+      box-shadow: var(--shadow-md);
+    }
+
+    .sandbox-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 2px solid #eff6ff;
+      padding-bottom: 14px;
+      margin-bottom: 20px;
+    }
+
+    .sandbox-header-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .sandbox-grid {
+      display: grid;
+      grid-template-columns: 340px 1fr;
+      gap: 24px;
+    }
+
+    @media (max-width: 1080px) {
+      .sandbox-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Panel edycji metadanych SharePoint */
+    .sp-fields-panel {
+      background: var(--surface-subtle);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .sp-panel-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 8px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .form-group label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-soft);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .form-group label span {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--word-blue);
+    }
+
+    .form-control {
+      padding: 8px 10px;
+      font-size: 13px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: #ffffff;
+      color: var(--text-main);
+      outline: none;
+      transition: border 0.15s;
+    }
+
+    .form-control:focus {
+      border-color: var(--word-blue);
+      box-shadow: 0 0 0 2px rgba(24, 90, 189, 0.15);
+    }
+
+    .sandbox-presets {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    .btn-preset {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 5px 9px;
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--text-soft);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .btn-preset:hover {
+      background: var(--word-blue-light);
+      border-color: var(--word-blue);
+      color: var(--word-blue);
+    }
+
+    /* Wirtualna Strona Dokumentu Word (Karta Tytułowa) */
+    .word-page-sheet {
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: var(--radius-sm);
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+      padding: 40px 48px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      min-height: 580px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .word-header-rule {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #185abd;
+      padding-bottom: 8px;
+      margin-bottom: 30px;
+      font-size: 11px;
+      color: #64748b;
+    }
+
+    .word-header-logo {
+      font-weight: 800;
+      color: #185abd;
+      font-size: 14px;
+      letter-spacing: -0.02em;
+    }
+
+    .word-header-meta {
+      text-align: right;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .doc-title-block {
+      margin-bottom: 32px;
+      text-align: center;
+    }
+
+    .doc-type-badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      background: #eff6ff;
+      color: #1e40af;
+      padding: 4px 12px;
+      border-radius: 4px;
+      margin-bottom: 12px;
+    }
+
+    .doc-main-title {
+      font-size: 24px;
+      font-weight: 800;
+      color: #0f172a;
+      line-height: 1.3;
+      margin-bottom: 8px;
+    }
+
+    .doc-sub-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      color: #64748b;
+      font-weight: 600;
+    }
+
+    /* Metryka w Dokumencie Word */
+    .doc-metric-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 24px 0 32px 0;
+      font-size: 12.5px;
+    }
+
+    .doc-metric-table td {
+      border: 1px solid #cbd5e1;
+      padding: 9px 12px;
+    }
+
+    .doc-metric-table td.lbl {
+      background: #f8fafc;
+      font-weight: 700;
+      color: #334155;
+      width: 32%;
+    }
+
+    .doc-metric-table td.val {
+      color: #0f172a;
+      font-weight: 600;
+    }
+
+    .qp-highlight {
+      background: #dbeafe;
+      color: #1e40af;
+      border-radius: 3px;
+      padding: 1px 4px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      display: inline-block;
+      border: 1px dashed #3b82f6;
+    }
+
+    .qp-highlight.field-code {
+      background: #fef3c7;
+      color: #92400e;
+      border-color: #f59e0b;
+    }
+
+    /* Stopka Dokumentu Word */
+    .word-footer-rule {
+      margin-top: auto;
+      border-top: 1px solid #cbd5e1;
+      padding-top: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 10.5px;
+      color: #64748b;
+    }
+
+    .word-footer-confidential {
+      color: #b91c1c;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .word-footer-page {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* PRZEŁĄCZNIK WIDOKU SANDBOX */
+    .view-switcher-bar {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-switch-view {
+      padding: 6px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+      font-weight: 600;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text-soft);
+      cursor: pointer;
+    }
+
+    .btn-switch-view.active {
+      background: var(--word-blue);
+      color: #ffffff;
+      border-color: var(--word-blue);
+    }
+
+    /* FAQ ACCORDION */
+    .faq-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin: 18px 0;
+    }
+
+    .faq-item {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      background: var(--surface);
+      transition: all 0.2s;
+    }
+
+    .faq-item.open {
+      border-color: var(--word-blue);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .faq-question {
+      padding: 14px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--text-main);
+      background: var(--surface);
+    }
+
+    .faq-question:hover {
+      background: var(--surface-subtle);
+    }
+
+    .faq-toggle-icon {
+      font-size: 12px;
+      color: var(--text-muted);
+      transition: transform 0.2s;
+    }
+
+    .faq-answer {
+      display: none;
+      padding: 14px 18px;
+      background: #ffffff;
+      border-top: 1px solid var(--border);
+      font-size: 13.5px;
+      line-height: 1.6;
+      color: var(--text-soft);
+    }
+
+    .faq-item.open .faq-answer {
+      display: block;
+    }
+
+    /* STOPKA GŁÓWNA */
+    .main-footer {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: 32px 24px;
+      margin-top: 40px;
+    }
+
+    .footer-inner {
+      max-width: 1540px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .footer-left {
+      max-width: 650px;
+    }
+
+    .footer-comp-name {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 4px;
+    }
+
+    .footer-comp-details {
+      font-size: 12.5px;
+      color: var(--text-soft);
+      line-height: 1.5;
+    }
+
+    .footer-right {
+      text-align: right;
+    }
+
+    .helpdesk-box {
+      background: var(--surface-subtle);
+      border: 1px solid var(--border);
+      padding: 12px 18px;
+      border-radius: var(--radius-md);
+    }
+
+    .helpdesk-box-title {
+      font-size: 11.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .helpdesk-box-contact {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .helpdesk-box-contact a {
+      color: var(--word-blue);
+      text-decoration: none;
+    }
+
+    .helpdesk-box-contact a:hover {
+      text-decoration: underline;
+    }
+
+    /* MEDIA PRINT */
+    @media print {
+      .app-header,
+      .app-sidebar,
+      .view-switcher-bar,
+      .sandbox-presets,
+      .sp-fields-panel,
+      .btn-copy,
+      .btn-header {
+        display: none !important;
+      }
+
+      .app-layout {
+        display: block;
+        padding: 0;
+      }
+
+      .topic-section {
+        border: none;
+        box-shadow: none;
+        padding: 10px 0;
+        page-break-inside: avoid;
+      }
+
+      .sandbox-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAGŁÓWEK GŁÓWNY -->
+  <header class="app-header">
+    <div class="header-left">
+      <div class="word-logo">W</div>
+      <div class="header-titles">
+        <h1>Szablony Word (.dotx) & Quick Parts w Sektorze Bankowym</h1>
+        <p>Integracja Metadanych SharePoint, Organization Assets Library & Zgodność KNF / DORA</p>
+      </div>
+    </div>
+    <div class="header-right">
+      <a href="index.html" class="btn-header">← Portal Główny</a>
+      <a href="sharepoint_columns_content_types.html" class="btn-header">Galerie Projektanta</a>
+      <a href="sharepoint_power_automate.html" class="btn-header">Power Automate</a>
+      <button class="btn-header primary" onclick="window.print()">Drukuj / Eksport PDF</button>
+    </div>
+  </header>
+
+  <!-- GŁÓWNY UKŁAD -->
+  <div class="app-layout">
+
+    <!-- PASEK BOCZNY -->
+    <aside class="app-sidebar">
+      <div class="sidebar-card">
+        <div class="sidebar-title">Spis Sekcji Modułu</div>
+
+        <div class="search-box">
+          <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input type="text" id="liveSearch" class="search-input" placeholder="Filtruj tematy..." oninput="filterContent()">
+        </div>
+
+        <nav>
+          <ul class="nav-list" id="sidebarNav">
+            <li><a href="#sec-intro" class="active">1. Wymogi Bankowe & GRC <span class="badge-counter">KNF</span></a></li>
+            <li><a href="#sec-architecture">2. Architektura XML & Quick Parts <span class="badge-counter">Tech</span></a></li>
+            <li><a href="#sec-steps">3. Krok po Kroku: Szablon .dotx <span class="badge-counter">5 kroków</span></a></li>
+            <li><a href="#sec-metadata-binding">4. Metryka Procedury Bankowej <span class="badge-counter">Wzorzec</span></a></li>
+            <li><a href="#sec-oal">5. Organization Assets Library <span class="badge-counter">PowerShell</span></a></li>
+            <li><a href="#sec-sandbox">6. Interaktywny Symulator Word <span class="badge-counter">Demo Live</span></a></li>
+            <li><a href="#sec-antipatterns">7. Antywzorce i Limity <span class="badge-counter">Ryzyko</span></a></li>
+            <li><a href="#sec-faq">8. FAQ & Checklista KNF <span class="badge-counter">Audyt</span></a></li>
+          </ul>
+        </nav>
+      </div>
+
+      <!-- KARTA POMOCNICZA -->
+      <div class="sidebar-card" style="background:#eff6ff; border-color:#bfdbfe;">
+        <div style="font-size:12px; font-weight:700; color:#1e40af; margin-bottom:6px;">Wskazówka Architekta</div>
+        <p style="font-size:12px; color:#1e3a8a; line-height:1.45;">
+          Nigdy nie twórz szablonów z poziomu <em>Word for Web</em> (przeglądarki). Tylko stacjonarna aplikacja <strong>Word Desktop</strong> umożliwia wstawianie powiązanych kontrolek <code>Document Property</code> z Custom XML.
+        </p>
+      </div>
+    </aside>
+
+    <!-- OBSZAR TREŚCI -->
+    <main class="content-area">
+
+      <!-- BANNER HERO -->
+      <section class="hero-panel" id="sec-intro">
+        <div class="hero-tag">🏛️ Standaryzacja Regulacji Wewnętrznych • KNF Rekomendacja D G9 & DORA</div>
+        <h2>Automatyczna Synchronizacja Metadanych SharePoint z Dokumentami Word (.dotx)</h2>
+        <p>
+          Wdrażanie mechanizmu <strong>Quick Parts (Document Properties)</strong> oraz centralnej dystrybucji szablonów za pośrednictwem <strong>Organization Assets Library</strong>. Eliminacja ręcznego przepisywania numerów procedur, dat ważności i klauzul poufności. Zapewnienie pełnej spójności pomiędzy atrybutami w SharePoint a fizyczną treścią wydruku lub pliku PDF.
+        </p>
+
+        <div class="hero-stats-row">
+          <div class="hero-stat-card">
+            <div class="hero-stat-val">100% Spójności</div>
+            <div class="hero-stat-lbl">Eliminacja rozbieżności SharePoint vs Word</div>
+          </div>
+          <div class="hero-stat-card">
+            <div class="hero-stat-val">Art. 104 Pr. Bank.</div>
+            <div class="hero-stat-lbl">Automatyczna klauzula Tajemnicy Bankowej</div>
+          </div>
+          <div class="hero-stat-card">
+            <div class="hero-stat-val">OAL Central</div>
+            <div class="hero-stat-lbl">Szablony dostępne w Word: Nowy -> [Bank]</div>
+          </div>
+          <div class="hero-stat-card">
+            <div class="hero-stat-val">Zero Makr</div>
+            <div class="hero-stat-lbl">Czyste Custom XML Data Binding bez VBA</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SEKCJA 1: WYMOGI BANKOWE & GRC -->
+      <section class="topic-section">
+        <div class="section-header">
+          <div class="section-header-left">
+            <div class="section-icon-badge">⚖️</div>
+            <div>
+              <h2>1. Kontekst Regulacyjny & Wyzwania Sektora Bankowego</h2>
+              <p>Dlaczego ręczne uzupełnianie metryk w plikach Word stanowi naruszenie wymogów ładu korporacyjnego</p>
+            </div>
+          </div>
+        </div>
+
+        <p>
+          W bankowości procedury, polityki bezpieczeństwa teleinformatycznego, regulaminy i instrukcje operacyjne podlegają ścisłemu reżimowi nadzorczemu. Audyty <strong>Komisji Nadzoru Finansowego (KNF)</strong> oraz wymogi unijnego rozporządzenia <strong>DORA (Digital Operational Resilience Act)</strong> kładą nacisk na integralność i jednoznaczną identyfikowalność obowiązujących wersji aktów prawnych.
+        </p>
+
+        <div class="alert-box alert-knf">
+          <div class="alert-icon">⚠️</div>
+          <div>
+            <div class="alert-title">KNF Rekomendacja D (G9) & DORA Art. 9: Integralność Wewnętrznych Regulacji</div>
+            Zgodnie z Rekomendacją D Bank ma obowiązek zapewnić, że każdy pracownik stosuje aktualną i zatwierdzoną wersję procedury. Klasycznym błędem audytowym jest tzw. <em>rozbieżność metadanych</em>: w SharePoint plik posiada status „Obowiązujący” i wersję 3.0, podczas gdy w tabelce tytułowej dokumentu Word widnieje „Wersja robocza 2.1” oraz nieaktualne nazwisko właściciela biznesowego.
+          </div>
+        </div>
+
+        <div class="data-table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Wymóg Regulacyjny</th>
+                <th>Ryzyko Tradycyjne (Ręczny Word)</th>
+                <th>Rozwiązanie SharePoint + Quick Parts</th>
+                <th>Poziom Ryzyka</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Tajemnica Bankowa (Art. 104)</strong></td>
+                <td>Pracownik zapomina wkleić klauzulę poufności do stopki lub usuwa ją przed wydrukiem.</td>
+                <td>Zablokowane pole nagłówka/stopki zasilane bezpośrednio z kolumny <code>Bank_TajemnicaBankowa</code>.</td>
+                <td><span class="badge-grc red">KRYTYCZNE</span></td>
+              </tr>
+              <tr>
+                <td><strong>DORA Art. 11 (Rejestr Ryzyka ICT)</strong></td>
+                <td>Niejednoznaczna numeracja planów ciągłości działania (BCP) i procedur odtwarzania (DRP).</td>
+                <td>Unikalny numer procedury wstrzykiwany do nagłówka Word z centralnego rejestru.</td>
+                <td><span class="badge-grc amber">WYSOKIE</span></td>
+              </tr>
+              <tr>
+                <td><strong>KNF Rekomendacja D G9 (Cykl Przeglądów)</strong></td>
+                <td>Brak informacji w wydrukowanym dokumencie o dacie utraty ważności regulacji.</td>
+                <td>Pole <code>Bank_DataPrzegladu</code> widoczne w metryce na 1. stronie dokumentu.</td>
+                <td><span class="badge-grc amber">WYSOKIE</span></td>
+              </tr>
+              <tr>
+                <td><strong>Zarządzanie Wersjami (ISO 27001 A.5.37)</strong></td>
+                <td>Pracownicy pobierają stary plik z dysku lokalnego i na jego bazie piszą nową procedurę.</td>
+                <td>Centralny szablon pobierany zawsze w najnowszej wersji z <em>Organization Assets Library</em>.</td>
+                <td><span class="badge-grc blue">ŚREDNIE</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- SEKCJA 2: ARCHITEKTURA XML & QUICK PARTS -->
+      <section class="topic-section" id="sec-architecture">
+        <div class="section-header">
+          <div class="section-header-left">
+            <div class="section-icon-badge">🧩</div>
+            <div>
+              <h2>2. Architektura Integracji: Custom XML Parts & Quick Parts</h2>
+              <p>Natywny mechanizm dwukierunkowej synchronizacji danych OpenXML bez użycia kodu VBA</p>
+            </div>
+          </div>
+        </div>
+
+        <p>
+          Dokument programu Word (plik <code>.docx</code> / <code>.dotx</code>) jest skompresowanym archiwum ZIP zawierającym pliki XML zgodne ze standardem <strong>Office Open XML (OOXML)</strong>. Gdy dokument jest tworzony na bazie <em>Typu Zawartości SharePoint (Content Type)</em>, SharePoint wstrzykuje do archiwum dedykowany zasób <strong>Custom XML Part</strong> powiązany z przestrzenią nazw właściwości witryny:
+        </p>
+
+        <div class="code-box">
+          <div class="code-box-header">
+            <span class="lang-tag">XML: SharePoint Custom Data Storage Namespace</span>
+            <button class="btn-copy" onclick="copySnippet(this)">Kopiuj schemat</button>
+          </div>
+          <pre><code>&lt;!-- Wycinek struktury CustomXML w dokumencie Word powiązanym z SharePoint --&gt;
+&lt;p:properties xmlns:p="http://schemas.microsoft.com/sharepoint/v3/contenttype/forms"
+              xmlns:ct="http://schemas.microsoft.com/office/2006/metadata/contentType"&gt;
+  &lt;documentManagement&gt;
+    &lt;Bank_NumerProcedury xmlns="http://bank.pl/schemas/grc/2026"&gt;PROC/RYZ/2026/0042&lt;/Bank_NumerProcedury&gt;
+    &lt;Bank_Departament xmlns="http://bank.pl/schemas/grc/2026"&gt;Departament Ryzyka Operacyjnego&lt;/Bank_Departament&gt;
+    &lt;Bank_TajemnicaBankowa xmlns="http://bank.pl/schemas/grc/2026"&gt;Poufne - Art. 104 Prawo Bankowe&lt;/Bank_TajemnicaBankowa&gt;
+    &lt;Bank_DataPrzegladu xmlns="http://bank.pl/schemas/grc/2026"&gt;2027-03-31&lt;/Bank_DataPrzegladu&gt;
+  &lt;/documentManagement&gt;
+&lt;/p:properties&gt;</code></pre>
+        </div>
+
+        <h3 style="font-size:15px; font-weight:700; margin:18px 0 8px 0;">Obsługiwane Typy Kolumn SharePoint w Quick Parts:</h3>
+        <ul style="padding-left:20px; line-height:1.6; color:var(--text-soft); margin-bottom:16px;">
+          <li><strong>Pojedynczy wiersz tekstu (Single line of text):</strong> Działa idealnie jako kontrolka zwykłego tekstu (Plain Text Content Control). Używane dla numeru procedury, kodu CIF, nazwy systemu.</li>
+          <li><strong>Wybór (Choice - pojedynczy wybór):</strong> W Wordzie pojawia się jako kontrolka rozwijana (Drop-Down List) z wartościami zdefiniowanymi w kolumnie SharePoint!</li>
+          <li><strong>Data i godzina (Date and Time):</strong> W Wordzie wyświetla natywny kalendarz wyboru daty (Date Picker Content Control).</li>
+          <li><strong>Osoba lub grupa (Person or Group - pojedyncza osoba):</strong> Wyświetla imię i nazwisko pracownika powiązane z Entra ID.</li>
+          <li><strong>Wartość logiczna (Yes/No):</strong> Reprezentowana jako pole wyboru lub tekst Tak/Nie.</li>
+          <li><strong>Zarządzane Metadane (Managed Metadata / Term Store):</strong> <em>Uwaga:</em> wymaga szczególnej ostrożności, ponieważ w starszych wersjach Worda może wyświetlać identyfikator GUID zamiast etykiety terminu.</li>
+        </ul>
+      </section>
+
+      <!-- SEKCJA 3: KROK PO KROKU SZABLON .DOTX -->
+      <section class="topic-section" id="sec-steps">
+        <div class="section-header">
+          <div class="section-header-left">
+            <div class="section-icon-badge">🛠️</div>
+            <div>
+              <h2>3. Procedura Krok po Kroku: Projektowanie i Wiązanie Szablonu .dotx</h2>
+              <p>5-etapowy proces wytwórczy od definicji architektury po publikację w Content Type Hub</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="step-timeline">
+          <div class="step-item">
+            <div class="step-num">1</div>
+            <div class="step-content">
+              <div class="step-title">
+                Definicja Typu Zawartości (Content Type) w SharePoint Hub
+                <span class="badge-grc blue">SharePoint Admin</span>
+              </div>
+              <div class="step-desc">
+                W <em>Centrum Administracyjnym SharePoint -> Typy zawartości</em> utwórz typ zawartości (np. <code>Bankowa Procedura Regulacyjna</code>) dziedziczący z typu bazowego <code>Dokument</code>. Przypisz do niego kolumny witryny: <code>Bank_NumerProcedury</code>, <code>Bank_Departament</code>, <code>Bank_WlascicielProcedury</code>, <code>Bank_DataPrzegladu</code>, <code>Bank_TajemnicaBankowa</code>.
+              </div>
+            </div>
+          </div>
+
+          <div class="step-item">
+            <div class="step-num">2</div>
+            <div class="step-content">
+              <div class="step-title">
+                Powiązanie Czystego Pliku z Biblioteką Roboczą
+                <span class="badge-grc amber">Kluczowy Krok</span>
+              </div>
+              <div class="step-desc">
+                Dodaj nowo utworzony Typ Zawartości do testowej biblioteki dokumentów. Kliknij <em>Nowy -> Bankowa Procedura Regulacyjna</em>. Wygeneruje się pusty plik Word, który został już zindeksowany z przestrzenią Custom XML Twojego tenanta.
+              </div>
+            </div>
+          </div>
+
+          <div class="step-item">
+            <div class="step-num">3</div>
+            <div class="step-content">
+              <div class="step-title">
+                Otwarcie w Aplikacji Klasycznej Word (Word Desktop)
+                <span class="badge-grc red">Tylko Aplikacja Klasyczna</span>
+              </div>
+              <div class="step-desc">
+                Kliknij <em>Edycja -> Otwórz w aplikacji klasycznej</em>. W stacjonarnym programie Microsoft Word przejdź do zakładki wstążki:
+                <br><code>Wstawianie (Insert) -> Szybkie części (Quick Parts) -> Właściwość dokumentu (Document Property)</code>.
+                <br>Na liście właściwości zobaczysz kolumny SharePoint zdefiniowane w Kroku 1!
+              </div>
+            </div>
+          </div>
+
+          <div class="step-item">
+            <div class="step-num">4</div>
+            <div class="step-content">
+              <div class="step-title">
+                Rozmieszczenie Kontrolek w Nagłówku, Stopce i Metryce
+                <span class="badge-grc green">Projektowanie Layoutu</span>
+              </div>
+              <div class="step-desc">
+                Wstaw odpowiednie kontrolki:
+                <ul style="padding-left:16px; margin-top:6px;">
+                  <li>W <strong>nagłówku</strong>: Numer procedury i logotyp banku.</li>
+                  <li>Na <strong>stronie tytułowej</strong>: Tabelę metryki z tytułem, departamentem, właścicielem i datami.</li>
+                  <li>W <strong>stopce</strong>: Klauzulę Tajemnicy Bankowej oraz numerację stron <code>Strona { PAGE } z { NUMPAGES }</code>.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="step-item">
+            <div class="step-num">5</div>
+            <div class="step-content">
+              <div class="step-title">
+                Zabezpieczenie Kontrolek i Zapis jako Szablon .dotx
+                <span class="badge-grc blue">Wdrożenie</span>
+              </div>
+              <div class="step-desc">
+                Zaznacz każdą kontrolkę zawartości, wejdź w <em>Deweloper -> Właściwości</em> i zaznacz opcję: <strong>„Nie można usunąć formantu zawartości”</strong>. Zapisz plik jako <strong>Szablon programu Word (*.dotx)</strong> i załaduj go w ustawieniach Typu Zawartości w SharePoint Hub jako domyślny szablon dokumentu.
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SEKCJA 4: WZORCOWA METRYKA PROCEDURY BANKOWEJ -->
+      <section class="topic-section" id="sec-metadata-binding">
+        <div class="section-header">
+          <div class="section-header-left">
+            <div class="section-icon-badge">📋</div>
+            <div>
+              <h2>4. Wzorcowa Metryka Procedury Bankowej & Klauzule Poufności</h2>
+              <p>Standard układu strony tytułowej spełniający wymogi audytu KNF i normy ISO 27001</p>
+            </div>
+          </div>
+        </div>
+
+        <p>
+          Strona tytułowa każdego dokumentu regulacyjnego w banku musi zawierać tabelę metryki dokumentu. Poniżej przedstawiono układ referencyjny z wyspecyfikowanymi polami Quick Parts:
+        </p>
+
+        <div class="data-table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Pozycja w Dokumencie</th>
+                <th>Nazwa Wyświetlana w Word</th>
+                <th>Wewnętrzna Kolumna SharePoint</th>
+                <th>Typ Pola SharePoint</th>
+                <th>Przeznaczenie Audytowe</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Tytuł Główny</td>
+                <td><code>Tytuł (Title)</code></td>
+                <td><code>Title</code></td>
+                <td>Pojedynczy wiersz tekstu</td>
+                <td>Oficjalna nazwa uchwały / procedury zatwierdzona przez Zarząd Banku.</td>
+              </tr>
+              <tr>
+                <td>Metryka: Identyfikator</td>
+                <td><code>Bank_NumerProcedury</code></td>
+                <td><code>Bank_NumerProcedury</code></td>
+                <td>Pojedynczy wiersz tekstu</td>
+                <td>Unikalny numer sprawy nadawany automatycznie przez Power Automate.</td>
+              </tr>
+              <tr>
+                <td>Metryka: Właściciel</td>
+                <td><code>Bank_WlascicielProcedury</code></td>
+                <td><code>Bank_WlascicielProcedury</code></td>
+                <td>Osoba lub grupa</td>
+                <td>Dyrektor departamentu odpowiedzialny merytorycznie za treść.</td>
+              </tr>
+              <tr>
+                <td>Metryka: Departament</td>
+                <td><code>Bank_Departament</code></td>
+                <td><code>Bank_Departament</code></td>
+                <td>Wybór (Choice)</td>
+                <td>Pion organizacyjny banku (np. Ryzyko, Compliance, IT, Audyt).</td>
+              </tr>
+              <tr>
+                <td>Metryka: Data Wejścia</td>
+                <td><code>Bank_DataWejscia</code></td>
+                <td><code>Bank_DataWejscia</code></td>
+                <td>Data i godzina</td>
+                <td>Dzień wejścia w życie regulacji na mocy uchwały Zarządu.</td>
+              </tr>
+              <tr>
+                <td>Metryka: Przegląd KNF</td>
+                <td><code>Bank_DataPrzegladu</code></td>
+                <td><code>Bank_DataPrzegladu</code></td>
+                <td>Data i godzina</td>
+                <td>Wymóg Rekomendacji D G9: data planowanego rocznego audytu procedury.</td>
+              </tr>
+              <tr>
+                <td>Stopka: Poufność</td>
+                <td><code>Bank_TajemnicaBankowa</code></td>
+                <td><code>Bank_TajemnicaBankowa</code></td>
+                <td>Wybór (Choice)</td>
+                <td>Klauzula poufności zgodnie z art. 104 Prawa Bankowego.</td>
+              </tr>
+              <tr>
+                <td>Stopka: Wersja</td>
+                <td><code>Wersja Dokumentu</code></td>
+                <td><code>_UIVersionString</code></td>
+                <td>Wbudowana właściwość</td>
+                <td>Numer wersji SharePoint (np. 1.0, 2.3) wstrzykiwany do stopki.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- SEKCJA 5: ORGANIZATION ASSETS LIBRARY (POWERSHELL) -->
+      <section class="topic-section" id="sec-oal">
+        <div class="section-header">
+          <div class="section-header-left">
+            <div class="section-icon-badge">🏢</div>
+            <div>
+              <h2>5. Centralna Dystrybucja: Organization Assets Library (OAL)</h2>
+              <p>Publikacja szablonów bankowych bezpośrednio w menu Word: Plik -> Nowy -> [Nazwa Banku]</p>
+            </div>
+          </div>
+        </div>
+
+        <p>
+          Zamiast wysyłać szablony pocztą e-mail lub kazać użytkownikom szukać plików w intranecie, architektura Microsoft 365 udostępnia mechanizm <strong>Biblioteki Zasobów Organizacji (Organization Assets Library)</strong>. Po zarejestrowaniu dedykowanej biblioteki SharePoint jako repozytorium szablonów, pojawia się ona automatycznie w aplikacjach Word, Excel i PowerPoint na stacjach roboczych pracowników.
+        </p>
+
+        <div class="alert-box alert-success">
+          <div class="alert-icon">💡</div>
+          <div>
+            <div class="alert-title">Korzyść Biznesowa dla Banku</div>
+            Użytkownik otwierając Microsoft Word na swoim laptopie klika <strong>Nowy -> [Katalog Bankowy]</strong> i natychmiast widzi oficjalne, zablokowane szablony <code>Procedura Bankowa .dotx</code>, <code>Uchwała Zarządu .dotx</code>, <code>Wniosek Kredytowy CIF .dotx</code>. Brak ryzyka użycia przestarzałego wzoru z pulpitu!
+          </div>
+        </div>
+
+        <h3 style="font-size:15px; font-weight:700; margin:16px 0 8px 0;">Skrypt Provisioningu PowerShell (Rejestracja OAL):</h3>
+        <p style="font-size:13.5px; color:var(--text-soft); margin-bottom:10px;">
+          Uruchom poniższy skrypt jako Administrator SharePoint Online w PowerShell (wymaga uprawnień SharePoint Tenant Admin):
+        </p>
+
+        <div class="code-box">
+          <div class="code-box-header">
+            <span class="lang-tag">PowerShell: Rejestracja Szablonów Organizacji w Tenancie</span>
+            <button class="btn-copy" onclick="copySnippet(this)">Kopiuj skrypt</button>
+          </div>
+          <pre><code># 1. Połączenie z centrum administracyjnym SharePoint Online
+$adminUrl = "https://twojbank-admin.sharepoint.com"
+Connect-SPOService -Url $adminUrl
+
+# 2. Adres dedykowanej biblioteki szablonów w witrynie centralnej Governance
+$libraryUrl = "https://twojbank.sharepoint.com/sites/governance/SzablonyBankowe"
+$cdnLogoUrl = "https://twojbank.sharepoint.com/sites/governance/SiteAssets/logo_bank_oal.png"
+
+# 3. Rejestracja biblioteki jako Organization Assets Library typu OfficeTemplateLibrary
+Add-SPOOrgAssetsLibrary `
+    -LibraryUrl $libraryUrl `
+    -ThumbnailUrl $cdnLogoUrl `
+    -OrgAssetType OfficeTemplateLibrary
+
+# 4. Weryfikacja zarejestrowanych bibliotek w tenancie
+Get-SPOOrgAssetsLibrary
+
+Write-Host "Pomyślnie zarejestrowano bibliotekę szablonów bankowych w Microsoft 365." -ForegroundColor Green</code></pre>
+        </div>
+
+        <div class="alert-box alert-warning">
+          <div class="alert-icon">⏱️</div>
+          <div>
+            <div class="alert-title">Czas Propagacji w Pakiecie Office Desktop</div>
+            Po wykonaniu polecenia <code>Add-SPOOrgAssetsLibrary</code> pojawienie się zakładki z szablonami na stacjach roboczych pracowników może zająć od <strong>2 do 24 godzin</strong> (wymagane odświeżenie tokenów licencyjnych pakietu Office 365 Apps for Enterprise).
+          </div>
+        </div>
+      </section>
+
+      <!-- SEKCJA 6: INTERAKTYWNY SYMULATOR WORD (SANDBOX) -->
+      <section class="topic-section" id="sec-sandbox">
+        <div class="section-header">
+          <div class="section-header-left">
+            <div class="section-icon-badge">⚡</div>
+            <div>
+              <h2>6. Interaktywny Symulator Word & Quick Parts (Live Sandbox)</h2>
+              <p>Przetestuj na żywo wstrzykiwanie metadanych SharePoint do wirtualnej strony tytułowej Word</p>
+            </div>
+          </div>
+          <div class="view-switcher-bar">
+            <button class="btn-switch-view active" id="btnViewValues" onclick="switchSandboxView('values')">Widok Wartości</button>
+            <button class="btn-switch-view" id="btnViewCodes" onclick="switchSandboxView('codes')">Kody Pól { Quick Parts }</button>
+          </div>
+        </div>
+
+        <div class="sandbox-container">
+          <div class="sandbox-header">
+            <div class="sandbox-header-left">
+              <span style="font-size:18px;">📄</span>
+              <div>
+                <strong style="font-size:14px; color:var(--text-main);">Wirtualny Edytor Karty Tytułowej Word (.dotx)</strong>
+                <div style="font-size:12px; color:var(--text-muted);">Zmieniaj pola SharePoint po lewej stronie — strona dokumentu Word odświeża się w czasie rzeczywistym</div>
+              </div>
+            </div>
+            <div class="sandbox-presets">
+              <button class="btn-preset" onclick="loadSandboxPreset('cif')">Procedura Kredytowa CIF</button>
+              <button class="btn-preset" onclick="loadSandboxPreset('dora')">Procedura Ciągłości DORA</button>
+              <button class="btn-preset" onclick="loadSandboxPreset('aml')">Instrukcja AML & KYC</button>
+            </div>
+          </div>
+
+          <div class="sandbox-grid">
+            <!-- PANEL POL METADANYCH SHAREPOINT -->
+            <div class="sp-fields-panel">
+              <div class="sp-panel-title">
+                <span>Pola Formularza SharePoint</span>
+                <span style="font-family:'JetBrains Mono', monospace; font-size:11px; color:#64748b;">Custom XML Part</span>
+              </div>
+
+              <div class="form-group">
+                <label>Tytuł Procedury: <span>[Title]</span></label>
+                <input type="text" id="simTitle" class="form-control" value="Procedura Oceny Zdolności Kredytowej Klientów Korporacyjnych" oninput="updateWordPage()">
+              </div>
+
+              <div class="form-group">
+                <label>Numer Sprawy / Identyfikator: <span>[Bank_NumerProcedury]</span></label>
+                <input type="text" id="simDocNum" class="form-control" value="PROC/KRED/2026/0018" oninput="updateWordPage()">
+              </div>
+
+              <div class="form-group">
+                <label>Departament Właścicielski: <span>[Bank_Departament]</span></label>
+                <select id="simDept" class="form-control" onchange="updateWordPage()">
+                  <option value="Departament Ryzyka Kredytowego i Klientów Kluczowych">Departament Ryzyka Kredytowego</option>
+                  <option value="Departament Bezpieczeństwa Informacji (CISO) & DORA">Departament Bezpieczeństwa (CISO)</option>
+                  <option value="Departament Zgodności (Compliance) & AML">Departament Compliance & AML</option>
+                  <option value="Departament Audytu Wewnętrznego">Departament Audytu Wewnętrznego</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label>Właściciel Biznesowy (Osoba): <span>[Bank_WlascicielProcedury]</span></label>
+                <input type="text" id="simOwner" class="form-control" value="Krzysztof Kowalczyk (Dyrektor Ryzyka)" oninput="updateWordPage()">
+              </div>
+
+              <div class="form-group">
+                <label>Data Wejścia w Życie: <span>[Bank_DataWejscia]</span></label>
+                <input type="date" id="simDateEffective" class="form-control" value="2026-05-01" oninput="updateWordPage()">
+              </div>
+
+              <div class="form-group">
+                <label>Data Rewizji KNF (Rek. D): <span>[Bank_DataPrzegladu]</span></label>
+                <input type="date" id="simDateReview" class="form-control" value="2027-04-30" oninput="updateWordPage()">
+              </div>
+
+              <div class="form-group">
+                <label>Klauzula Poufności: <span>[Bank_TajemnicaBankowa]</span></label>
+                <select id="simConfidentiality" class="form-control" onchange="updateWordPage()">
+                  <option value="ŚCIŚLE POUFNE • TAJEMNICA BANKOWA (ART. 104 PR. BANKOWEGO)">Ściśle Poufne (Tajemnica Bankowa)</option>
+                  <option value="POUFNE DO UŻYTKU WEWNĘTRZNEGO (INTERNAL RESTRICTED)">Poufne do użytku wewnętrznego</option>
+                  <option value="JAWNE • PUBLIKACJA PUBLICZNA NA STRONIE BANKU">Jawne (Publiczne)</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label>Wersja SharePoint: <span>[_UIVersionString]</span></label>
+                <input type="text" id="simVersion" class="form-control" value="Wersja 2.0 (Zatwierdzona)" oninput="updateWordPage()">
+              </div>
+            </div>
+
+            <!-- PODGLĄD STRONY DOKUMENTU WORD -->
+            <div class="word-page-sheet" id="wordPageSheet">
+              <!-- NAGŁÓWEK DOKUMENTU -->
+              <div class="word-header-rule">
+                <div class="word-header-logo">BANK POLSKI S.A. • CENTRALA</div>
+                <div class="word-header-meta" id="wpHeaderMeta">
+                  ID: <span class="qp-highlight" id="wpHeaderId">PROC/KRED/2026/0018</span>
+                </div>
+              </div>
+
+              <!-- BLOK TYTUŁU -->
+              <div class="doc-title-block">
+                <div class="doc-type-badge">WEWNĘTRZNY AKT REGULACYJNY BANKU</div>
+                <h1 class="doc-main-title" id="wpMainTitle">
+                  <span class="qp-highlight" id="wpMainTitleVal">Procedura Oceny Zdolności Kredytowej Klientów Korporacyjnych</span>
+                </h1>
+                <div class="doc-sub-num" id="wpDocSubNum">
+                  Kod Aktu: <span class="qp-highlight" id="wpDocSubNumVal">PROC/KRED/2026/0018</span>
+                </div>
+              </div>
+
+              <!-- TABELA METRYKI PROCEDURY -->
+              <table class="doc-metric-table">
+                <tbody>
+                  <tr>
+                    <td class="lbl">Jednostka Opracowująca:</td>
+                    <td class="val"><span class="qp-highlight" id="wpDept">Departament Ryzyka Kredytowego i Klientów Kluczowych</span></td>
+                  </tr>
+                  <tr>
+                    <td class="lbl">Właściciel Biznesowy:</td>
+                    <td class="val"><span class="qp-highlight" id="wpOwner">Krzysztof Kowalczyk (Dyrektor Ryzyka)</span></td>
+                  </tr>
+                  <tr>
+                    <td class="lbl">Data Wejścia w Życie:</td>
+                    <td class="val"><span class="qp-highlight" id="wpDateEffective">2026-05-01</span></td>
+                  </tr>
+                  <tr>
+                    <td class="lbl">Termin Przeglądu (KNF Rek. D):</td>
+                    <td class="val"><span class="qp-highlight" id="wpDateReview">2027-04-30</span></td>
+                  </tr>
+                  <tr>
+                    <td class="lbl">Status Wersji Systemowej:</td>
+                    <td class="val"><span class="qp-highlight" id="wpVersion">Wersja 2.0 (Zatwierdzona)</span></td>
+                  </tr>
+                  <tr>
+                    <td class="lbl">Podstawa Prawna / Reżim:</td>
+                    <td class="val">Uchwała Zarządu Banku nr 42/2026 • KNF Rekomendacja S i D</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <!-- STOPKA DOKUMENTU -->
+              <div class="word-footer-rule">
+                <div class="word-footer-confidential" id="wpFooterConf">
+                  🔒 <span class="qp-highlight" id="wpFooterConfVal">ŚCIŚLE POUFNE • TAJEMNICA BANKOWA (ART. 104 PR. BANKOWEGO)</span>
+                </div>
+                <div class="word-footer-page">
+                  Strona 1 z <span style="font-family:'JetBrains Mono';">12</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SEKCJA 7: ANTYWZORCE I LIMITY -->
+      <section class="topic-section" id="sec-antipatterns">
+        <div class="section-header">
+          <div class="section-header-left">
+            <div class="section-icon-badge">🛑</div>
+            <div>
+              <h2>7. Typowe Błędy Wdrożeniowe, Limity & Dobre Praktyki</h2>
+              <p>Zestawienie pułapek architektury SharePoint + Word, na które natrafiają zespoły IT i Governance</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="data-table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Antywzorzec / Powszechny Błąd</th>
+                <th>Skutki Techniczne i Audytowe</th>
+                <th>Zalecana Dobra Praktyka Bankowa</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Edycja szablonu w przeglądarce (Word Online)</strong></td>
+                <td>Word Online nie posiada interfejsu wstawiania Quick Parts i może uszkodzić wiązania Custom XML.</td>
+                <td>Zawsze edytuj plik szablonu <code>.dotx</code> wyłącznie w aplikacji stacjonarnej <em>Word Desktop</em>.</td>
+              </tr>
+              <tr>
+                <td><strong>Stosowanie kolumn lokalnych biblioteki</strong></td>
+                <td>Gdy dokument zostanie przeniesiony do innej biblioteki, kolumny znikają, a Quick Parts stają się martwymi polami.</td>
+                <td>Zawsze używaj <strong>Kolumn Witryny (Site Columns)</strong> powiązanych ze scentralizowanym <strong>Typem Zawartości</strong>.</td>
+              </tr>
+              <tr>
+                <td><strong>Używanie makr VBA (.docm) do uzupełniania danych</strong></td>
+                <td>Makra są blokowane przez polityki bezpieczeństwa SOC/EDR na stacjach bankowych; nie działają w Word Online.</td>
+                <td>Stosuj wyłącznie natywne <em>Custom XML Content Controls</em> (Quick Parts), które nie wymagają żadnych makr.</td>
+              </tr>
+              <tr>
+                <td><strong>Brak blokady formantu zawartości</strong></td>
+                <td>Autor procedury przypadkowo wciska Backspace w tabeli metryki i trwale usuwa powiązanie z kolumną SharePoint.</td>
+                <td>We właściwościach każdej kontrolki bezwzględnie włącz: <em>„Nie można usunąć formantu zawartości”</em>.</td>
+              </tr>
+              <tr>
+                <td><strong>Pola wyboru wielokrotnego (Multi-choice)</strong></td>
+                <td>Word ma ograniczone wsparcie dla wielokrotnego wyboru w pojedynczym formancie tekstowym Quick Parts.</td>
+                <td>Rozbijaj atrybuty wielokrotne na osobne kolumny logiczne lub stosuj pojedynczy wybór wiodący.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- SEKCJA 8: FAQ & CHECKLISTA KNF -->
+      <section class="topic-section" id="sec-faq">
+        <div class="section-header">
+          <div class="section-header-left">
+            <div class="section-icon-badge">❓</div>
+            <div>
+              <h2>8. Najczęściej Zadawane Pytania (FAQ) & Checklista Audytowa</h2>
+              <p>Praktyczne odpowiedzi na wyzwania zgłaszane przez administratorów SharePoint i audytorów</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-list">
+          <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+              <span>Czy zmiana metadanej w SharePoint aktualizuje treść otwartego dokumentu Word?</span>
+              <span class="faq-toggle-icon">▼</span>
+            </div>
+            <div class="faq-answer">
+              Tak. Synchronizacja działa dwukierunkowo. Jeśli zmienisz wartość kolumny w SharePoint (np. Właściciela z poziomu panelu szczegółów), przy kolejnym otwarciu pliku w Word kontrolka Quick Parts automatycznie wyświetli nową wartość. Działa to również w drugą stronę: edycja tekstu w kontrolce Word aktualizuje metadaną w SharePoint po zapisaniu pliku.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+              <span>Co się dzieje po wyeksportowaniu procedury do pliku PDF?</span>
+              <span class="faq-toggle-icon">▼</span>
+            </div>
+            <div class="faq-answer">
+              Silnik konwersji Word do PDF (zarówno stacjonarny, jak i działający w Power Automate <em>Convert file using path</em>) „spłaszcza” kontrolki Quick Parts do czystego, niezmiennego tekstu. Dzięki temu wygenerowany plik <code>.pdf</code> zawiera utrwalone, zgodne ze stanem prawnym metadane bez ryzyka ich modyfikacji przez odbiorcę zewnętrznego.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+              <span>Dlaczego pole numeracji stron „Strona X z Y” czasami pokazuje błędną liczbę?</span>
+              <span class="faq-toggle-icon">▼</span>
+            </div>
+            <div class="faq-answer">
+              W programie Word pola formuł dynamicznych takie jak <code>{ PAGE }</code> oraz <code>{ NUMPAGES }</code> nie są kontrolkami XML, lecz tradycyjnymi polami Worda (Fields). Word odświeża je w momencie wydruku lub zapisu do PDF. W aplikacji można wymusić ich natychmiastowe odświeżenie skrótem klawiszowym <code>Ctrl + A</code>, a następnie <code>F9</code>.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+              <span>Jakie uprawnienia są wymagane do zarządzania Organization Assets Library?</span>
+              <span class="faq-toggle-icon">▼</span>
+            </div>
+            <div class="faq-answer">
+              Do rejestracji biblioteki komendą <code>Add-SPOOrgAssetsLibrary</code> niezbędna jest rola <strong>SharePoint Administrator</strong> w tenancie Microsoft 365. Do samej biblioteki SharePoint zaleca się model uprawnień: tylko wąska grupa administratorów Governance/Compliance posiada rolę <em>Właściciel / Edytor</em>, natomiast wszyscy pracownicy banku (grupa <em>Everyone except external users</em>) posiadają uprawnienia <em>Tylko do odczytu (Czytelnik)</em>.
+            </div>
+          </div>
+        </div>
+
+        <div class="alert-box alert-success" style="margin-top:24px;">
+          <div class="alert-icon">✅</div>
+          <div>
+            <div class="alert-title">Bankowa Checklista Gotowości Szablonu do Produkcji</div>
+            <ul style="padding-left:18px; margin-top:6px; line-height:1.55;">
+              <li>[ ] Kolumny witryny zdefiniowane w Content Type Hub i opublikowane w tenancie.</li>
+              <li>[ ] Szablon utworzony na bazie typu zawartości i edytowany w Word Desktop.</li>
+              <li>[ ] Wszystkie kontrolki Quick Parts zabezpieczone przed usunięciem (<em>Lock Content Control</em>).</li>
+              <li>[ ] Nagłówek i stopka zawierają obowiązkową klauzulę Tajemnicy Bankowej (art. 104).</li>
+              <li>[ ] Biblioteka szablonów zarejestrowana jako <code>OfficeTemplateLibrary</code> w PowerShell.</li>
+              <li>[ ] Przetestowano zachowanie konwersji do formatu PDF w przepływie Power Automate.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- STOPKA FIRMOWA -->
+      <footer class="main-footer">
+        <div class="footer-inner">
+          <div class="footer-left">
+            <div class="footer-comp-name">REMBIASZ GRC Tech Solutions Tomasz Rembiasz</div>
+            <div class="footer-comp-details">
+              NIP: 887-155-01-62 • Tworzenie aplikacji GRC dla Sektora Bankowego (Governance, Risk & Compliance), Oracle APEX, Python, systemy wsparcia procesów.
+            </div>
+            <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">
+              Wydanie: 2026.1 • Przewodnik Szablonów Word (.dotx), Quick Parts & Organization Assets Library w SharePoint M365
+            </div>
+          </div>
+
+          <div class="footer-right">
+            <div class="helpdesk-box">
+              <div class="helpdesk-box-title">Kontakt & Doradztwo GRC</div>
+              <div class="helpdesk-box-contact">
+                E-mail: <a href="mailto:trembiasz@gmail.com">trembiasz@gmail.com</a><br>
+                NIP: 887-155-01-62
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
+
+    </main>
+  </div>
+
+  <!-- SKRYPTY INTERAKTYWNE -->
+  <script>
+    let currentSandboxView = 'values'; // 'values' | 'codes'
+
+    // Aktualizacja wirtualnej strony Word w Sandboxie
+    function updateWordPage() {
+      const title = document.getElementById('simTitle').value || 'Brak tytułu';
+      const docNum = document.getElementById('simDocNum').value || 'BRAK/NUMERU';
+      const dept = document.getElementById('simDept').value;
+      const owner = document.getElementById('simOwner').value || 'Nieprzypisany';
+      const dateEffective = document.getElementById('simDateEffective').value || 'Nieokreślona';
+      const dateReview = document.getElementById('simDateReview').value || 'Nieokreślona';
+      const confidentiality = document.getElementById('simConfidentiality').value;
+      const version = document.getElementById('simVersion').value || '1.0';
+
+      if (currentSandboxView === 'values') {
+        document.getElementById('wpHeaderId').textContent = docNum;
+        document.getElementById('wpHeaderId').className = 'qp-highlight';
+
+        document.getElementById('wpMainTitleVal').textContent = title;
+        document.getElementById('wpMainTitleVal').className = 'qp-highlight';
+
+        document.getElementById('wpDocSubNumVal').textContent = docNum;
+        document.getElementById('wpDocSubNumVal').className = 'qp-highlight';
+
+        document.getElementById('wpDept').textContent = dept;
+        document.getElementById('wpDept').className = 'qp-highlight';
+
+        document.getElementById('wpOwner').textContent = owner;
+        document.getElementById('wpOwner').className = 'qp-highlight';
+
+        document.getElementById('wpDateEffective').textContent = dateEffective;
+        document.getElementById('wpDateEffective').className = 'qp-highlight';
+
+        document.getElementById('wpDateReview').textContent = dateReview;
+        document.getElementById('wpDateReview').className = 'qp-highlight';
+
+        document.getElementById('wpVersion').textContent = version;
+        document.getElementById('wpVersion').className = 'qp-highlight';
+
+        document.getElementById('wpFooterConfVal').textContent = confidentiality;
+        document.getElementById('wpFooterConfVal').className = 'qp-highlight';
+      } else {
+        // Widok kodów pól XML { Quick Parts }
+        document.getElementById('wpHeaderId').textContent = '{ DocumentProperty "Bank_NumerProcedury" }';
+        document.getElementById('wpHeaderId').className = 'qp-highlight field-code';
+
+        document.getElementById('wpMainTitleVal').textContent = '{ DocumentProperty "Title" }';
+        document.getElementById('wpMainTitleVal').className = 'qp-highlight field-code';
+
+        document.getElementById('wpDocSubNumVal').textContent = '{ DocumentProperty "Bank_NumerProcedury" }';
+        document.getElementById('wpDocSubNumVal').className = 'qp-highlight field-code';
+
+        document.getElementById('wpDept').textContent = '{ DocumentProperty "Bank_Departament" }';
+        document.getElementById('wpDept').className = 'qp-highlight field-code';
+
+        document.getElementById('wpOwner').textContent = '{ DocumentProperty "Bank_WlascicielProcedury" }';
+        document.getElementById('wpOwner').className = 'qp-highlight field-code';
+
+        document.getElementById('wpDateEffective').textContent = '{ DocumentProperty "Bank_DataWejscia" \\@ "yyyy-MM-dd" }';
+        document.getElementById('wpDateEffective').className = 'qp-highlight field-code';
+
+        document.getElementById('wpDateReview').textContent = '{ DocumentProperty "Bank_DataPrzegladu" \\@ "yyyy-MM-dd" }';
+        document.getElementById('wpDateReview').className = 'qp-highlight field-code';
+
+        document.getElementById('wpVersion').textContent = '{ DocumentProperty "_UIVersionString" }';
+        document.getElementById('wpVersion').className = 'qp-highlight field-code';
+
+        document.getElementById('wpFooterConfVal').textContent = '{ DocumentProperty "Bank_TajemnicaBankowa" }';
+        document.getElementById('wpFooterConfVal').className = 'qp-highlight field-code';
+      }
+    }
+
+    // Przełączanie widoku: Wartości vs Kody Pól
+    function switchSandboxView(view) {
+      currentSandboxView = view;
+      document.getElementById('btnViewValues').classList.toggle('active', view === 'values');
+      document.getElementById('btnViewCodes').classList.toggle('active', view === 'codes');
+      updateWordPage();
+    }
+
+    // Ładowanie predefiniowanych szablonów
+    function loadSandboxPreset(preset) {
+      if (preset === 'cif') {
+        document.getElementById('simTitle').value = 'Procedura Oceny Zdolności Kredytowej Klientów Korporacyjnych';
+        document.getElementById('simDocNum').value = 'PROC/KRED/2026/0018';
+        document.getElementById('simDept').value = 'Departament Ryzyka Kredytowego i Klientów Kluczowych';
+        document.getElementById('simOwner').value = 'Krzysztof Kowalczyk (Dyrektor Ryzyka)';
+        document.getElementById('simDateEffective').value = '2026-05-01';
+        document.getElementById('simDateReview').value = '2027-04-30';
+        document.getElementById('simConfidentiality').value = 'ŚCIŚLE POUFNE • TAJEMNICA BANKOWA (ART. 104 PR. BANKOWEGO)';
+        document.getElementById('simVersion').value = 'Wersja 2.0 (Zatwierdzona)';
+      } else if (preset === 'dora') {
+        document.getElementById('simTitle').value = 'Plan Ciągłości Działania Systemów Płatniczych i Odtwarzania Awaryjnego (BCP/DRP)';
+        document.getElementById('simDocNum').value = 'PROC/DORA/2026/0104';
+        document.getElementById('simDept').value = 'Departament Bezpieczeństwa Informacji (CISO) & DORA';
+        document.getElementById('simOwner').value = 'Marta Wiśniewska (CISO / BCM Officer)';
+        document.getElementById('simDateEffective').value = '2026-01-15';
+        document.getElementById('simDateReview').value = '2027-01-14';
+        document.getElementById('simConfidentiality').value = 'POUFNE DO UŻYTKU WEWNĘTRZNEGO (INTERNAL RESTRICTED)';
+        document.getElementById('simVersion').value = 'Wersja 3.1 (Zatwierdzona)';
+      } else if (preset === 'aml') {
+        document.getElementById('simTitle').value = 'Instrukcja Weryfikacji Środków Bezpieczeństwa Finansowego KYC i Transakcji Podejrzanych';
+        document.getElementById('simDocNum').value = 'INST/AML/2026/0009';
+        document.getElementById('simDept').value = 'Departament Zgodności (Compliance) & AML';
+        document.getElementById('simOwner').value = 'Piotr Zieliński (AML Officer)';
+        document.getElementById('simDateEffective').value = '2026-03-01';
+        document.getElementById('simDateReview').value = '2027-02-28';
+        document.getElementById('simConfidentiality').value = 'ŚCIŚLE POUFNE • TAJEMNICA BANKOWA (ART. 104 PR. BANKOWEGO)';
+        document.getElementById('simVersion').value = 'Wersja 1.4 (Obowiązująca)';
+      }
+      updateWordPage();
+    }
+
+    // Kopiowanie snippetów kodu
+    function copySnippet(btn) {
+      const code = btn.closest('.code-box').querySelector('code').innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        const originalText = btn.textContent;
+        btn.textContent = 'Skopiowano!';
+        btn.style.background = '#059669';
+        setTimeout(() => {
+          btn.textContent = originalText;
+          btn.style.background = '#334155';
+        }, 2000);
+      });
+    }
+
+    // Rozwijanie akordeonów FAQ
+    function toggleFaq(element) {
+      const parent = element.parentElement;
+      const isOpen = parent.classList.contains('open');
+      const icon = element.querySelector('.faq-toggle-icon');
+
+      if (isOpen) {
+        parent.classList.remove('open');
+        icon.textContent = '▼';
+      } else {
+        parent.classList.add('open');
+        icon.textContent = '▲';
+      }
+    }
+
+    // Wyszukiwarka Live Search sekcji
+    function filterContent() {
+      const input = document.getElementById('liveSearch');
+      const filter = input.value.toLowerCase().trim();
+      const sections = document.querySelectorAll('.topic-section');
+
+      sections.forEach(sec => {
+        if (!filter) {
+          sec.style.display = 'block';
+          return;
+        }
+
+        const text = sec.innerText.toLowerCase();
+        if (text.includes(filter)) {
+          sec.style.display = 'block';
+        } else {
+          sec.style.display = 'none';
+        }
+      });
+    }
+
+    // Scroll-Spy paska bocznego
+    window.addEventListener('scroll', () => {
+      const sections = document.querySelectorAll('.topic-section, .hero-panel');
+      const navLinks = document.querySelectorAll('#sidebarNav a');
+      let currentSectionId = '';
+
+      sections.forEach(section => {
+        const rect = section.getBoundingClientRect();
+        if (rect.top <= 140 && rect.bottom >= 140) {
+          currentSectionId = section.getAttribute('id');
+        }
+      });
+
+      if (currentSectionId) {
+        navLinks.forEach(link => {
+          if (link.getAttribute('href') === '#' + currentSectionId) {
+            link.classList.add('active');
+          } else {
+            link.classList.remove('active');
+          }
+        });
+      }
+    });
+
+    // Inicjalizacja podglądu na starcie
+    updateWordPage();
+  </script>
+</body>
+</html>
